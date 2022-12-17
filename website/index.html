@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .result-item{
+            width: 90%;
+            color: white;
+            background: rgb(103, 103, 161);
+            border-radius: 15px;
+            padding: 10px;
+            margin: 10px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" id = "keyword">
+    <button id = "submitKeyword" onclick="onSubmit()">Submit</button>
+    <div id="result"></div>
+    <script>
+    async function getData(keyword) {
+        const response = await fetch('http://127.0.0.1/' + keyword)
+        const data = await response.json()
+        return data
+    }
+    //sentiment platform
+    function onSubmit(){
+        let input = document.getElementById("keyword").value 
+        document.getElementById("result").innerHTML = "Loading..."
+        if(input != "")
+            getData(input).then((data) => {
+                result = ""
+                let container = document.createElement("div")
+                container.classList.add("container-result");
+                for(i = 0; i < data.length; i++){
+                    result += ("<div class = 'result-item'><h3>"+data[i].platform+"</h3><h3>Sentiment: "+data[i].sentiment+"</h3><br><strong>" + data[i].text + "</strong></div>") 
+                }
+                document.getElementById("result").innerHTML = result}
+                )
+    }
+    
+    </script>
+</body>
+</html>
