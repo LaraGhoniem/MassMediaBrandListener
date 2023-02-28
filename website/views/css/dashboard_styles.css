@@ -1,0 +1,646 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+html, body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+.main{
+    background-image: url(../assets/dashboard_background.png);
+    height: 100vh;
+    width: 100%;
+}
+.mainContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: start;
+    height: 100%;
+    width: 100%;
+
+}
+.navbar{
+    width: 100%;
+    height: 7vh;
+    background-color: rgba(251, 251, 251, 0.413);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.nav-items a{
+    font-family: 'Rubik', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    text-decoration: none;
+    color: #000;
+    margin-right: 10px;
+    font-family: sans-serif;
+}
+.logo h2{
+    font-family: 'Rubik', sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    color: #000;
+}
+.sliderContainer{
+    width: 10%;
+    height: 100%;
+    background-color: rgba(251, 251, 251, 0.413);
+    display: flex;
+    justify-content: space-around;
+    align-items: left;
+    flex-direction: column;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+.sliderContainer h5{
+    line-height: 0.15;
+    margin-bottom: 25px;
+    color: gray;
+    padding-left: 20px;
+}
+.sliderContent{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    
+}
+.sliderContent button{
+    text-decoration: none;
+    width: 80%;
+    padding: 10px 5px;
+    color: #000;
+    background-color: transparent;
+    margin: 0 10px;
+    font-family: sans-serif;
+    outline: none;
+    border: none;
+    text-align: left;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-family: "Rubik", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+}
+.sliderContent button svg{
+    margin-right: 10px;
+}
+.sliderContent button:hover{
+    background-color: #EFE9FF;
+    color: #6425FE;
+}
+.GeneralContainer{
+    width: 80%;
+    height: 100%;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.GeneralContainer h1, .addlistenersPageContainer h1{
+    padding: 0 10px;
+    margin-top: 60px;
+    color: #000;
+    line-height: 0.75;
+}
+.GeneralContainer .generalInfo, .addlistenersPageContainer .generalInfo{
+    line-height: 0.15;
+    padding: 0 10px;
+    margin-bottom: 40px;
+    color: gray;
+}
+
+.gridContainer{
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    height: 15%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.gridContainer .gridItem{
+    width: 30%;
+    height: 100%;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.01);
+    transition: all 0.3s ease-in-out;
+}
+.gridContainer .gridItem:hover{
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+.gridContainer .gridItem h1{
+    color: #000;
+    line-height: 0.15;
+    font-size: 30px;
+}
+.gridContainer .gridItem p{
+    color: gray;
+    line-height: 0.15;
+}
+
+.listenerContainer{
+    width: 100%;
+    height: 35%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 30px;
+    padding: 0 30px;
+    box-sizing: border-box;
+}
+.listenerItem{
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    padding: 0 20px;
+    border-radius: 15px;
+}
+
+.listenerItem h5{
+    color: #000;
+    line-height: 0.05;
+    font-size: 15px;
+    margin-top: 20px;
+}
+
+.listenerItem #listenerName{
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    /* margin: 0 25px; */
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #000;
+}
+.listenerItem .keywordItem{
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+    box-sizing: border-box;
+}
+.keywordItem input{
+    width: 85%;
+    border: none;
+    outline: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #000;
+}
+.keywordItem button{
+    width: 15%;
+    border: none;
+    outline: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.keywordItem button:hover{
+    background-color: rgb(248, 112, 112);
+    color: #fff;
+}
+
+.textContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+.textContainer button{
+    border: none;
+    outline: none;
+    background-color: #efefef;
+    padding: 7px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.createListener{
+    margin-top: 20px;
+    width: 100%;
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.createListener:hover{
+    background-color: gray;
+    color: #fff;
+}
+.listenerListContainer{
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 15px;
+    padding: 0 30px;
+    box-sizing: border-box;
+}
+
+.listenerlistitem{
+    width: 100%;
+}
+.listernerlistitem h5{
+    color: #000;
+    line-height: 0.05;
+    font-size: 15px;
+    margin-top: 20px;
+}
+.listenerlistitem .keywordtext{
+    line-height: 0.1;
+}
+.listenerlistitem .viewListener{
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.listenerlistitem .viewListener:hover{
+    background-color: gray;
+    color: #fff;
+}
+.listenerlistitem .deleteListener{
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.listenerlistitem .deleteListener:hover{
+    background-color: rgb(248, 112, 112);
+    color: #fff;
+}
+.listenerlistitem .buttonContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.addlistenersPageContainer{
+    display: none;
+    width: 100%;
+    height: 100%;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.viewlistenersPageContainer{
+    display: none;
+    width: 100%;
+    height: 100%;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    font-family: 'Rubik', sans-serif;
+    padding: 0 30px;
+}
+
+.viewlistenersPageContainer .listeners_list{
+    width: 100%;
+    background: white;
+    border-radius: 15px;
+    padding: 10px 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 15px;
+}
+
+.viewlistenersPageContainer .listeners_list .listeners_list_item{
+    background-color: #CBB7FF;
+    color: #2C2C2C;
+    width: 209px;
+    height: 116px;
+    border-radius: 15px;
+    padding: 0 30px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+.viewlistenersPageContainer .listeners_list .inactive:hover{
+    background-color: #A785FF;
+    color: #fff;
+}
+.viewlistenersPageContainer .listeners_list .active{
+    background-color: #A785FF;
+}
+
+.listenerNameContainer{
+    width: 90%;
+    background: white;
+    border-radius: 15px;
+    padding: 12px 30px;
+    margin: 0 5%;
+    box-sizing: border-box;
+}
+.listenerNameContainer h3{
+    color: #000;
+    line-height: 0.25;
+    font-size: 15px;
+    margin-top: 20px;
+}
+.listenerNameContainer p{
+    line-height: 0.1;
+}
+
+.listenerNameContainer input{
+    width: 100%;
+    border: none;
+    outline: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    /* margin: 0 25px; */
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #000;
+}
+
+.listenerKeywordsContainer{
+    width: 90%;
+    background: white;
+    border-radius: 15px;
+    padding: 12px 30px;
+    
+    margin: 0 5%;
+    margin-top: 20px;
+    box-sizing: border-box;
+}
+
+.listenerKeywordsContainer h3{
+    color: #000;
+    line-height: 0.25;
+    font-size: 15px;
+    margin-top: 20px;
+}
+
+.listenerKeywordsContainer p{
+    line-height: 0.1;
+}
+
+.listenerKeywordInput{
+    width: 100%;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #000;
+}
+.listenerKeywordsContainer .listenerKeywordInput input{
+    width: 90%;
+    border: none;
+    outline: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    /* margin: 0 25px; */
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #000;
+}
+
+.listenerKeywordsContainer .listenerKeywordInput button{
+    /* width: 5%; */
+    border: none;
+    outline: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 15px;
+    font-size: 16px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.listenerKeywordsContainer .listenerKeywordInput button:hover{
+    background-color: rgb(251, 120, 120);
+    color: #fff;
+}
+
+.keywordContainerTopArea{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.keywordContainerTopArea button{
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.keywordContainerTopArea button:hover{
+    background-color: gray;
+    color: #fff;
+}
+
+.keywordContainerTopArea select{
+    outline: none;
+    border: none;
+    background-color: #efefef;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    margin-right: 10px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.keywordContainerTopArea select:hover{
+    background-color: gray;
+    color: #fff;
+}
+
+.keywordContainerTopArea select option{
+    outline: none;
+    border: none;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+
+
+
+.saveContainer{
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    width: 25%;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 10px 20px;
+}
+.saveContainer .saveHeader{
+    margin: 0px;
+    padding: 0px;
+}
+.saveContainer button{
+    width: 100%;
+    outline: none;
+    border: none;
+    background-color: rgb(33, 201, 33);
+    padding: 10px 20px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.saveContainer button:hover{
+    background-color: rgb(9, 128, 9);
+    color: #fff;
+}
+
+.listener-container{
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+.listener-container div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border-radius: 15px;
+    padding: 12px 30px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.mentionContainer{
+    width: 70%;
+    background: white;
+    border-radius: 15px;
+    padding: 12px 30px;
+    margin: 0 5%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+.mentionContainer p{
+    width: 50%;
+}
+.listener-mentions-container{
+    overflow-y: scroll; 
+    height:400px;
+}

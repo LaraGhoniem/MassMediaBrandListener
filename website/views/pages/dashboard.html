@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard_styles.css">
+    <script src="../scripts/dashboard_scripts.js"></script>
+</head>
+<body>
+    <div class="main">
+        <div class="navbar">
+            <div class="nav-items">
+                <a href="/">Home</a>
+                <a href="/view/register">About</a>
+            </div>
+            <div class="logo">
+                <h2>Brand Listening Tool</h2>
+            </div>
+            <div class="buttons">
+                <h5>Mohammed Yasser</h5>
+            </div>
+        </div>
+    <div class="mainContainer">
+        <div class="sliderContainer">
+            <h5>LISTENERS</h5>
+            <div class="sliderContent">
+                <button onclick="navigate(0)">General Dashboard</button>
+                <button onclick="navigate(1)">Add Listeners</button>
+                <button onclick="navigate(2)">View Listeners</button>
+            </div>
+            <h5>SETTINGS</h5>
+            <div class="sliderContent">
+                <button>Settings</button>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="GeneralContainer" id="home">
+            <h1>General Dashboard</h1>
+            <p class="generalInfo">Views information about all listeners created</p>
+            <div class="gridContainer">
+                <div class="gridItem">
+                    <p>Number of listeners</p>
+                    <h1 id="listeners">0</h1>
+                </div>
+                <div class="gridItem">
+                    <p>Number of Active listeners</p>
+                    <h1 id="activeListeners">0</h1>
+                </div>
+                <div class="gridItem">
+                    <p>Number of Keywords</p>
+                    <h1 id="keywords">0</h1>
+                </div>
+            </div>
+            <div class="listenerContainer">
+                <div class="listenerItem">
+                    <h3>Create Listener</h3>
+                    <h5>A name to group all keywords</h5>
+                    <input type="text" id="listenerName" placeholder="Listener Name">
+                    <div class="textContainer">
+                        <h5>keywords</h5>
+                    <button class="addKeyword">Add Keyword</button>
+                    </div>
+                    
+                    <div id="keywords" class="keywordsContainer">
+                        <div class="keywordItem">
+                            <input type="text" placeholder="Keyword">
+                            <button onclick="removeKeyword(this)">-</button>
+                        </div>
+                    </div>
+                    
+                    <button class="createListener">Create Listener</button>
+                    
+                </div>
+                <div class="listenerListContainer">
+                    <h3>Listeners List</h3>
+                    <div class="listenerList">
+                        <div class="listenerlistitem">
+                            <h5>Listener Name</h5>
+                            <p class="keywordtext">Keywords</p>
+                            <div class="buttonContainer">
+                                <button class="viewListener">View</button>
+                            <button class="deleteListener">Delete</button>
+                            </div>
+                        </div>
+                        <div class="listenerlistitem">
+                            <h5>Listener Name</h5>
+                            <p class="keywordtext">Keywords</p>
+                            <div class="buttonContainer">
+                                <button class="viewListener">View</button>
+                            <button class="deleteListener">Delete</button>
+                            </div>
+                            
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="addlistenersPageContainer" id="add-listener">
+        <h1>Add Listener</h1>
+        <p class="generalInfo">Create a listener with keywords to start monitoring your brand</p>
+        <div class="listenerNameContainer">
+            <h3>Get started with a name</h3>
+            <p>Enter a name to the listener to group all keywords.</p>
+            <input type="text" id="addlistenerName" placeholder="Listener Name">
+        </div>
+        <div class="listenerKeywordsContainer" id="listener-keyword-container">
+            <div class="keywordContainerTopArea">
+                <span>
+                    <h3>Enter brand's keywords</h3>
+                    <p>Enter keywords to monitor your brand</p>
+                </span>
+                <span>
+                    <select name="category" id="keyword-category">
+                    <option value="0">Select Category</option>
+                    <option value="1">Category 1</option>
+                    <option value="2">Category 2</option>
+                    <option value="3">Category 3</option>
+                    <option value="4">Category 4</option>
+                    <option value="5">Category 5</option>
+                </select>
+                <button onclick="addKeyword()">Add Keyword</button>
+                </span>
+                
+            </div>
+            <div class="listenerKeywordInput" id="keyword1">
+                <input type="text" id="keywordInput1" placeholder="Keyword">
+                
+                <button onclick="removeKeyword(1)">-</button>
+            </div>
+        </div>
+        <div class="saveContainer">
+            <h3 class="saveHeader">Confirm</h3>
+            <p>Confirm the listener name and keywords</p>
+            <button onclick="saveListener()">Save Listener</button>
+        </div>
+    </div>
+    <div class="viewlistenersPageContainer" id="view-listeners">
+        <h2>Listeners</h2>
+        <div class="listeners_list" id = "listeners_list_items">
+            <div class="listeners_list_item active">
+                <h3>Listener 1</h3>
+            </div>
+            <div class="listeners_list_item inactive">
+                <h3>Listener 2</h3>
+            </div>
+            <div class="listeners_list_item inactive">
+                <h3>Listener 3</h3>
+            </div>
+            <div class="listeners_list_item inactive">
+                <h3>Listener 4</h3>
+            </div>
+        </div>
+        <h2 id="listener_name">No Listeners</h2>
+        <div class="viewListenerData" id="listener_data_api">
+            The listener is loading...
+        </div>
+    </div>
+    </div> 
+    </div>
+    
+</body>
+</html>

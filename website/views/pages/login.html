@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../css/login_styles.css">
+    <link href = "../../icons/css/boxicons.min.css" rel="stylesheet">
+    <script src="../scripts/login_scripts.js"></script>
+</head>
+<body>
+    
+    <div class="mainContainer">
+        <div class="navbar">
+            <div class="nav-items">
+                <a href="/">Home</a>
+                <a href="/view/register">Sign Up</a>
+            </div>
+            <div class="logo">
+                <h2>Brand Listening Tool</h2>
+            </div>
+            <div class="buttons">
+                <a href="/view/login">Sign in</a>
+            </div>
+        </div>
+        <div class="bodyContainer">
+            <div class="loginContainer">
+                <div class="leftContainer">
+                    <h1>Welcome Back</h1>
+                    <p>Please enter your credentials to proceed.</p>
+                    <p>Want to create a new account <a href="/view/register">click here</a></p>
+                </div>
+                <div class="rightContainer">
+                    <div class="topContainer">
+                        <h4>You can</h4>
+                    <button class="googleButton"><i class='bx bxl-google'></i> Sign in with google</button>
+                    </div>
+                    
+                    <div class="formContainer">
+                        <h4>Or</h4>
+                        <input type="text" id="email" placeholder="Email">
+                    <input type="password" id="password" placeholder="Password">
+                    </div>
+                    <button class="submitButton" onclick="login()">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+
+</html>

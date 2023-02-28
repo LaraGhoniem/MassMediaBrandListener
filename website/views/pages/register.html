@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="../css/register_styles.css">
+    <script src="../scripts/register_scripts.js"></script>
+    <link href = "../../icons/css/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mainContainer">
+        <div class="navbar">
+            <div class="nav-items">
+                <a href="/">Home</a>
+                <a href="/view/register">Sign Up</a>
+            </div>
+            <div class="logo">
+                <h2>Brand Listening Tool</h2>
+            </div>
+            <div class="buttons">
+                <a href="/view/login">Sign in</a>
+            </div>
+        </div>
+        <div class="bodyContainer">
+            <div class="registerContainer">
+                <div class="leftContainer">
+                    <h1>Get Started</h1>
+                    <p>Please enter the required fields to register.</p>
+                    <p>Already registered? <a href="/view/login">click here</a></p>
+                </div>
+                <div class="rightContainer" id="personalInfo" >
+                    <div class="topContainer">
+                        <h4>You can</h4>
+                    <button class="googleButton"><i class='bx bxl-google'></i> Sign in with google</button>
+                    </div>
+                    
+                    <div class="formContainer">
+                        <h4>Or</h4>
+                        <input type="text" id="name" placeholder="Name">
+                        <input type="text" id="jobTitle" placeholder="Job Title">
+                        <input type="text" id="email" placeholder="Email">
+                        <input type="password" id="password" placeholder="Password">
+                    </div>
+                    <button class="submitButton" onclick="registerPersonalInfo()">Next</button>
+                </div>
+                <div class="rightContainerCompanyInfo" id="companyInfo" style="display:none">
+                    <div class="formContainer">
+                        <h2>Company Information</h2>
+                        <input type="text" id="companyName" placeholder="Company Name">
+                        <input type="text" id="companyAddress" placeholder="Company Address">
+                    </div>
+                    <button class="submitButton" onclick="registerCompanyInfo()">Next</button>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="bodyContainer">
+            <h1>Register</h1>
+                <input type="text" id="email" placeholder="Email">
+                <input type="password" id="password" placeholder="Password">
+                <input type="text" id="companyName" placeholder="Company Name">
+                <input type="text" id="companyAddress" placeholder="Company Address">
+                <button onclick="register()">Register</button>
+    </div> -->
+</body>
+</html>

@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+html, body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.mainContainer{
+    width: 100%;
+    height: 100vh;
+    background-image: url(../assets/login_background.png);
+}
+.navbar{
+        width: 100%;
+        height: 7vh;
+        background-color: rgba(251, 251, 251, 0.39);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .nav-items a{
+        font-family: 'Rubik', sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        text-decoration: none;
+        color: #000;
+        margin-right: 10px;
+        font-family: sans-serif;
+    }
+    .logo h2{
+        font-family: 'Rubik', sans-serif;
+        font-size: 25px;
+        font-weight: 700;
+        color: #000;
+    }
+    .buttons a{
+        font-family: 'Rubik', sans-serif;
+        font-size: 15px;
+        font-weight: 400;
+        padding: 10px;
+        text-decoration: none;
+        color: white;
+        background-color: #000;
+        border-radius: 8px;
+        margin-right: 10px;
+        font-family: sans-serif;
+    }
+.bodyContainer{
+    width: 100%;
+    height: 95vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.loginContainer{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0 25px;
+    height: 505px;
+    width: 752px;
+    
+}
+.leftContainer{
+    background-color: rgba(251, 251, 251, 0.39);
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    flex-direction: column;
+    padding-left: 25px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+.leftContainer p{
+    line-height: 0.15;
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: gray
+}
+.leftContainer p a{
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+
+.rightContainer{
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: space-around;
+    align-items: left;
+    flex-direction: column;
+    padding: 0 25px;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.rightContainer input{
+    width: 100%;
+    height: 44px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+.rightContainer input:focus{
+    border: none;
+    outline: none;
+    /* padding-left: 10px; */
+}
+.rightContainer input::placeholder{
+    font-size: 15px;
+    /* padding-left: 10px; */
+}
+.rightContainer .submitButton{
+    width: 100%;
+    height: 44px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    font-size: 15px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+.rightContainer .googleButton{
+    width: 100%;
+    height: 44px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 0 50px;
+    font-size: 15px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
