@@ -37,32 +37,27 @@ async function getUserListeners(){
         }
         }).then(async (res) => {
             if(res.status === 200){
-                //convert body to json
-                await res.json().then(async (data) => {
-                    console.log(data)
-                let response = await fetch('/listener/id/'+data.data[0]._id, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        
-                        }
-                        }).then(async (res) => {
-                            if(res.status === 200){
-                                console.log("Listeners found")
-                                //convert body to json
-                                await res.json().then(async (data) => {
-                                    if(data.listener.length != 0){
-                                        listenersData = data
-                                        document.getElementById("listener_name").innerHTML = data.listener[0].listener_name
-                                    }
-                                })
+                await res.json().then(async (company) => {
+                    await fetch('/listener/id/'+company.data[0]._id, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
                             }
-                            else{
-                                console.log(res.status)
-                            }
-                        }).catch((err) => {
-                            console.log(err)
-                        })
+                            }).then(async (res) => {
+                                if(res.status === 200){
+                                    await res.json().then(async (data) => {
+                                        if(data.listener.length != 0){
+                                            listenersData = data.listener
+                                            viewStats(listenersData)
+                                        }
+                                    })
+                                }
+                                else{
+                                    console.log(res.status)
+                                }
+                            }).catch((err) => {
+                                console.log(err)
+                            })
                     })
                     }
                     else{
@@ -145,7 +140,6 @@ await fetch('/company/getCompany/'+userData._id, {
     method: 'GET',
     headers: {
         'Content-Type': 'application/json',
-        
         }
         }).then(async (res) => {
             if(res.status === 200){
@@ -287,3 +281,18 @@ function count(arr, value){
 }
 
 
+function viewStats(listeners){
+    let listener_html = document.getElementById("listeners_list_items")
+    let listener_html_inner = `<h4>No Listeners Created</h4>`
+    if(listeners.length > 0){
+        listener_html_inner = ``
+        for(let i = 0; i < listeners.length; i++){
+            listener_html_inner += `
+            <div class="listeners_list_item ${(i==0)?'active':'inactive'}">
+                <h3>${listeners[i].listener_name}</h3>
+            </div>
+            `
+        }
+    }
+    listener_html.innerHTML = listener_html_inner
+}

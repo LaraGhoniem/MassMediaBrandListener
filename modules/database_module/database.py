@@ -3,7 +3,7 @@ from api_keys import Keys
 
 class Database(object):
     def __init__(self):
-        self.client = MongoClient("mongodb+srv://Cluster22:Mj8sP4uq8GtrOJBN@cluster22334.jy8xlkd.mongodb.net/test")
+        self.client = MongoClient("mongodb+srv://Cluster22:Mj8sP4uq8GtrOJBN@cluster22334.jy8xlkd.mongodb.net")
         self.db = self.client["test"]
     def find(self, collection, query):
         return self.db[collection].find(query)

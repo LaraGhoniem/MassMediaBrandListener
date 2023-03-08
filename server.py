@@ -63,15 +63,13 @@ async def main(jsonData: JsonData):
 
     # start engine
     engine.run()
-    data = engine.listeners[0].result
+    
     # print(data)
 
     # update listener in database
-    # db.update("listeners", {"_id":ObjectId(data["listener_id"])}, {"listener_status":"active"})
-    # for i in range(len(engine.listeners)):
-    #     print(engine.listeners[i].result)
-    # return result
-    return data
+    db.update("listeners", ObjectId(engine.listeners[0].id), {"listener_status":"active", "result":json.dumps(engine.listeners[0].result)})
+
+    return "Done"
     
 
 
