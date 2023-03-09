@@ -18,17 +18,18 @@ class Podcasts:
     # trackno = 0
     limit = 200
     id = 0
-    def __init__(self,  region ,limit,keyword = None,categorizedlist=None):
+    #kan fi limit fel param unused w 3amla error
+    def __init__(self,  region ,keyword = None,categorizedlist=None):
         if(self.categorizedlist==None and self.keyword==None):
             print("Error: No keyword or categorized list")
             return
         self.id += 1
         self.keyword = keyword
         self.region = region
-        self.limit = limit
+        # self.limit = limit
         self.categorizedlist = categorizedlist
-        if(limit>200):
-            self.limit=200
+        # if(limit>200):
+        #     self.limit=200
         
         
     def setpodcastdetails(self, jsondata):
@@ -48,7 +49,7 @@ class Podcasts:
         
     def getfinaldirectory(self):
         current_directory = os.getcwd()
-        final_directory = os.path.join(current_directory+'\Podcasts\PodcastsMP3\\'+str(self.id), r'')
+        final_directory = os.path.join(current_directory+'\podcasts_module\PodcastsMP3\\'+str(self.keyword), r'')
         if not os.path.exists(final_directory):
             os.makedirs(final_directory)
         return final_directory[2:]
@@ -61,18 +62,18 @@ class Podcasts:
             feed = self.getrss()
             os.system('cmd /k Podcasts\poddl.exe '+feed+' '+final_directory)
 
-    def downloadlist(self):
-        for i in range(len(self.categorizedlist)):
-            jsondata = requests.get('https://itunes.apple.com/search?term='+self.categorizedlist[i]+'&media=podcast&entity=podcast&country='+self.region+'&limit='+str(self.limit))
-            self.setpodcastdetails(jsondata)
-            if(self.podcast_title==self.categorizedlist[i].replace(" ", "_")):
-                final_directory = self.getfinaldirectory()
-                feed = self.getrss()
-                os.system('cmd /k Podcasts\poddl.exe '+feed+' '+final_directory)
+    # def downloadlist(self):
+    #     for i in range(len(self.categorizedlist)):
+    #         jsondata = requests.get('https://itunes.apple.com/search?term='+self.categorizedlist[i]+'&media=podcast&entity=podcast&country='+self.region+'&limit='+str(self.limit))
+    #         self.setpodcastdetails(jsondata)
+    #         if(self.podcast_title==self.categorizedlist[i].replace(" ", "_")):
+    #             final_directory = self.getfinaldirectory()
+    #             feed = self.getrss()
+    #             os.system('cmd /k Podcasts\poddl.exe '+feed+' '+final_directory)
                 
     def converttowav(self):
         current_directory = os.getcwd()
-        final_directory = os.path.join(current_directory+'\Podcasts\PodcastsMP3\\'+str(1), r'')
+        final_directory = os.path.join(current_directory+'\podcasts_module\PodcastsMP3\\'+str(1), r'')
         if not os.path.exists(final_directory):
             os.makedirs(final_directory)
         count = 0
