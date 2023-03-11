@@ -75,18 +75,28 @@ function navigate(page){
             document.getElementById("home").style.display = "block";
             document.getElementById("add-listener").style.display = "none";
             document.getElementById("view-listeners").style.display = "none";
+            document.getElementById("web-mentions").style.display = "none";
     }
     else if(page === 1){
             document.getElementById("home").style.display = "none";
             document.getElementById("add-listener").style.display = "block";
             document.getElementById("view-listeners").style.display = "none";
+            document.getElementById("web-mentions").style.display = "none";
     }
     else if(page === 2){
             getUserListeners()
             document.getElementById("home").style.display = "none";
             document.getElementById("add-listener").style.display = "none";
             document.getElementById("view-listeners").style.display = "block";
+            document.getElementById("web-mentions").style.display = "none";
     }
+    else if(page === 3){
+        getUserListeners()
+        document.getElementById("home").style.display = "none";
+        document.getElementById("add-listener").style.display = "none";
+        document.getElementById("view-listeners").style.display = "none";
+        document.getElementById("web-mentions").style.display = "block";
+}
 }
 var keywordCount = 1;
 function removeKeyword(keyword){
@@ -107,6 +117,12 @@ function addKeyword(){
     <button onclick="removeKeyword(${keywordCount})">-</button>
     `
     keywords.appendChild(keyword);
+}
+function copyEvent(id)
+{
+    var str = document.getElementById(id);
+    window.getSelection().selectAllChildren(str);
+    document.execCommand("Copy")
 }
 
 var listenerData = {}
