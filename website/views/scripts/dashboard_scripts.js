@@ -89,6 +89,297 @@ function navigate(page){
             document.getElementById("add-listener").style.display = "none";
             document.getElementById("view-listeners").style.display = "block";
             document.getElementById("web-mentions").style.display = "none";
+
+            // 
+            // 
+            ctx = document.getElementById('mentionslinechart'),
+            new Chart(
+                ctx,
+                {         
+                 type: 'line',
+                    data:  
+                     {
+                        labels: ['January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',],
+                        datasets: [{
+                            label: 'Mentions over time',
+                            order: screenLeft,
+                            data: [65, 59, 80, 81, 56, 55, 40],
+                            fill: false,
+                            borderColor: 'rgb(221,160,221)',
+                            tension: 0.1
+                        
+                        }],
+                        
+                    },
+                    options: {
+                            plugins: {
+
+                                legend: {
+                                    position: 'bottom',
+                                  },
+                                }}
+                },
+                
+            );
+            // 
+            ctx = document.getElementById('topSources'),
+            new Chart(
+                ctx,
+                {         
+                    type: 'bar',
+                    data:  
+                     {
+                        labels: ['January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',],
+                        datasets: [{
+                            label: 'Top sources',
+                            data: [65, 59, 80, 81, 56, 55, 40],
+                            backgroundColor: [
+                              'rgba(255, 99, 132, 0.2)',
+                              'rgba(255, 159, 64, 0.2)',
+                              'rgba(255, 205, 86, 0.2)',
+                              'rgba(75, 192, 192, 0.2)',
+                              'rgba(54, 162, 235, 0.2)',
+                              'rgba(153, 102, 255, 0.2)',
+                              'rgba(201, 203, 207, 0.2)'
+                            ],
+                            borderColor: [
+                              'rgb(255, 99, 132)',
+                              'rgb(255, 159, 64)',
+                              'rgb(255, 205, 86)',
+                              'rgb(75, 192, 192)',
+                              'rgb(54, 162, 235)',
+                              'rgb(153, 102, 255)',
+                              'rgb(201, 203, 207)'
+                            ],
+                            borderWidth: 1
+                          }]
+                        
+                    },
+                    options: {
+                        plugins: {
+
+                            legend: {
+                                position: 'bottom',
+                              },
+                            },
+                        indexAxis: 'y',
+                      }
+                },
+                
+            );
+            // 
+            // summary
+            // 
+            ctx = document.getElementById('posMentions'),
+            new Chart(
+                ctx,
+                {         
+                 type: 'line',
+                    data:  
+                     {
+                        labels: ['January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',],
+                        datasets: [{
+                            label: 'Positive mentions over time',
+                            order: screenLeft,
+                            data: [65, 59, 80, 81, 56, 55, 40],
+                            fill: true,
+                            borderColor: 'rgb(221,160,221)',
+                            tension: 0.5
+                        
+                        }],
+                        
+                        
+                    },options: {
+                            plugins: {
+
+                                legend: {
+                                    position: 'bottom',
+                                  },
+                                }
+                        }
+                },
+                
+            );
+            // 
+            ctx = document.getElementById('topKeywords'),
+            new Chart(
+                ctx,
+                {
+                    type: 'bar',
+                    data:  
+                     {
+                        labels: ['January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',],
+                        datasets: [{
+                            label: 'Top keyword mentions',
+                            data: [65, 59, 80, 81, 56, 55, 40],
+                            backgroundColor: [
+                              'rgba(255, 99, 132, 0.2)',
+                              'rgba(255, 159, 64, 0.2)',
+                              'rgba(255, 205, 86, 0.2)',
+                              'rgba(75, 192, 192, 0.2)',
+                              'rgba(54, 162, 235, 0.2)',
+                              'rgba(153, 102, 255, 0.2)',
+                              'rgba(201, 203, 207, 0.2)'
+                            ],
+                            borderColor: [
+                              'rgb(255, 99, 132)',
+                              'rgb(255, 159, 64)',
+                              'rgb(255, 205, 86)',
+                              'rgb(75, 192, 192)',
+                              'rgb(54, 162, 235)',
+                              'rgb(153, 102, 255)',
+                              'rgb(201, 203, 207)'
+                            ],
+                            borderWidth: 1
+                          }]
+                        
+                        }
+                    ,
+                    options: {
+                        indexAxis: 'y',
+                        plugins: {
+
+                            legend: {
+                                position: 'bottom',
+                              },
+                            }
+                      }
+                },
+                
+            );
+            // 
+            ctx = document.getElementById('sentimentShare'),
+            new Chart(
+                ctx,
+                {         
+                 type: 'pie',
+                    data:  
+                     {
+                        labels: [
+                            'Positive',
+                            'Neutral',
+                            'Negative'
+                          ],
+                          datasets: [{
+                            label: 'Sentiment share',
+                            data: [300, 50, 100],
+                            backgroundColor: [
+                              'rgb(255, 99, 132)',
+                              'rgb(54, 162, 235)',
+                              'rgb(255, 205, 86)'
+                            ],
+                            hoverOffset: 4
+                          }]
+                    },
+                    options: {
+                        plugins: {
+
+                        legend: {
+                            position: 'bottom',
+                          },
+                        }
+                    }
+                },
+                
+            );
+            // 
+            ctx = document.getElementById('sentimentSource'),
+            new Chart(
+                ctx,
+                {         
+                    type: 'bar',
+                    data: {
+                        labels: ['January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',],
+                        
+                        datasets: [
+                        {label: 'Positive',
+                        data: [65, 59, 80, 81, 56, 55, 40]},
+                        {label: 'Neutral',
+                        data: [75, 5, 10, 0, 45, 60, 10]},
+                        {label: 'Negative',
+                        data: [20, 15, 5, 30, 40, 10, 5]}
+                        ]
+                    },
+                      options: {
+                      plugins: {
+                        legend: {
+                            position: 'bottom',
+                          },
+                        title: {
+                          display: true,
+                          text: 'Sentiment by source'
+                        },
+                      },
+                      responsive: true,
+                      scales: {
+                        x: {
+                          stacked: true,
+                        },
+                        y: {
+                          stacked: true
+                        }
+                      }
+                    }
+                },
+                
+            );
+            // 
+            ctx = document.getElementById('topTopics'),
+            new Chart(
+                ctx,
+                {         
+                    type: 'bubble',
+                    data: {
+                        labels: ['January',
+                        'February',
+                        'March',
+                        'April',
+                        'May',
+                        'June',],
+                        
+                    data: [65, 59, 80, 81, 56, 55, 40]},
+                    options: {
+                      responsive: true,
+                      plugins: {
+                        legend: {
+                          position: 'bottom',
+                        },
+                        title: {
+                          display: true,
+                          text: 'Top topics'
+                        }
+                      }
+                    },
+                },
+                
+            );
+            // 
+            // 
     }
     else if(page === 3){
         getUserListeners()

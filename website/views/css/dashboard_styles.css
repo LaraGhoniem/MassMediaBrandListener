@@ -14,6 +14,7 @@ html, body{
 }
 .main{
     background-image: url(../assets/dashboard_background.png);
+    background-repeat: repeat;
     height: 100vh;
     width: 100%;
 }
@@ -27,6 +28,8 @@ html, body{
 
 }
 .navbar{
+    position: sticky;
+    top: 0;
     width: 100%;
     height: 7vh;
     background-color: rgba(251, 251, 251, 0.413);
@@ -50,6 +53,9 @@ html, body{
     color: #000;
 }
 .sliderContainer{
+    position: sticky;
+    top: 7vh;
+    left: 0;
     width: 15%;
     height: 100%;
     background-color: rgba(251, 251, 251, 0.413);
@@ -365,7 +371,9 @@ html, body{
     border-bottom-right-radius: 15px;
     font-family: 'Rubik', sans-serif;
     padding: 0 30px;
-    
+    /* margin-top: -50px; */
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .viewlistenersPageContainer .listeners_list{
@@ -695,4 +703,124 @@ html, body{
 .listener-mentions-container{
     overflow-y: scroll; 
     height:400px;
+}
+
+.viewListenerData div{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.viewListenerData .mentions{
+    width: 47%;
+    float: left;
+    height: 310px;
+    display: inline-flex;
+    background: white;
+    border-radius: 15px;
+    padding: 12px 30px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.viewListenerData .topSources{
+    width: 20%;
+    display: inline-flex;
+    height: 210px;
+    float: left;
+    background: white;
+    border-radius: 15px;
+    padding: 12px 30px;
+    margin: 0 2%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.viewListenerData .summary{
+    width: 29%;
+    height: 310px;
+    display: inline-flex;
+    float: left;
+    background: white;
+    border-radius: 15px;
+    padding: 12px 30px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.viewListenerData .posMentions{
+    width: 30%;
+    height: 200px;
+    display: inline-flex;
+    float: left;
+    background: white;
+    border-radius: 15px;
+    padding: 12px 30px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.viewListenerData .topKeywords{
+    width: 15%;
+    height: 200px;
+    display: inline-flex;
+    float: left;
+    background: white;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin: 0 2%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.viewListenerData .sentimentShare{
+    width: 20%;
+    height: 310px;
+    display: inline-flex;
+    float: left;
+    margin-bottom: 20%;
+    background: white;
+    border-radius: 15px;
+    padding: 10px 00px;
+    margin-top: -80px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.viewListenerData .sentimentSource{
+    width: 15%;
+    height: 200px;
+    background: white;
+    display: inline-flex;
+    float: left;
+    border-radius: 15px;
+    padding: 12px 30px;
+    margin: 0 2%;
+    margin-right: 0;
+    margin-top: 20px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.viewListenerData .topTopics{
+    width: 13%;
+    height: 200px;
+    background: white;
+    display: inline-flex;
+    float: left;
+    border-radius: 15px;
+    padding: 12px 30px;
+    margin-top: 20px;
+    margin-left: 1%;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }

@@ -7,6 +7,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard_styles.css">
     <script src="../scripts/dashboard_scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="main">
@@ -143,7 +144,56 @@
         </div>
         <h2 id="listener_name">No Listeners</h2>
         <div class="viewListenerData" id="listener_data_api">
-            The listener is loading...
+            <div class="mentions">
+                <canvas  width="400" height="200"  id="mentionslinechart">
+                </canvas>
+            </div>
+            <div class="topSources">
+                <canvas  width="300" height="250"  id="topSources">
+                </canvas>
+            </div>
+            <div class="summary">
+                <canvas  width="300" height="200"  id="summary">
+                </canvas>
+            </div>
+            <div class="posMentions">
+                <canvas  width="400" height="200"  id="posMentions">
+                </canvas>
+            </div>
+            <div class="topKeywords">
+                <canvas  width="300" height="300"  id="topKeywords">
+                </canvas>
+            </div>
+            <div class="sentimentShare">
+                <canvas  width="400" height="200"  id="sentimentShare">
+                </canvas>
+            </div>
+            <div class="sentimentSource">
+                <canvas  width="600" height="500"  id="sentimentSource">
+                </canvas>
+            </div>
+            <div class="topTopics">
+                <canvas  width="400" height="200"  id="topTopics">
+                </canvas>
+            </div>
+                <!-- <script>
+                new Chart(
+                {         
+                 type: 'line',
+                    data:  
+                     {labels: Utils.months({count: 7}),
+                    datasets: [{
+                        label: 'My First Dataset',
+                        data: [65, 59, 80, 81, 56, 55, 40],
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }],}},
+                    document.getElementById('mentionsChart'),
+                    
+                );
+                </script> -->
+            
         </div>
     </div>
     <div class="webmentionsPageContainer" id="web-mentions">
