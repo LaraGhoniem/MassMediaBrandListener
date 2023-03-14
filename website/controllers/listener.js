@@ -18,7 +18,7 @@ exports.addListener = (req, res) => {
 }
 
 exports.view_listener_by_id = (req, res) => {
-Listener.find({"company_id":req.params.id}, (err, listener) => {
+Listener.find({"user_id":req.params.id}, (err, listener) => {
         if(err) {
             return res.status(400).json({
                 err: err.toString()
