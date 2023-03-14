@@ -196,30 +196,162 @@
             
         </div>
     </div>
+
     <div class="webmentionsPageContainer" id="web-mentions">
         <h2>Listeners</h2>
         <div class="listeners_list" id = "listeners_list_items_2">
         </div>
-        <h2>Mentions</h2>
-        <div class="row justify-content-center" id="web-mentions"> 
-            <div class="col-auto">
-                <div class="listenerItem">
-        <table class="table table-hover">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">#</th>
+        <div>
+        <table class="tableOne" id="tableOne">
+            <tr>
+                <th scope="col"></th>
                 <th scope="col">Date</th>
                 <th scope="col">Mention</th>
                 <th scope="col">Source</th>
                 <th scope="col">Sentiment</th>
                 <th scope="col">Summary</th>
+                <th scope="col">URL</th>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td id="Data">26/02/2022</td>
+                <td id="Mention">Important news</td>
+                <td><button type="button" class="Twitter" id="Twitter">Twitter</button></td>
+                <td><button type="button" class="Negative" id="Negative">Negative</button></td>
+                <td id="Summary">News</tdi>
+                <td><button type="button" id="Open">Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')" id="Copy">Copy</button>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td id="Data">20/02/2022</td>
+                <td id="Mention">Important news</td>
+                <td><button type="button" class="Youtube" id="Youtube">Youtube</button></td>
+                <td><button type="button" class="Positive" id="Positive">Positive</button></td>
+                <td id="Summary">News</td>
+                <td><button type="button" id="Open">Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')" id="Copy">Copy</button>
+                    </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td id="Data">19/02/2022</td>
+                <td id="Mention">Important news</td>
+                <td><button type="button" class="News" id="News">News</button></td>
+                <td><button type="button" class="Hybrid" id="Hybrid">Hybrid</button></td>
+                <td id="Summary">News</td>
+                <td><button type="button" id="Open">Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')" id="Copy">Copy</button>
+                    </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td id="Data">17/02/2022</td>
+                <td id="Mention">important news</td>
+                <td><button type="Podcasts" class="Podcasts" id="Podcasts">Podcasts</button></td>
+                <td><button type="Positive" class="Positive" id="Positive">Postive</button></td>
+                <td id="Summary">News</td>
+                <td><button type="button" id="Open">Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')" id="Copy">Copy</button>
+                    </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td id="Data">05/02/2022</td>
+                <td id="Mention">Important news</td>
+                <td><button type="Radio" class="Radio" id="Radio">Radio</button></td>
+                <td><button type="Negative" class="Negative" id="Negative">Negative</button></td>
+                <td id="Summary">News</td>
+                <td><button type="button" id="Open">Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')" id="Copy">Copy</button>
+                    </td>
+            </tr>    
+        </table>
+        </div>
+        <!-- <div class="row justify-content-center" id="web-mentions"> 
+            <div class="col-auto">
+                <div class="listenerItem">
+        <table class="table table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">Date</th>
+                <th scope="col">Mention</th>
+                <th scope="col">Source</th>
+                <th scope="col">Sentiment</th>
                 <th scope="col">Summary</th>
                 <th scope="col">URL</th>
-              </tr>
+            </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
+            <tr>
+                <th scope="row"></th>
+                <td>26/02/2022</td>
+                <td>Important news</td>
+                <td>Twitter</td>
+                <td>Negative</td>
+                <td>News</td>
+                <td><button type="button" >Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')">Copy</button>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>20/02/2022</td>
+                <td>Important news</td>
+                <td>Youtube</td>
+                <td>Positve</td>
+                <td>New</td>
+                <td><button type="button" >Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')">Copy</button>
+                    </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>19/02/2022</td>
+                <td>Important news</td>
+                <td>News</td>
+                <td>Hybrid</td>
+                <td>New</td>
+                <td><button type="button" >Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')">Copy</button>
+                    </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>17/02/2022</td>
+                <td>important news</td>
+                <td>Podcasts</td>
+                <td>Positive</td>
+                <td>news</td>
+                <td><button type="button" >Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')">Copy</button>
+                    </td>
+            </tr>
+            <tr>
+                <th scope="row"></th>
+                <td>05/02/2022</td>
+                <td>Important news</td>
+                <td>Radio</td>
+                <td>Negative</td>
+                <td>News</td>
+                <td><button type="button" >Open</button></td>
+                <td id="copy">
+                    <button type="button" onclick="copyEvent('copy')">Copy</button>
+                    </td>
+            </tr>
+            <!-- <tr>
+                <th scope="row"></th>
                 <td>salma</td>
                 <td>salma</td>
                 <td>salma</td>
@@ -230,74 +362,8 @@
                 <td id="copy">
                     <button type="button" onclick="copyEvent('copy')">Copy</button>
                     </td>
-
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td><button type="button" >Open</button></td>
-                <td id="copy">
-                    <button type="button" onclick="copyEvent('copy')">Copy</button>
-                    </td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td><button type="button" >Open</button></td>
-                <td id="copy">
-                    <button type="button" onclick="copyEvent('copy')">Copy</button>
-                    </td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td><button type="button" >Open</button></td>
-                <td id="copy">
-                    <button type="button" onclick="copyEvent('copy')">Copy</button>
-                    </td>
-              </tr>
-              <tr>
-                <th scope="row">5</th>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td><button type="button" >Open</button></td>
-                <td id="copy">
-                    <button type="button" onclick="copyEvent('copy')">Copy</button>
-                    </td>
-              </tr>
-              <tr>
-                <th scope="row">6</th>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td>salma</td>
-                <td><button type="button" >Open</button></td>
-                <td id="copy">
-                    <button type="button" onclick="copyEvent('copy')">Copy</button>
-                    </td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <th scope="row">7</th>
                 <td>salma</td>
                 <td>salma</td>
@@ -309,8 +375,8 @@
                 <td id="copy">
                     <button type="button" onclick="copyEvent('copy')">Copy</button>
                     </td>
-              </tr>
-              <tr>
+            </tr>
+            <tr>
                 <th scope="row">8</th>
                 <td>salma</td>
                 <td>salma</td>
@@ -322,12 +388,12 @@
                 <td id="copy">
                     <button type="button" onclick="copyEvent('copy')">Copy</button>
                     </td>
-              </tr>
-            </tbody>
-          </table>
+            </tr> -->
+        </tbody>
+        </table>
         </div>
         </div>
-    </div>
+    </div> -->
     </div>
     </div> 
     </div>

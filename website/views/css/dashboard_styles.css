@@ -412,9 +412,14 @@ html, body{
 .viewlistenersPageContainer .listeners_list .active{
     background-color: #A785FF;
 }
+
+
 .webmentionsPageContainer{
     display: none;
+    text-align: auto;
     width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
     height: 100%;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -425,6 +430,7 @@ html, body{
 
 .webmentionsPageContainer .listeners_list{
     width: 100%;
+    text-align: auto;
     background: white;
     border-radius: 15px;
     padding: 10px 30px;
@@ -435,11 +441,16 @@ html, body{
     align-items: center;
     gap: 15px;
     overflow-x: scroll;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
 }
 
 .webmentionsPageContainer .listeners_list .listeners_list_item{
     background-color: #CBB7FF;
     color: #2C2C2C;
+    text-align: auto;
     width: 209px;
     height: 116px;
     border-radius: 15px;
@@ -451,6 +462,10 @@ html, body{
     align-items: center;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
 }
 .webmentionsPageContainer .listeners_list .inactive:hover{
     background-color: #A785FF;
@@ -823,4 +838,120 @@ html, body{
     margin-left: 1%;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+}
+.tableOne{
+    background-color: #ffffff;
+    text-align: center;
+    width:100%;
+    height:100%;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    margin-top: 5%;
+}
+
+
+.Twitter{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background: lightskyblue;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
+}
+
+.News{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background:#b6a0f0;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
+}
+
+.Youtube{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background:#f07269;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
+}
+
+.Podcasts{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background:#e7e992;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
+}
+
+.Radio{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background:#eba19f;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
+}
+
+.Positive{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background:#95db8b;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
+}
+
+.Negative{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background:#f07269;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
+}
+.Hybrid{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background:antiquewhite;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
 }
