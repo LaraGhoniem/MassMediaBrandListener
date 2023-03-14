@@ -1018,3 +1018,30 @@ html, body{
     border-style: hidden;
     width: 50%;
 }
+.icon{
+    width: 18.5px;
+   padding-right: 2%;
+vertical-align: middle;
+
+}
+.buttons{
+    text-align: center;
+    align-items: center;
+    pointer-events: none;
+    padding: 10px 10px;
+    background: lightgrey;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 10px;
+    border-style: hidden;
+    width: 50%;
+}
+.icon2{
+    width: 20px;
+   padding-right: 4%;
+vertical-align:text-bottom;
+}
+/* .header{
+    text-align: right;
+    padding-bottom: 20px;
+} */
