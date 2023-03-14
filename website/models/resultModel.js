@@ -9,7 +9,12 @@ const resultSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "listeners",
         required: true
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
     }
+
 }, {timestamps: true})
 
 module.exports = mongoose.model("Result", resultSchema)

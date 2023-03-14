@@ -1,9 +1,9 @@
 const mongoose = require("mongoose")
 
 const listenerSchema = new mongoose.Schema({
-    company_id: {
+    user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "company",
+        ref: "users",
         required: true
     },
     listener_status: {

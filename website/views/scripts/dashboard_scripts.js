@@ -30,43 +30,36 @@ async function logout(){
 }
 
 async function getUserListeners(){
-    await fetch('/company/getCompany/'+userData._id, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-        }
-        }).then(async (res) => {
-            if(res.status === 200){
-                await res.json().then(async (company) => {
-                    await fetch('/listener/id/'+company.data[0]._id, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            }
-                            }).then(async (res) => {
-                                if(res.status === 200){
-                                    await res.json().then(async (data) => {
-                                        if(data.listener.length != 0){
-                                            listenersData = data.listener
-                                            viewStats(listenersData)
-                                        }
-                                    })
-                                }
-                                else{
-                                    console.log(res.status)
-                                }
-                            }).catch((err) => {
-                                console.log(err)
-                            })
+    await fetch('/listener/id/'+userData._id, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            }
+            }).then(async (res) => {
+                if(res.status === 200){
+                    await res.json().then(async (data) => {
+                        if(data.listener.length != 0){
+                            listenersData = data.listener
+                            viewStats(listenersData)
+                            viewListener(listenersData[0]._id, listenersData[0].listener_name)
+                        }
                     })
-                    }
-                    else{
-                        console.log(res.status)
-                    }
-                
-                }).catch((err) => {
-                    console.log(err)
-                })
+                }
+                else{
+                    console.log(res.status)
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
+}
+
+var gradient;
+function getGradient(ctx, chartArea) {
+    gradient = ctx.createLinearGradient(0, 0, 0, 250);
+    gradient.addColorStop(0, 'rgba(227, 185, 255,0.8)');
+    gradient.addColorStop(1, 'rgba(227, 185, 255,0)');
+
+  return gradient;
 }
 
 function navigate(page){
@@ -92,7 +85,8 @@ function navigate(page){
 
             // 
             // 
-            ctx = document.getElementById('mentionslinechart'),
+            
+            ctx = document.getElementById('mentionslinechart');
             new Chart(
                 ctx,
                 {         
@@ -109,9 +103,21 @@ function navigate(page){
                             label: 'Mentions over time',
                             order: screenLeft,
                             data: [65, 59, 80, 81, 56, 55, 40],
-                            fill: false,
-                            borderColor: 'rgb(221,160,221)',
-                            tension: 0.1
+                            fill: true,
+                            borderWidth: 2.5,
+                            backgroundColor: function(context) {
+                                const chart = context.chart;
+                                const {ctx, chartArea} = chart;
+                        
+                                if (!chartArea) {
+                                  // This case happens on initial chart load
+                                  return null;
+                                }
+                                return getGradient(ctx, chartArea);
+                              },
+                            borderColor: 'rgb(210, 145, 255)',
+                            // tension: 0.1
+                            pointStyle: false,
                         
                         }],
                         
@@ -120,8 +126,8 @@ function navigate(page){
                             plugins: {
 
                                 legend: {
-                                    position: 'bottom',
-                                  },
+                                    display: false,
+                                },
                                 }}
                 },
                 
@@ -169,8 +175,8 @@ function navigate(page){
                         plugins: {
 
                             legend: {
-                                position: 'bottom',
-                              },
+                                display: false,
+                            },
                             },
                         indexAxis: 'y',
                       }
@@ -180,6 +186,8 @@ function navigate(page){
             // 
             // summary
             // 
+            
+          
             ctx = document.getElementById('posMentions'),
             new Chart(
                 ctx,
@@ -198,9 +206,10 @@ function navigate(page){
                             order: screenLeft,
                             data: [65, 59, 80, 81, 56, 55, 40],
                             fill: true,
-                            borderColor: 'rgb(221,160,221)',
-                            tension: 0.5
-                        
+                            backgroundColor: "rgb(211,246,236)",
+                            borderColor: 'rgb(137,102,232)',
+                            tension: 0.5,
+                            borderWidth: 1.2
                         }],
                         
                         
@@ -208,8 +217,13 @@ function navigate(page){
                             plugins: {
 
                                 legend: {
-                                    position: 'bottom',
-                                  },
+                                    display: false,
+                                },
+                                },
+                                elements: {
+                                    point:{
+                                        backgroundColor: 'rgb(137,110,240)',
+                                    }
                                 }
                         }
                 },
@@ -260,8 +274,8 @@ function navigate(page){
                         plugins: {
 
                             legend: {
-                                position: 'bottom',
-                              },
+                                display: false,
+                            },
                             }
                       }
                 },
@@ -328,7 +342,8 @@ function navigate(page){
                       options: {
                       plugins: {
                         legend: {
-                            position: 'bottom',
+                            // position: 'bottom',
+                            display: false,
                           },
                         title: {
                           display: true,
@@ -349,35 +364,35 @@ function navigate(page){
                 
             );
             // 
-            ctx = document.getElementById('topTopics'),
-            new Chart(
-                ctx,
-                {         
-                    type: 'bubble',
-                    data: {
-                        labels: ['January',
-                        'February',
-                        'March',
-                        'April',
-                        'May',
-                        'June',],
+            // ctx = document.getElementById('topTopics'),
+            // new Chart(
+            //     ctx,
+            //     {         
+            //         type: 'bubble',
+            //         data: {
+            //             labels: ['January',
+            //             'February',
+            //             'March',
+            //             'April',
+            //             'May',
+            //             'June',],
                         
-                    data: [65, 59, 80, 81, 56, 55, 40]},
-                    options: {
-                      responsive: true,
-                      plugins: {
-                        legend: {
-                          position: 'bottom',
-                        },
-                        title: {
-                          display: true,
-                          text: 'Top topics'
-                        }
-                      }
-                    },
-                },
+            //         data: [65, 59, 80, 81, 56, 55, 40]},
+            //         options: {
+            //           responsive: true,
+            //           plugins: {
+            //             legend: {
+            //               position: 'bottom',
+            //             },
+            //             title: {
+            //               display: true,
+            //               text: 'Top topics'
+            //             }
+            //           }
+            //         },
+            //     },
                 
-            );
+            // );
             // 
             // 
     }
@@ -443,120 +458,39 @@ let response = {
     category_id: "63fb78b1737cba7b6d865aae"
 }
 // get company id by user id
-await fetch('/company/getCompany/'+userData._id, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-        }
-        }).then(async (res) => {
-            if(res.status === 200){
-                console.log("Company found")
-                //convert body to json
-                await res.json().then(async (data) => {
-                    let company_id = data.data[0]._id
-                    await fetch('/listener/add', {
+
+    await fetch('/listener/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "listener_name": listenerName,
+            "listener_status": "inactive",
+            "user_id": userData._id,
+            "category_id": "63fb78b1737cba7b6d865aae"
+        })
+    }).then(async (res) => {
+        if(res.status === 200){
+            console.log("Listener added successfully")
+            await res.json().then(async (data) => {
+                console.log(data)
+                let listener_id = data.listener._id
+                
+                for(let i = 0; i < keywordArray.length; i++){
+                    await fetch('/keyword/add', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            "listener_name": listenerName,
-                            "listener_status": "inactive",
-                            "company_id": company_id,
-                            "category_id": "63fb78b1737cba7b6d865aae"
+                            "keyword": keywordArray[i],
+                            "listener_id": listener_id
                         })
                     }).then(async (res) => {
                         if(res.status === 200){
-                            console.log("Listener added successfully")
-                            await res.json().then(async (data) => {
-                                console.log(data)
-                                let listener_id = data.listener._id
-                                
-                                for(let i = 0; i < keywordArray.length; i++){
-                                    await fetch('/keyword/add', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify({
-                                            "keyword": keywordArray[i],
-                                            "listener_id": listener_id
-                                        })
-                                    }).then(async (res) => {
-                                        if(res.status === 200){
-                                            console.log("Keyword added successfully")
-                                            await res.json().then(async (data) => {
-                                                
-                                            })
-                                        }
-                                        else{
-                                            console.log(res.status)
-                                        }
-                                    }).catch((err) => {
-                                        console.log(err)
-                                    })
-                                }
-                                await fetch("http://127.0.0.1:85/listener/",{
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'Content-Type': 'application/json',
-                                                        "Access-Control-Allow-Origin":  "http://127.0.0.1:85",
-                                                        "Access-Control-Allow-Methods": "POST",
-                                                        "Access-Control-Allow-Headers": "Content-Type, Authorization"
-                                                    },
-                                                    body: JSON.stringify({
-                                                        "listener_id": listener_id,
-                                                        "name": listenerName,
-                                                        "category": "63fb78b1737cba7b6d865aae",
-                                                        "keywords": keywordArray,
-                                                        "user_id": userData._id
-                                                    })
-                                                }).then((res) => {
-                                                    if(res.status === 200){
-                                                        console.log("Listener added to listener service")
-                                                        res.json().then((data) => {
-                                                            listenerData = data
-                                                            console.log(listenerData)
-                                                            innerHTML = ``
-                                                            numOfPositiveSentiments = 0
-                                                            numOfNegativeSentiments = 0
-                                                            numOfNeutralSentiments = 0
-                                                            numOfSpamTweets = 0
-                                                            mentions = ""
-                                                            for(let i = 0; i < listenerData.length; i++){
-                                                                for(let j = 0; j < Object.keys(listenerData[i]).length; j++){
-                                                                    numOfPositiveSentiments += count(listenerData[i][Object.keys(listenerData[i])[j]].news.sentiment, "positive") + count(listenerData[i][Object.keys(listenerData[i])[j]].twitter.sentiment, "positive")
-                                                                    numOfNegativeSentiments = count(listenerData[i][Object.keys(listenerData[i])[j]].news.sentiment, "negative") + count(listenerData[i][Object.keys(listenerData[i])[j]].twitter.sentiment, "negative")
-                                                                    numOfNeutralSentiments = count(listenerData[i][Object.keys(listenerData[i])[j]].news.sentiment, "neutral") + count(listenerData[i][Object.keys(listenerData[i])[j]].twitter.sentiment, "neutral")
-                                                                    numOfSpamTweets = count(listenerData[i][Object.keys(listenerData[i])[j]].twitter.spam, "1")
-                                                                    for(let k = 0; k < listenerData[i][Object.keys(listenerData[i])[j]].twitter.text.length; k++){
-                                                                        mentions += "<div class='mentionContainer'>" + listenerData[i][Object.keys(listenerData[i])[j]].twitter.text[k] + "</div>"
-                                                                    }
-                                                                    for(let k = 0; k < listenerData[i][Object.keys(listenerData[i])[j]].news.text.length; k++){
-                                                                        mentions += "<div class='mentionContainer'><p>" + listenerData[i][Object.keys(listenerData[i])[j]].news.text[k] + "</p></div>"
-                                                                    }
-                                                                }
-                                                            }
-                                                            innerHTML += `
-                                                            <div class="listener-container">
-                                                                <div>Positive Mentions <br> ${numOfPositiveSentiments}</div>
-                                                                <div>Negative Mentions <br> ${numOfNegativeSentiments}</div>
-                                                                <div>Neutral Mentions <br> ${numOfNeutralSentiments}</div>
-                                                                <div>Spam Tweets <br> ${numOfSpamTweets}</div>
-                                                            </div>
-                                                            <div class="listener-mentions-container">
-                                                            ${mentions}
-                                                            </div>
-                                                            `
-                                                            document.getElementById("listener_data_api").innerHTML = innerHTML
-                                                        })
-                                                    }
-                                                    else{
-                                                        console.log(res.status)
-                                                    }
-
-                                                })
-                            })
+                            console.log("Keyword added successfully")
+                            alert("Listener added successfully")
                         }
                         else{
                             console.log(res.status)
@@ -565,14 +499,16 @@ await fetch('/company/getCompany/'+userData._id, {
                         console.log(err)
                     })
                 }
-                )
-            }
-            else{
-                console.log(res.status)
-            }
-        }).catch((err) => {
-            console.log(err)
-        })
+                
+            })
+        }
+        else{
+            console.log(res.status)
+        }
+    }).catch((err) => {
+        console.log(err)
+    })
+
 }else{
     alert("Please fill out all fields")
 }
@@ -592,16 +528,57 @@ function viewStats(listeners){
     let listener_html = document.getElementById("listeners_list_items")
     let listener_html_2 = document.getElementById("listeners_list_items_2")
     let listener_html_inner = `<h4>No Listeners Created</h4>`
+    let listener_html_inner_2 = `<h4>No Listeners Created</h4>`
     if(listeners.length > 0){
         listener_html_inner = ``
+        listener_html_inner_2 = ``
         for(let i = 0; i < listeners.length; i++){
             listener_html_inner += `
-            <div class="listeners_list_item ${(i==0)?'active':'inactive'}">
+            <div id="${listeners[i]._id}" class="listeners_list_item ${(i==0)?'active':'inactive'}" onclick="viewListener('${listeners[i]._id}', '${listeners[i].listener_name}')">
+                <h3>${listeners[i].listener_name}</h3>
+            </div>
+            `
+            listener_html_inner_2 += `
+            <div id="${listeners[i]._id}_2" class="listeners_list_item ${(i==0)?'active':'inactive'}" onclick="viewListenerMentions('${listeners[i]._id}')">
                 <h3>${listeners[i].listener_name}</h3>
             </div>
             `
         }
     }
     listener_html.innerHTML = listener_html_inner
-    listener_html_2.innerHTML = listener_html_inner
+    listener_html_2.innerHTML = listener_html_inner_2
+}
+
+function viewListener(listenerid, listenername){
+    let listenernamecontainer = document.getElementById("listener_name")
+    listenernamecontainer.innerHTML = listenername
+    let listener_html = document.getElementById("listeners_list_items")
+    Array.from(listener_html.children).forEach((node) => {
+        if(node.id === listenerid){
+            if(node.classList.contains("inactive")){
+            node.classList.remove("inactive")
+            node.classList.add("active")}
+        }
+        else{
+            if(node.classList.contains("active")){
+            node.classList.remove("active")
+            node.classList.add("inactive")}
+        }
+    })
+}
+
+function viewListenerMentions(listenerid){
+    let listener_html = document.getElementById("listeners_list_items_2")
+    Array.from(listener_html.children).forEach((node) => {
+        if(node.id === listenerid+"_2"){
+            if(node.classList.contains("inactive")){
+            node.classList.remove("inactive")
+            node.classList.add("active")}
+        }
+        else{
+            if(node.classList.contains("active")){
+            node.classList.remove("active")
+            node.classList.add("inactive")}
+        }
+    })
 }

@@ -144,37 +144,49 @@
         </div>
         <h2 id="listener_name">No Listeners</h2>
         <div class="viewListenerData" id="listener_data_api">
+            <div class="col1">
             <div class="mentions">
-                <canvas  width="400" height="200"  id="mentionslinechart">
+                <canvas    id="mentionslinechart">
                 </canvas>
             </div>
+
+            <div class="row1">
+            <div class="posMentions">
+                <canvas  height="200"  id="posMentions">
+                </canvas>
+            </div>
+            <div class="topKeywords">
+                <canvas height="200" id="topKeywords">
+                </canvas>
+            </div>
+            </div>
+
+            </div>
+
+            <div class="col2">
             <div class="topSources">
                 <canvas  width="300" height="250"  id="topSources">
                 </canvas>
             </div>
+            <div class="sentimentShare">
+                <canvas  width="150" height="150"  id="sentimentShare">
+                </canvas>
+            </div>
+            </div>
+
+            <div class="col3">
             <div class="summary">
                 <canvas  width="300" height="200"  id="summary">
                 </canvas>
             </div>
-            <div class="posMentions">
-                <canvas  width="400" height="200"  id="posMentions">
-                </canvas>
-            </div>
-            <div class="topKeywords">
-                <canvas  width="300" height="300"  id="topKeywords">
-                </canvas>
-            </div>
-            <div class="sentimentShare">
-                <canvas  width="400" height="200"  id="sentimentShare">
-                </canvas>
-            </div>
             <div class="sentimentSource">
-                <canvas  width="600" height="500"  id="sentimentSource">
+                <canvas  width="300" height="500"  id="sentimentSource">
                 </canvas>
             </div>
-            <div class="topTopics">
+            <!-- <div class="topTopics">
                 <canvas  width="400" height="200"  id="topTopics">
                 </canvas>
+            </div> -->
             </div>
                 <!-- <script>
                 new Chart(

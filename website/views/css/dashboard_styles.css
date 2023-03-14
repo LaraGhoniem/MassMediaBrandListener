@@ -387,7 +387,7 @@ html, body{
     justify-content: start;
     align-items: center;
     gap: 15px;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .viewlistenersPageContainer .listeners_list .listeners_list_item{
@@ -440,7 +440,7 @@ html, body{
     justify-content: start;
     align-items: center;
     gap: 15px;
-    overflow-x: scroll;
+    overflow-x: auto;
     -webkit-border-radius: 15px;
     -moz-border-radius: 15px;
     -ms-border-radius: 15px;
@@ -720,34 +720,80 @@ html, body{
     height:400px;
 }
 
-.viewListenerData div{
+.viewListenerData{
+    height: 87vh;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+    gap: 10px;
+}
+
+/* .viewListenerData div{
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+} */
+
+.col1{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.col2{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.col3{
+    width: 62%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.row1{
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }
 
 .viewListenerData .mentions{
-    width: 47%;
-    float: left;
+    width: 100%;
     height: 310px;
-    display: inline-flex;
     background: white;
     border-radius: 15px;
     padding: 12px 30px;
     margin-top: 20px;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .viewListenerData .topSources{
-    width: 20%;
-    display: inline-flex;
+    width: 100%;
     height: 210px;
-    float: left;
     background: white;
     border-radius: 15px;
     padding: 12px 30px;
@@ -755,89 +801,106 @@ html, body{
     margin-top: 20px;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .viewListenerData .summary{
-    width: 29%;
-    height: 310px;
-    display: inline-flex;
-    float: left;
+    width: 100%;
+    height: 250px;
     background: white;
     border-radius: 15px;
     padding: 12px 30px;
     margin-top: 20px;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .viewListenerData .posMentions{
-    width: 30%;
-    height: 200px;
-    display: inline-flex;
-    float: left;
+    width: 100%;
+    height: 231px;
     background: white;
     border-radius: 15px;
     padding: 12px 30px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .viewListenerData .topKeywords{
-    width: 15%;
-    height: 200px;
-    display: inline-flex;
-    float: left;
+    width: 100%;
+    height: 231px;
     background: white;
     border-radius: 15px;
     padding: 5px 10px;
-    margin: 0 2%;
-    margin-top: 20px;
+    /* margin: 0 2%; */
+    /* margin-top: 20px; */
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .viewListenerData .sentimentShare{
-    width: 20%;
-    height: 310px;
-    display: inline-flex;
-    float: left;
-    margin-bottom: 20%;
+    width: 100%;
+    height: 331px;
+    /* margin-bottom: 20%; */
     background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     border-radius: 15px;
-    padding: 10px 00px;
-    margin-top: -80px;
+    padding: 25px;
+    /* padding: 10px 00px; */
+    /* margin-top: -80px; */
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
 
 .viewListenerData .sentimentSource{
-    width: 15%;
-    height: 200px;
+    width: 100%;
+    height: 291px;
     background: white;
-    display: inline-flex;
-    float: left;
     border-radius: 15px;
     padding: 12px 30px;
     margin: 0 2%;
     margin-right: 0;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .viewListenerData .topTopics{
-    width: 13%;
+    width: 100%;
     height: 200px;
     background: white;
-    display: inline-flex;
-    float: left;
     border-radius: 15px;
     padding: 12px 30px;
     margin-top: 20px;
     margin-left: 1%;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .tableOne{
     background-color: #ffffff;
