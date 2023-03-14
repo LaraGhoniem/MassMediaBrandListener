@@ -48,8 +48,25 @@ db = Database()
 #create Engine
 engine = Engine()
 
+# get all listeners from database
+listeners = [data for data in db.find("listeners", {})]
+# get all keywords from keywords collection using listeners ids
+keywords = [[data["keyword"] for data in db.find("keywords", {"listener_id":ObjectId(listener["_id"])})] for listener in listeners]
+# get categories from categories collection using listeners ids
+categories = [[data for data in db.find("Category", {"_id":ObjectId(listener["category_id"])})] for listener in listeners]
+# get all companies from companies collection using listeners ids
+companies = [[data for data in db.find("companies", {"_id":ObjectId(listener["company_id"])})] for listener in listeners]
+# get all users from users collection using company ids
+users = [[User(data["_id"],data["name"],data["email"]) for data in db.find("users", {"_id":ObjectId(company[0]["user_id"])})] for company in companies]
+
+#data["listener_id"],data["name"], data["keywords"], data["category"], user
+listeners = [ObserverListener(listener["_id"],listener["listener_name"],keywords[i],categories[i][0]["_id"],users[i][0]) for i,listener in enumerate(listeners)]
+
+
 @app.post("/listener/")
 async def main(jsonData: JsonData):
+    
+
     data = jsonData.toDict()
 
     #get user data from dict

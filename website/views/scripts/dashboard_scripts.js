@@ -590,6 +590,7 @@ function count(arr, value){
 
 function viewStats(listeners){
     let listener_html = document.getElementById("listeners_list_items")
+    let listener_html_2 = document.getElementById("listeners_list_items_2")
     let listener_html_inner = `<h4>No Listeners Created</h4>`
     if(listeners.length > 0){
         listener_html_inner = ``
@@ -602,4 +603,5 @@ function viewStats(listeners){
         }
     }
     listener_html.innerHTML = listener_html_inner
+    listener_html_2.innerHTML = listener_html_inner
 }

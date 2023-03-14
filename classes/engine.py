@@ -4,7 +4,6 @@ class Engine:
         self.listeners = listeners
     def run(self):
         for listener in self.listeners:
-            if(listener.status == "inactive"):
                 listener.listen()
         
     def result_json(self):

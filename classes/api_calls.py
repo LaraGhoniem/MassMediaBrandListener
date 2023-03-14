@@ -41,23 +41,22 @@ class ApiCall:
         news_array,news_titles_array = self.__news.article_search()
         sentiment_news_results = self.__sentiment.predict_list(news_array)
 
-        print("Podcasts")
-        # podcasts results
-        #3amalna media link lel podcasts hena badal el function
-        media_links = self.get_media_links_by_category_id()
-        for media_link in media_links:
-            if media_link['media_link_type'] == "podcast":
-                podcast = Podcasts("EG", media_link['media_link'])
-                podcasts_titles_array=podcast.podcast_title
-                podcast.download()
-                podcast.converttowav()
-        asr = asr_handler.AsrHandler(self.keyword,"Podcasts")
-        asr.preprocess()
-        asr.trim()
-        Podcast_asr_result = asr.transcribe()
-        asr.delete_all_folders()
+        # print("Podcasts")
+        # # podcasts results
+        # #3amalna media link lel podcasts hena badal el function
+        # media_links = self.get_media_links_by_category_id()
+        # for media_link in media_links:
+        #     if media_link['media_link_type'] == "podcast":
+        #         podcast = Podcasts("EG", media_link['media_link'])
+        #         podcasts_titles_array=podcast.podcast_title
+        #         podcast.download()
+        #         podcast.converttowav()
+        # asr = asr_handler.AsrHandler(self.keyword,"Podcasts")
+        # asr.preprocess()
+        # asr.trim()
+        # Podcast_asr_result = asr.transcribe()
+        # asr.delete_all_folders()
 
-     
         self.result = {"twitter": {
             "text": twitter_results, 
             "sentiment" : sentiment_twitter_results, 
@@ -67,11 +66,13 @@ class ApiCall:
                 "text" : news_array,
                 "title" : news_titles_array,
                 "sentiment" : sentiment_news_results,
-            }, "podcasts": {
-                "text" : Podcast_asr_result,
-                "title" : podcasts_titles_array,
-                "sentiment" : self.__sentiment.predict_list(Podcast_asr_result),
-            }}
+            }
+            # , "podcasts": {
+            #     "text" : Podcast_asr_result,
+            #     "title" : podcasts_titles_array,
+            #     "sentiment" : self.__sentiment.predict_list(Podcast_asr_result),
+            # }
+            }
     def get_media_links_by_category_id(self):
         database = db()
         media_links = [data for data in database.find("media_link",{"category_id":ObjectId(self.category)})]
