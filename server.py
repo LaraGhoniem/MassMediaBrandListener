@@ -67,7 +67,7 @@ for listener in listeners:
 engine.run()
 
 for listener in engine.listeners:
-    db.insert("Result", {"listener_id":ObjectId(listener.id), "result":json.dumps(listener.result), "created_at":datetime.datetime.now()})
+    db.insert("results", {"listener_id":ObjectId(listener.id), "result":json.dumps(listener.result, ensure_ascii = False), "created_at":datetime.datetime.now()})
 
 @app.post("/listener/")
 async def main(jsonData: JsonData):

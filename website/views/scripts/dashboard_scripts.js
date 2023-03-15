@@ -541,7 +541,7 @@ function viewStats(listeners){
     listener_html_2.innerHTML = listener_html_inner_2
 }
 
-function viewListener(listenerid, listenername){
+async function viewListener(listenerid, listenername){
     let listenernamecontainer = document.getElementById("listener_name")
     listenernamecontainer.innerHTML = listenername
     let listener_html = document.getElementById("listeners_list_items")
@@ -556,6 +556,31 @@ function viewListener(listenerid, listenername){
             node.classList.remove("active")
             node.classList.add("inactive")}
         }
+    })
+    await fetch('/listener/result/'+listenerid,{  
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            }}).then(async (res) => {
+                if(res.status==200){
+                    await res.json().then((data) => {
+                        var listener_results = []
+                        var mentions = 0
+                        for(let i = 0; i < data["result"].length; i++){
+                        listener_results.push(JSON.parse(data["result"][i]["result"]))
+                    }
+                    for(let i = 0; i < listener_results.length; i++){
+                        for(let j = 0; j < listener_results[i].length; j++){
+                            // console.log(listener_results[i][j])
+                        if(listener_results[i][j]!=0)
+                            mentions += listener_results[i][Object.keys(listener_results[i][j])]["text"].length
+                        
+                    }}
+                    console.log(mentions)
+                })
+        }
+    }).catch((err) => {
+        console.log(err)
     })
 }
 
