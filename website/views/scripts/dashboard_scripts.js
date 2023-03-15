@@ -56,8 +56,8 @@ async function getUserListeners(){
 var gradient;
 function getGradient(ctx, chartArea) {
     gradient = ctx.createLinearGradient(0, 0, 0, 250);
-    gradient.addColorStop(0, 'rgba(227, 185, 255,0.8)');
-    gradient.addColorStop(1, 'rgba(227, 185, 255,0)');
+    gradient.addColorStop(0, 'rgba(133, 92, 248, 0.4)');
+    gradient.addColorStop(1, 'rgba(133, 92, 248, 0)');
 
   return gradient;
 }
@@ -115,7 +115,7 @@ function navigate(page){
                                 }
                                 return getGradient(ctx, chartArea);
                               },
-                            borderColor: 'rgb(210, 145, 255)',
+                            borderColor: 'rgba(133, 92, 248, 0.6)',
                             // tension: 0.1
                             pointStyle: false,
                         
@@ -140,37 +140,32 @@ function navigate(page){
                     type: 'bar',
                     data:  
                      {
-                        labels: ['January',
-                        'February',
-                        'March',
-                        'April',
-                        'May',
-                        'June',],
+                        labels: ['News',
+                        'Twitter',
+                        'YouTube',
+                        'Blogs',
+                        'Podcasts'],
                         datasets: [{
-                            label: 'Top sources',
-                            data: [65, 59, 80, 81, 56, 55, 40],
+                            label: 'Top keyword mentions',
+                            data: [65, 59, 80, 81, 56],
                             backgroundColor: [
-                              'rgba(255, 99, 132, 0.2)',
-                              'rgba(255, 159, 64, 0.2)',
-                              'rgba(255, 205, 86, 0.2)',
-                              'rgba(75, 192, 192, 0.2)',
-                              'rgba(54, 162, 235, 0.2)',
-                              'rgba(153, 102, 255, 0.2)',
-                              'rgba(201, 203, 207, 0.2)'
+                                'rgb(133,92,248)',
+                              'rgba(133, 92, 248, 0.8)',
+                              'rgba(133, 92, 248, 0.6)',
+                              'rgba(133, 92, 248, 0.5)',
+                              'rgba(101, 101, 102,0.4)',
                             ],
                             borderColor: [
-                              'rgb(255, 99, 132)',
-                              'rgb(255, 159, 64)',
-                              'rgb(255, 205, 86)',
-                              'rgb(75, 192, 192)',
-                              'rgb(54, 162, 235)',
-                              'rgb(153, 102, 255)',
-                              'rgb(201, 203, 207)'
+                              'rgb(133,92,248)',
+                              'rgba(133, 92, 248, 0.8)',
+                              'rgba(133, 92, 248, 0.6)',
+                              'rgba(133, 92, 248, 0.5)',
+                              'rgba(101, 101, 102, 0.4)',
                             ],
                             borderWidth: 1
                           }]
                         
-                    },
+                        },
                     options: {
                         plugins: {
 
@@ -206,7 +201,7 @@ function navigate(page){
                             order: screenLeft,
                             data: [65, 59, 80, 81, 56, 55, 40],
                             fill: true,
-                            backgroundColor: "rgb(211,246,236)",
+                            backgroundColor: "rgb(206, 234, 226)",
                             borderColor: 'rgb(137,102,232)',
                             tension: 0.5,
                             borderWidth: 1.2
@@ -241,28 +236,23 @@ function navigate(page){
                         'February',
                         'March',
                         'April',
-                        'May',
-                        'June',],
+                        'May',],
                         datasets: [{
                             label: 'Top keyword mentions',
-                            data: [65, 59, 80, 81, 56, 55, 40],
+                            data: [65, 59, 80, 81, 56],
                             backgroundColor: [
-                              'rgba(255, 99, 132, 0.2)',
-                              'rgba(255, 159, 64, 0.2)',
-                              'rgba(255, 205, 86, 0.2)',
-                              'rgba(75, 192, 192, 0.2)',
-                              'rgba(54, 162, 235, 0.2)',
-                              'rgba(153, 102, 255, 0.2)',
-                              'rgba(201, 203, 207, 0.2)'
+                                'rgb(133,92,248)',
+                              'rgba(133, 92, 248, 0.8)',
+                              'rgba(133, 92, 248, 0.6)',
+                              'rgba(133, 92, 248, 0.5)',
+                              'rgba(101, 101, 102,0.4)',
                             ],
                             borderColor: [
-                              'rgb(255, 99, 132)',
-                              'rgb(255, 159, 64)',
-                              'rgb(255, 205, 86)',
-                              'rgb(75, 192, 192)',
-                              'rgb(54, 162, 235)',
-                              'rgb(153, 102, 255)',
-                              'rgb(201, 203, 207)'
+                              'rgb(133,92,248)',
+                              'rgba(133, 92, 248, 0.8)',
+                              'rgba(133, 92, 248, 0.6)',
+                              'rgba(133, 92, 248, 0.5)',
+                              'rgba(101, 101, 102, 0.4)',
                             ],
                             borderWidth: 1
                           }]
@@ -298,9 +288,9 @@ function navigate(page){
                             label: 'Sentiment share',
                             data: [300, 50, 100],
                             backgroundColor: [
-                              'rgb(255, 99, 132)',
-                              'rgb(54, 162, 235)',
-                              'rgb(255, 205, 86)'
+                                'rgb(133,92,248)',
+                                'rgba(80,55,149)',
+                                'rgb(18,0,29)',
                             ],
                             hoverOffset: 4
                           }]
@@ -323,20 +313,22 @@ function navigate(page){
                 {         
                     type: 'bar',
                     data: {
-                        labels: ['January',
-                        'February',
-                        'March',
-                        'April',
-                        'May',
-                        'June',],
+                        labels: ['News',
+                        'Twitter',
+                        'YouTube',
+                        'Blogs',
+                        'Podcasts'],
                         
                         datasets: [
                         {label: 'Positive',
-                        data: [65, 59, 80, 81, 56, 55, 40]},
+                        data: [65, 59, 80, 81, 56, 55, 40],
+                    backgroundColor:'rgba(133, 92, 248, 0.6)'},
                         {label: 'Neutral',
-                        data: [75, 5, 10, 0, 45, 60, 10]},
+                        data: [75, 5, 10, 0, 45, 60, 10],
+                    backgroundColor:'rgba(133, 92, 248)'},
                         {label: 'Negative',
-                        data: [20, 15, 5, 30, 40, 10, 5]}
+                        data: [20, 15, 5, 30, 40, 10, 5],
+                    backgroundColor:'rgb(18,0,29)',}
                         ]
                     },
                       options: {
