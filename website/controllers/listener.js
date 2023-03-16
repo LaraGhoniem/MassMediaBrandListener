@@ -1,7 +1,6 @@
 const Listener = require('../models/listenerModel')
 
 exports.addListener = (req, res) => {
-    console.log(req.body)
     const listener = new Listener(req.body)
     listener.save((err, listener) => {
         if(err) {

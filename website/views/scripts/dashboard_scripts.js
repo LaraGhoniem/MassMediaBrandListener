@@ -42,6 +42,7 @@ async function getUserListeners(){
                             listenersData = data.listener
                             viewStats(listenersData)
                             viewListener(listenersData[0]._id, listenersData[0].listener_name)
+                            viewListenerMentions(listenersData[0]._id, listenersData[0].listener_name)
                         }
                     })
                 }
@@ -531,7 +532,7 @@ function viewStats(listeners){
             </div>
             `
             listener_html_inner_2 += `
-            <div id="${listeners[i]._id}_2" class="listeners_list_item ${(i==0)?'active':'inactive'}" onclick="viewListenerMentions('${listeners[i]._id}')">
+            <div id="${listeners[i]._id}_2" class="listeners_list_item ${(i==0)?'active':'inactive'}" onclick="viewListenerMentions('${listeners[i]._id}', '${listeners[i].listener_name}')">
                 <h3>${listeners[i].listener_name}</h3>
             </div>
             `
@@ -572,8 +573,8 @@ async function viewListener(listenerid, listenername){
                     for(let i = 0; i < listener_results.length; i++){
                         for(let j = 0; j < listener_results[i].length; j++){
                             // console.log(listener_results[i][j])
-                        if(listener_results[i][j]!=0)
-                            mentions += listener_results[i][Object.keys(listener_results[i][j])]["text"].length
+                        // if(listener_results[i][j]!=0)
+                            // mentions += listener_results[i][Object.keys(listener_results[i][j])]["text"].length
                         
                     }}
                     console.log(mentions)
@@ -584,18 +585,58 @@ async function viewListener(listenerid, listenername){
     })
 }
 
-function viewListenerMentions(listenerid){
+async function viewListenerMentions(listenerid, listenername){
+    let listenernamecontainer = document.getElementById("listener_name_mentions")
+    listenernamecontainer.innerHTML = listenername
     let listener_html = document.getElementById("listeners_list_items_2")
     Array.from(listener_html.children).forEach((node) => {
         if(node.id === listenerid+"_2"){
             if(node.classList.contains("inactive")){
-            node.classList.remove("inactive")
-            node.classList.add("active")}
+                node.classList.remove("inactive")
+                node.classList.add("active")
+            }
         }
         else{
             if(node.classList.contains("active")){
-            node.classList.remove("active")
-            node.classList.add("inactive")}
+                node.classList.remove("active")
+                node.classList.add("inactive")
+            }
         }
+    })
+    await fetch('/listener/result/'+listenerid,{  
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            }}).then(async (res) => {
+                if(res.status==200){
+                    await res.json().then((data) => {
+                        var listener_results = []
+                        var mentions = 0
+                        for(let i = 0; i < data["result"].length; i++){
+                        listener_results.push(JSON.parse(data["result"][i]["result"]))
+                    }
+                    for(let i = 0; i < listener_results.length; i++){
+                        for(let j = 0; j < listener_results[i].length; j++){
+                            let keyword = Object.keys(listener_results[i][j])[0]
+                            let twitter_text = listener_results[i][j][keyword]["twitter"]["text"]
+                            let news_text = listener_results[i][j][keyword]["news"]["text"]
+                            for(let k = 0; k < twitter_text.length; k++){
+                                if(twitter_text[k].length > 255){
+                                    twitter_text[k] = twitter_text[k].slice(0, 255)
+                                    twitter_text[k] += "..."
+                                }
+                            }
+                            for(let k = 0; k < news_text.length; k++){
+                                if(news_text[k].length > 255){
+                                    news_text[k] = news_text[k].slice(0, 255)
+                                    news_text[k] += "..."
+                                }
+                            }
+                        }
+                    }
+                })
+        }
+    }).catch((err) => {
+        console.log(err)
     })
 }
