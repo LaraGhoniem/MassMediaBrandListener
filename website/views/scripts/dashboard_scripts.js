@@ -297,8 +297,8 @@ function navigate(page){
                             'Negative'
                           ],
                           datasets: [{
-                            label: sentimentsharedata,
-                            data: [300, 50, 100],
+                            label: 'Number of mentions',
+                            data: sentimentsharedata,
                             backgroundColor: [
                                 'rgb(133,92,248)',
                                 'rgba(80,55,149)',
@@ -630,6 +630,16 @@ async function viewListener(listenerid, listenername){
                             else
                                 keywordmentions[keyword] += (twitter_text.length + news_text.length)
 
+                            if(sentimentsharedata[0] == 0 && sentimentsharedata[1] == 0 && sentimentsharedata[2] == 0){
+                                sentimentsharedata[0]=(twitter_pos+news_pos)
+                                sentimentsharedata[1]=(twitter_neu+news_neu)
+                                sentimentsharedata[2]=(twitter_neg+news_neg)}
+                            else{
+                                sentimentsharedata[0]+=(twitter_pos+news_pos)
+                                sentimentsharedata[1]+=(twitter_neu+news_neu)
+                                sentimentsharedata[2]+=(twitter_neg+news_neg)}
+
+
                             sentimentsourcepos[0] += news_pos
                             sentimentsourcepos[1] += twitter_pos
                             sentimentsourceneu[0] += news_neu
@@ -643,19 +653,22 @@ async function viewListener(listenerid, listenername){
 
                             mentions += twitter_text.length + news_text.length
                             // console.log(twitter_text.length)
-
                             topsourcesdata[0]+=news_text.length
                             topsourcesdata[1]+=twitter_text.length
+
+                           
+    
                         }
+                        console.log(sentimentsharedata)
+
                         // console.log('b')          
                         // console.log(keywordmentions)
-
                         // keywordmentions.sort(function(first, second) {
                         //         return second[1] - first[1];
                         // })
                         // keywordmentions = keywordmentions.slice(0,5)
                         // console.log('a')
-                        // console.log(keywordmentions)    
+                        // console.log(keywordmentions)   
 
                         mentionschartdata.push(mentions)
                         var created_at = new Date(listener_results[i]["created_at"].substring(0,listener_results[i]["created_at"].indexOf('T')))
@@ -663,9 +676,6 @@ async function viewListener(listenerid, listenername){
                        
                         posmentionslabels.push(created_at.getDate()+'/'+(created_at.getMonth()+1))
                         posmentionsdata.push((twitter_pos+news_pos))
-                        sentimentsharedata[0]+=(twitter_pos+news_pos)
-                        sentimentsharedata[1]+=(twitter_neu+news_neu)
-                        sentimentsharedata[2]+=(twitter_neg+news_neg)
 
                     }    
                     var items = Object.keys(keywordmentions).map(function(key) {
