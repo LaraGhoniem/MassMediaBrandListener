@@ -62,13 +62,14 @@ class TwitterAPI:
         print(self.keyword)
         query_params = {
         'query': self.keyword + f' lang:{lang}',
-        'max_results':'100',
+        'max_results':'10',
         'tweet.fields': 'author_id,in_reply_to_user_id,entities,public_metrics,created_at,text,lang'
         }
         json_response = self.connect_to_endpoint(query_params)
         preprocessed_text = []
         self.tweet_data = []
         self.tweets_preprocessed_array = []
+        counter = 0
 
         
         while json_response["meta"].get("next_token"):
@@ -81,6 +82,9 @@ class TwitterAPI:
 
             self.tweet_data.extend(self.data_array)
             self.tweets_preprocessed_array.extend(self.preprocessed_text)
+            if(counter== 10):
+                break
+            counter += 1
 
         return {"preprocessed_text": self.tweets_preprocessed_array, "tweet_data": self.tweet_data}
     
