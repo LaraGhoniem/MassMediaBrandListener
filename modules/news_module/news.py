@@ -18,7 +18,6 @@ class NewsApi:
         title_array=[]
         response = requests.get(self.url)
         data = json.loads(response.content)
-        print(len(data["articles"]))
         for i in range(len(data["articles"])):
             try:
                 response = requests.get(data["articles"][i]["url"])
@@ -31,7 +30,7 @@ class NewsApi:
                     print("Failed to retrieve webpage. Status code:", response.status_code)
             except:
                 continue
-        return content_array,title_array
+        return content_array,title_array,data["articles"]
 
 
 

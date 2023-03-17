@@ -15,6 +15,7 @@ def predict(sentence):
 
 
 def predict_list(sent_lst):
+    
     url = "http://mazajak.inf.ed.ac.uk:8000/api/predict_list"
     to_sent = {'data': sent_lst}
     data = json.dumps(to_sent)

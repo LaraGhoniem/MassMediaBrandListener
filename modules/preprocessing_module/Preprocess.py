@@ -33,6 +33,8 @@ class Preprocess:
     def SpamPreProcess(self):
         self.data = [self.removeStopWords(tweet) for tweet in self.data]
         self.data = ''.join(self.data)
+    def removeEnglishWords(self):
+        return [re.sub(r'[a-zA-Z]+', '', text) for text in self.data]
     def ArticlePreProcess(self,text):
         text = re.sub(r'@\w+', '',text)
         text = re.sub(r'https?://\S+', '', text)

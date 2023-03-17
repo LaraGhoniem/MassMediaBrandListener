@@ -17,11 +17,12 @@ class ApiCall:
         self.__podcasts=Podcasts("EG",keyword)
     def send(self):
         # print("Youtube Downloading")
-        #youtube results
+        # # youtube results
         # media_links = self.get_media_links_by_category_id()
         # for media_link in media_links:
-        #     youtube = youtube_handler.Youtube(media_link['media_link'])
-        #     youtube.download("modules/youtube_module/downloads")
+        #     if media_link['media_link_type'] == "youtube":
+        #         youtube = youtube_handler.Youtube(media_link['media_link'])
+        #         youtube.download("modules/youtube_module/downloads")
         # #asr results
         # asr = asr_handler.AsrHandler(self.keyword,"YouTube")
         # asr.preprocess()
@@ -33,12 +34,13 @@ class ApiCall:
         print("Twitter")
         #twitter resuls
         twitter_results = self.__twitter.getResponse("ar")
-        spam_twitter_results = self.__twitter.spamFilter(twitter_results)
-        sentiment_twitter_results = self.__sentiment.predict_list(twitter_results)
+        twitter_links_dates = self.__twitter.getLinksAndDates(twitter_results["tweet_data"])
+        spam_twitter_results = self.__twitter.spamFilter(twitter_results["preprocessed_text"])
+        sentiment_twitter_results = self.__sentiment.predict_list(twitter_results["preprocessed_text"])
         
         print("News")
         #articles results
-        news_array,news_titles_array = self.__news.article_search()
+        news_array,news_titles_array,other_data = self.__news.article_search()
         sentiment_news_results = self.__sentiment.predict_list(news_array)
 
         # print("Podcasts")
@@ -60,13 +62,20 @@ class ApiCall:
         self.result = {"twitter": {
             "text": twitter_results, 
             "sentiment" : sentiment_twitter_results, 
-            "spam" : [str(i) for i in spam_twitter_results]
+            "spam" : [str(i) for i in spam_twitter_results],
+            "links_dates" : twitter_links_dates
             }, 
             "news": {
                 "text" : news_array,
+                "links" : [data["url"] for data in other_data],
+                "publishedAt" : [data["publishedAt"] for data in other_data],
                 "title" : news_titles_array,
                 "sentiment" : sentiment_news_results,
-            }
+            },
+            # "youtube": {
+            #     "text" : youtube_asr_result,
+            #     "sentiment" : self.__sentiment.predict_list(youtube_asr_result),
+            # },
             # , "podcasts": {
             #     "text" : Podcast_asr_result,
             #     "title" : podcasts_titles_array,
