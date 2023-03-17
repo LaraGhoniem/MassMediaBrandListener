@@ -111,6 +111,7 @@ html, body{
 .GeneralContainer{
     width: 100%;
     height: 100%;
+    display: none;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -366,13 +367,11 @@ html, body{
 .viewlistenersPageContainer{
     display: none;
     width: 100%;
-    height: 100%;
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
+    height: 95vh;
     font-family: 'Rubik', sans-serif;
     padding: 0 30px;
     /* margin-top: -50px; */
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 
@@ -415,7 +414,7 @@ html, body{
 
 
 .webmentionsPageContainer{
-    display: none;
+    display: block;
     text-align: auto;
     width: 100%;
     border-collapse: collapse;
@@ -721,11 +720,12 @@ html, body{
 }
 
 .viewListenerData{
-    height: 87vh;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr 3fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 10px;
+    overflow: hidden;
+    padding-bottom: 30px;
 }
 
 /* .viewListenerData div{
@@ -757,7 +757,7 @@ html, body{
 }
 
 .col3{
-    width: 62%;
+    width: 60%;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -778,7 +778,7 @@ html, body{
 
 .viewListenerData .mentions{
     width: 100%;
-    height: 310px;
+    height: 360px;
     background: white;
     border-radius: 15px;
     padding: 12px 30px;
@@ -791,9 +791,19 @@ html, body{
     align-items: center;
 }
 
+.viewListenerData .mentions h1{
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Rubik', sans-serif;
+    text-align: left;
+}
+
 .viewListenerData .topSources{
     width: 100%;
-    height: 210px;
+    height: 255px;
     background: white;
     border-radius: 15px;
     padding: 12px 30px;
@@ -837,6 +847,64 @@ html, body{
     align-items: center;
 }
 
+.viewListenerData .posMentions h1{
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Rubik', sans-serif;
+    text-align: left;
+}
+.viewListenerData .topKeywords h1{
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Rubik', sans-serif;
+    text-align: left;
+}
+.viewListenerData .topSources h1{
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Rubik', sans-serif;
+    text-align: left;
+}
+.viewListenerData .sentimentShare h1{
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Rubik', sans-serif;
+    text-align: left;
+}
+.viewListenerData .summary h1{
+    margin: 0;
+    padding: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Rubik', sans-serif;
+    text-align: left;
+}
+.viewListenerData .sentimentSource h1{
+    margin: 0;
+    padding: 0;
+    
+    font-size: 15px;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Rubik', sans-serif;
+    text-align: left;
+}
+
+
+
 .viewListenerData .topKeywords{
     width: 100%;
     height: 231px;
@@ -857,6 +925,7 @@ html, body{
     width: 100%;
     height: 331px;
     /* margin-bottom: 20%; */
+
     background: white;
     display: flex;
     justify-content: center;
@@ -872,7 +941,7 @@ html, body{
 
 .viewListenerData .sentimentSource{
     width: 100%;
-    height: 291px;
+    height: 331px;
     background: white;
     border-radius: 15px;
     padding: 12px 30px;
@@ -958,9 +1027,10 @@ html, body{
 
 .table_container table tr td:last-child div{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 20px 10%;
+    gap: 4px;
+    /* padding: 20px 5%; */
 }
 
 .table_container table tr td:last-child div button{
@@ -975,7 +1045,7 @@ html, body{
     font-size: 16px;
     color: #222222;
     background: #E9E9E9;
-    border-radius:6px;
+    border-radius:7px;
     outline: none;
     border: none;
 }
