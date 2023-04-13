@@ -1,3 +1,4 @@
+
 async function getDashboardData() {
   const response = await fetch("/listener-data");
   const data = await response.json();
@@ -719,6 +720,20 @@ async function viewListener(listenerid, listenername){
     })
 }
 
+const sentiment = {
+    "negative":`<button type="button" class="Negative" id="Negative">Negative</button>`,
+    "positive":`<button type="button" class="Positive" id="Positive">Positive</button>`, 
+    "neutral":`<button type="button" class="Neutral" id="Neutral">Neutral</button>`
+}
+const spam = {
+    "0":"",
+    "1": `<button type="button" class="Spam" id="Spam"><i class='bx bx-error'></i> Spam</button>`
+}
+
+// Pagination
+var currentPage = 0
+var source_parts = 0
+
 async function viewListenerMentions(listenerid, listenername){
     let listenernamecontainer = document.getElementById("listener_name_mentions")
     listenernamecontainer.innerHTML = listenername
@@ -737,162 +752,262 @@ async function viewListenerMentions(listenerid, listenername){
             }
         }
     })
+    document.getElementById("table-container").style.display = "none"
+    document.getElementById("loading-container").style.display = "flex"
     await fetch('/listener/result/'+listenerid,{  
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            }}).then(async (res) => {
-                if(res.status==200){
-                    await res.json().then((data) => {
-                        var listener_results = []
-                        for(let i = 0; i < data["result"].length; i++){
-                            var jsonvar = JSON.parse(data["result"][i]["result"])
-                            jsonvar["created_at"] = data["result"][i]["created_at"]
-                            listener_results.push(jsonvar)
-                        }
-                    let mentions_table = document.getElementById("mentions-table")
-                    let sentiment = {"negative":`
-                        <td><button type="button" class="Negative" id="Negative">Negative</button></td>
-                    `, "positive":`
+    }}).then(async (res) => {
+        if(res.status==200){
+            await res.json().then((data) => {
+                var listener_results = []
+                for(let i = 0; i < data["result"].length; i++){
+                    var jsonvar = JSON.parse(data["result"][i]["result"])
+                    jsonvar["created_at"] = data["result"][i]["created_at"]
+                    listener_results.push(jsonvar)
+                }
+                currentPage = 0
+                source_parts = 0
+                // Initialize pagination div
+                let pagination_div = document.getElementById("pagination_div")
+                pagination_div.innerHTML = ""
+                // calculate number of pages
+                const all_listener_length = listener_results.length
+                var pages = 0
                 
-                        <td><button type="button" class="Positive" id="Positive">Positive</button></td>
-                    `, "neutral":`
+                for(let i = 0; i < all_listener_length; i++){
+                    const listener_length = listener_results[i].length
+                    for(let j = 0; j < listener_length; j++){
+                        const keyword = Object.keys(listener_results[i][j])[0]
+                        pages += listener_results[i][j][keyword]["twitter"]["text"]["preprocessed_text"].length
+                        pages += listener_results[i][j][keyword]["news"]["text"].length
+                        source_parts++
+                    }
+                }
+                // console.log(pages)
+                pages = Math.ceil(pages/50)
                 
-                        <td><button type="button" class="Neutral" id="Neutral">Neutral</button></td>
-                    `}
-                    let spam = {
-                        "0":"",
-                        "1": `
-                            <button type="button" class="Spam" id="Spam"><i class='bx bx-error'></i> Spam</button>
-                        `
-                    }
-                    var innerHTML = ``
-                    mentions_table.innerHTML = `
-                        <tr>
-                <!-- <header class="header"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAASFJREFUWEftmOENwiAQRl8n0E0cQTfQEXQDN1AnUDfQDRxBN9IJNF/SJvxoIUehaSOXkDblKI+POwqtGJlVI+NhUkBz4AxsAN1b7AbsLA0aX59CD2Ad89K6TRSUD+jbA6ZpaoZKDXQFVsDCGYwJKjXQCbgAz1ioHEDHOgmioHIBacaUmWaonEBRULmBzFBDAHVBtfadGkgxo9Jmiqm9UzEIkGUt7Q2kNUYpLdP1YOm9xbcAhQT8H4VeTmbpw7oMSVPXZ1MoNtgLUGjmikKh2BpcoQLUfMu6lMiukLu10AKoIrM+954JU++HQqnu1vcOaktnId9P1/E851HaB3UHtm0OPiBtOXXqVKzMQkM21AtGW9m3FcjQRzrXSf0fSjdsw5t+eHp0JbEeJ3cAAAAASUVORK5CYII="class="icon"/>Create Report</header> -->
-                <th scope="col"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAJlJREFUWEftlcEKwCAMQ+ufb1++4cGRw2zEIrQQT2JnF19TbZZstGR6TIJYRURIhBgBFi/loQdOg8JxnR3Yi//C8AhJUMdZykMRf2zvFSGGziN0mdnotBsS4TrL78Ux5/ed2n5y2S4R6qUZYzaPlAxzLgmK/Gx7r9qeoStFSK89e+3TEWL+OxIvZeojBFhSERIhRoDF5SFG6AUGLBYl/5ufmwAAAABJRU5ErkJggg==" class="icon"/>Date</th>
-                <th scope="col">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAJlJREFUWEftlcEKwCAMQ+ufb1++4cGRw2zEIrQQT2JnF19TbZZstGR6TIJYRURIhBgBFi/loQdOg8JxnR3Yi//C8AhJUMdZykMRf2zvFSGGziN0mdnotBsS4TrL78Ux5/ed2n5y2S4R6qUZYzaPlAxzLgmK/Gx7r9qeoStFSK89e+3TEWL+OxIvZeojBFhSERIhRoDF5SFG6AUGLBYl/5ufmwAAAABJRU5ErkJggg==" class="icon"/>
-                    Mention</th>
-                <th scope="col">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAJlJREFUWEftlcEKwCAMQ+ufb1++4cGRw2zEIrQQT2JnF19TbZZstGR6TIJYRURIhBgBFi/loQdOg8JxnR3Yi//C8AhJUMdZykMRf2zvFSGGziN0mdnotBsS4TrL78Ux5/ed2n5y2S4R6qUZYzaPlAxzLgmK/Gx7r9qeoStFSK89e+3TEWL+OxIvZeojBFhSERIhRoDF5SFG6AUGLBYl/5ufmwAAAABJRU5ErkJggg==" class="icon"/>
-
-                    Source</th>
-                <th scope="col">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAJlJREFUWEftlcEKwCAMQ+ufb1++4cGRw2zEIrQQT2JnF19TbZZstGR6TIJYRURIhBgBFi/loQdOg8JxnR3Yi//C8AhJUMdZykMRf2zvFSGGziN0mdnotBsS4TrL78Ux5/ed2n5y2S4R6qUZYzaPlAxzLgmK/Gx7r9qeoStFSK89e+3TEWL+OxIvZeojBFhSERIhRoDF5SFG6AUGLBYl/5ufmwAAAABJRU5ErkJggg==" class="icon"/>
-                    Sentiment</th>
-                <th scope="col">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAJlJREFUWEftlcEKwCAMQ+ufb1++4cGRw2zEIrQQT2JnF19TbZZstGR6TIJYRURIhBgBFi/loQdOg8JxnR3Yi//C8AhJUMdZykMRf2zvFSGGziN0mdnotBsS4TrL78Ux5/ed2n5y2S4R6qUZYzaPlAxzLgmK/Gx7r9qeoStFSK89e+3TEWL+OxIvZeojBFhSERIhRoDF5SFG6AUGLBYl/5ufmwAAAABJRU5ErkJggg==" class="icon"/>
-                    Summary</th>
-                <th scope="col">
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAJlJREFUWEftlcEKwCAMQ+ufb1++4cGRw2zEIrQQT2JnF19TbZZstGR6TIJYRURIhBgBFi/loQdOg8JxnR3Yi//C8AhJUMdZykMRf2zvFSGGziN0mdnotBsS4TrL78Ux5/ed2n5y2S4R6qUZYzaPlAxzLgmK/Gx7r9qeoStFSK89e+3TEWL+OxIvZeojBFhSERIhRoDF5SFG6AUGLBYl/5ufmwAAAABJRU5ErkJggg==" class="icon"/>
-                    URL</th>
-            </tr>
-                    `
-                    for(let i = 0; i < listener_results.length; i++){
-                        var created_at = new Date(listener_results[i]["created_at"])
-                        for(let j = 0; j < listener_results[i].length; j++){
-                            let keyword = Object.keys(listener_results[i][j])[0]
-                            let twitter_text = listener_results[i][j][keyword]["twitter"]["text"]["preprocessed_text"]
-                            let twitter_links_dates = listener_results[i][j][keyword]["twitter"]["links_dates"]
-                            let twitter_sentiment = listener_results[i][j][keyword]["twitter"]["sentiment"]
-                            let twitter_spam_tweets = listener_results[i][j][keyword]["twitter"]["spam"]
-                            let news_text = listener_results[i][j][keyword]["news"]["text"]
-                            let news_links = listener_results[i][j][keyword]["news"]["links"]
-                            let news_links_dates = listener_results[i][j][keyword]["news"]["publishedAt"]
-                            let news_sentiment = listener_results[i][j][keyword]["news"]["sentiment"]
-                            for(let k = 0; k < twitter_text.length; k++){
-                                twitter_text[k] = twitter_text[k].replace(/\s+/g, ' ').replace(/"/g, '\\"')
-                                var twitter_text_single = twitter_text[k]
-                                if(twitter_text_single.length > 128){
-                                    twitter_text_single = twitter_text_single.slice(0, 128)
-                                    twitter_text_single += `...\n<button onclick='popUpMention("${twitter_text[k]}","twitter","${twitter_sentiment[k]}","${twitter_links_dates[k]["link"]}","${twitter_links_dates[k]["date"]}","${twitter_spam_tweets[k]}","${Object.keys(listener_results[i][j])[0]}")'>View more <i class='bx bx-expand-alt'></i></button>`
-                                }
-                                let tweet_published_at = new Date(twitter_links_dates[k]["date"])
-                                // let wrapped_keyword = `<span style="color: green; font-weight: 900">${keyword}</span>`
-                                // twitter_text_single = twitter_text_single.replace(keyword, wrapped_keyword)
-                                // twitter_text_single = twitter_text_single.replace(keyword.toLowerCase(), wrapped_keyword)
-                                // twitter_text_single = twitter_text_single.replace(keyword.toUpperCase(), wrapped_keyword)
-                                innerHTML += `<tr>
-                                    <td id="Data">${tweet_published_at.getDate() + "/" + (tweet_published_at.getMonth()+1) + "/" + tweet_published_at.getFullYear()}</td>
-                                    <td id="Mention"> 
-                                        <div class="mention_text">
-                                            <p><bdi>${twitter_text_single}</bdi></p>
-                                        </div> 
-                                    </td>
-                                    <td>
-                                        <div class="source_item">
-                                            <button type="button" class="Twitter" id="Twitter">
-                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAe9JREFUWEftl4EtREEQhv+rgA7oABWgAjpABagAFaADKkAFlEAF6IAO5JPdl727nX0zL3dxkjfJ5XJ2dvbff/6ZHROtmE1WDI9GQH0ZGRn6C4a2JZ1K2pS0J+lV0oukW0kfBaD15MN6Z7WU5UB3fbeprJ9Jum7sO0mgDiQdS9qZAVmtshyUzRFQh5IeApc4l3Qz619jCHp3k6MXFPS/S+LbY1yU9MEQTH3lTTVAj5KgNBu/AdZtqpwYZYcQ34XGmhqq6QAw/P3euP6lpAsPNcnnLTEzJWjWagxRGc9GcIDBGBVTBkMLVJbXriRxiTmzGiM5PnJEB1ROJRfxWlXQFkPoAWHDRBa39yCv3346w8VQFjU391aNF0j2CwGKCjQKxsrMbxyrU9NTlmVPkpBF1SxRL5MlU9BN6lKfANjGAqmiGfJWmk22NQ9RxmupX/CCL8LM/pOD9wGyGuQQcL3s9KWMdW+D9AB0PdSeEbZ8/T0H13yalVVu8ADCHz3xoVy3gqh4SNnbmha6kF5AbKDieEAj3TsExqMhqgtGAEO5RoxRhZHFxYxVZVDL4ZT70FL/TD0M7YXNejq4GaMlwLxGeqjKuTnZG8CTsizmPOvkcYTDSQVzMTMRE0L5L04Ew5RvRNSDD4lsHAH1sTUy9O8Y+gEpWlYl824o1gAAAABJRU5ErkJggg=="class="icon"/>Twitter</button>
-                                            ${spam[twitter_spam_tweets[k]]}
-                                        </div>
-                                    </td>
-                                    ${sentiment[twitter_sentiment[k]]}
-                                    <td id="Summary">Twitter</td>
-                                    <td>
-                                        <div>
-                                            <button type="button" id="Open" onclick="window.open('${twitter_links_dates[k]["link"]}', '_blank')">
-                                                <i class='bx bx-link-external'></i>
-                                                Open
-                                            </button>
-                                            <button type="button" onclick="copyToClipboard('${twitter_links_dates[k]["link"]}')" id="Copy">
-                                                <i class='bx bx-link' ></i>
-                                                Copy
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>`
-                            }
-                            for(let k = 0; k < news_text.length; k++){
-                                if(news_text[k].length > 128){
-                                    news_text[k] = news_text[k].slice(0, 128)
-                                    news_text[k] += "..."
-                                }
-                                let wrapped_keyword = `<span style="color: green; font-weight: 900">${keyword}</span>`
-                                news_text[k] = news_text[k].replace(keyword, wrapped_keyword)
-                                news_text[k] = news_text[k].replace(keyword.toLowerCase(), wrapped_keyword)
-                                news_text[k] = news_text[k].replace(keyword.toUpperCase(), wrapped_keyword)
-                                let news_published_at = new Date(news_links_dates[k])
-                                innerHTML += `<tr>
-                                    <td id="Data">${news_published_at.getDate() + "/" + news_published_at.getMonth() + "/" + news_published_at.getFullYear()}</td>
-                                    <td id="Mention"> 
-                                        <div class="mention_text">
-                                            <p>${news_text[k]}</p>
-                                        </div> 
-                                    </td>
-                                    <td>
-                                        <div class="source_item">
-                                            <button type="button" class="News" id="News">
-                                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAASlJREFUWEftV9ERgjAMfUygbuIGuoGj6AbqCG6gGziCjuAkuoFe7oCLAfqovVbQ9o4fmgeP95ImFBjYKgbGB5kQcyQr5KvQDsAawJQBP9g/ANgwnLXsyQAB+w8AM4ZPSUi40JwdHaErgItD5q3a25u4JYCFuacFkHytUqTGMoUkUIBdS+ecfZbgNGFrWSv2pwlZJcUyufTSAkRXiFV0cssGR8i3yqJb9p9VJoei62DUlZWkyvokqk9McNn7vKxPbDAh1stcJFgvi1JlLkJf6WXJCbEqY5Z19TIZke8KXOcW6/Z9EtUnRmbqUzlbV6OJ5GlNPDWhNvJvM5cldAaw8vnkwNgbgHnXfCL3xdtjKeEk8GUueHWcNKZR+hcQkVTrozMhpnhWaHQKvQDQTFYlSOk9NQAAAABJRU5ErkJggg=="class="icon"/>
-                                            News</button>
-                                        </div>
-                                    </td>
-                                    ${sentiment[news_sentiment[k]]}
-                                    <td id="Summary">News</td>
-                                    <td>
-                                        <div>
-                                            <button type="button" id="Open" onclick="window.open('${news_links[k]}', '_blank')">
-                                                <i class='bx bx-link-external'></i>
-                                                Open
-                                            </button>
-                                            <button type="button" onclick="copyToClipboard('${news_links[k]}')" id="Copy">
-                                                <i class='bx bx-link' ></i>
-                                                Copy
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>`
-                            }
-                            
+                // create pagination div
+                //add previous button
+                let previous = document.createElement("div")
+                previous.classList.add("button-pagination")
+                previous.innerHTML = "<i class='bx bx-chevron-left' ></i> Previous"
+                previous.addEventListener("click", () => {
+                    let pages = document.getElementsByClassName("page")
+                    if(currentPage > 0){
+                        for(let j = 0; j < pages.length; j++){
+                            pages[j].classList.remove("active")
                         }
+                        currentPage--
+                        pages[currentPage].classList.add("active")
+                        viewMentions(listener_results)
                     }
-                    mentions_table.innerHTML += innerHTML
-
                 })
+                pagination_div.appendChild(previous)
+                let pagination_numbers = document.createElement("div")
+                pagination_numbers.classList.add("pagination-numbers")
+                for(let i = 0; i < pages; i++){
+                    let page = document.createElement("div")
+                    page.classList.add("page")
+                    page.innerHTML = i+1
+                    page.addEventListener("click", () => {
+                        let pages = document.getElementsByClassName("page")
+                        for(let j = 0; j < pages.length; j++){
+                            pages[j].classList.remove("active")
+                        }
+                        page.classList.add("active")
+                        currentPage = i
+                        viewMentions(listener_results)
+                    })
+                    pagination_numbers.appendChild(page)
+                }
+                pagination_div.appendChild(pagination_numbers)
+                // add next button
+                let next = document.createElement("div")
+                next.classList.add("button-pagination")
+                next.innerHTML = "Next <i class='bx bx-chevron-right' ></i>"
+                next.addEventListener("click", () => {
+                    let pages = document.getElementsByClassName("page")
+                    if(currentPage < pages.length-1){
+                        for(let j = 0; j < pages.length; j++){
+                            pages[j].classList.remove("active")
+                        }
+                        currentPage++
+                        pages[currentPage].classList.add("active")
+                        viewMentions(listener_results)
+                    }
+                })
+                pagination_div.appendChild(next)
+                // set first page active
+                let pages_by_class = document.getElementsByClassName("page")
+                pages_by_class[0].classList.add("active")
+                
+
+            viewMentions(listener_results)
+
+        })
+
+
+
+        // res.json().then(data => {
+        //     const listener_results = data["result"].map(({result,created_at}) => ({
+        //         ...JSON.parse(result),
+        //         created_at
+        //     }))
+        //     currentPage = 0
+        //     source_parts = 0
+        //     // Initialize pagination div
+        //     let pagination_div = document.getElementById("pagination_div")
+        //     pagination_div.innerHTML = ""
+        //     // calculate number of pages
+        //     const all_listener_length = listener_results.length
+        //     var pages = 0
+            
+        //     for(let i = 0; i < all_listener_length; i++){
+        //         const listener_length = listener_results[i].length
+        //         for(let j = 0; j < listener_length; j++){
+        //             const keyword = Object.keys(listener_results[i][j])[0]
+        //             pages += listener_results[i][j][keyword]["twitter"]["text"]["preprocessed_text"].length
+        //             pages += listener_results[i][j][keyword]["news"]["text"].length
+        //             source_parts++
+        //         }
+        //     }
+        //     // console.log(pages)
+        //     pages = Math.ceil(pages/50)
+            
+        //     // create pagination div
+        //     //add previous button
+        //     let previous = document.createElement("div")
+        //     previous.classList.add("button-pagination")
+        //     previous.innerHTML = "<i class='bx bx-chevron-left' ></i> Previous"
+        //     previous.addEventListener("click", () => {
+        //         let pages = document.getElementsByClassName("page")
+        //         if(currentPage > 0){
+        //             for(let j = 0; j < pages.length; j++){
+        //                 pages[j].classList.remove("active")
+        //             }
+        //             currentPage--
+        //             pages[currentPage].classList.add("active")
+        //             viewMentions(listener_results)
+        //         }
+        //     })
+        //     pagination_div.appendChild(previous)
+        //     let pagination_numbers = document.createElement("div")
+        //     pagination_numbers.classList.add("pagination-numbers")
+        //     for(let i = 0; i < pages; i++){
+        //         let page = document.createElement("div")
+        //         page.classList.add("page")
+        //         page.innerHTML = i+1
+        //         page.addEventListener("click", () => {
+        //             let pages = document.getElementsByClassName("page")
+        //             for(let j = 0; j < pages.length; j++){
+        //                 pages[j].classList.remove("active")
+        //             }
+        //             page.classList.add("active")
+        //             currentPage = i
+        //             viewMentions(listener_results)
+        //         })
+        //         pagination_numbers.appendChild(page)
+        //     }
+        //     pagination_div.appendChild(pagination_numbers)
+        //     // add next button
+        //     let next = document.createElement("div")
+        //     next.classList.add("button-pagination")
+        //     next.innerHTML = "Next <i class='bx bx-chevron-right' ></i>"
+        //     next.addEventListener("click", () => {
+        //         let pages = document.getElementsByClassName("page")
+        //         if(currentPage < pages.length-1){
+        //             for(let j = 0; j < pages.length; j++){
+        //                 pages[j].classList.remove("active")
+        //             }
+        //             currentPage++
+        //             pages[currentPage].classList.add("active")
+        //             viewMentions(listener_results)
+        //         }
+        //     })
+        //     pagination_div.appendChild(next)
+        //     // set first page active
+        //     let pages_by_class = document.getElementsByClassName("page")
+        //     pages_by_class[0].classList.add("active")
+            
+
+        // viewMentions(listener_results)
+        // })
         }
     }).catch((err) => {
         console.log(err)
     })
+}
+
+var view_more_onclick = []
+
+function viewMentions(listener_results){
+    let mentions_table = document.getElementById("mentions-table")
+                    
+                    var innerHTML = ``
+                    mentions_table.innerHTML = `
+                        <tr>
+                            <th scope = "col"><i class='bx bx-list-ul icon'></i>Date</th>
+                            <th scope="col">
+                                <i class='bx bx-list-ul icon'></i>
+                                Mention</th>
+                            <th scope="col">
+                                <i class='bx bx-list-ul icon'></i>
+                                Source</th>
+                            <th scope="col">
+                                <i class='bx bx-list-ul icon'></i>Sentiment</th>
+                            <th scope="col">
+                                <i class='bx bx-list-ul icon'></i>Summary</th>
+                            <th scope="col">
+                                <i class='bx bx-list-ul icon'></i>URL</th>
+                        </tr>
+                    `
+                    let all_listener_length = listener_results.length
+                    view_more_onclick = []
+                    for(let i = 0; i < all_listener_length; i++){
+                        const listener_length = listener_results[i].length
+                        for(let j = 0; j < listener_length; j++){
+                            const keyword = Object.keys(listener_results[i][j])[0]
+                            //calculate the start and end indices for the current page
+                            const start_index = (currentPage)* Math.floor(50/source_parts)
+                            const end_index = start_index + Math.floor(50/source_parts)
+                            
+                            //TWITTER
+                            const twitter_text = listener_results[i][j][keyword]["twitter"]["text"]["preprocessed_text"]
+                            const twitter_links_dates = listener_results[i][j][keyword]["twitter"]["links_dates"].slice(start_index,end_index)
+                            const twitter_sentiment = listener_results[i][j][keyword]["twitter"]["sentiment"].slice(start_index,end_index)
+                            const twitter_spam_tweets = listener_results[i][j][keyword]["twitter"]["spam"].slice(start_index,end_index)
+                            //NEWS
+                            const news_text = listener_results[i][j][keyword]["news"]["text"]
+                            const news_links = listener_results[i][j][keyword]["news"]["links"].slice(start_index,end_index)
+                            const news_links_dates = listener_results[i][j][keyword]["news"]["publishedAt"].slice(start_index,end_index)
+                            const news_sentiment = listener_results[i][j][keyword]["news"]["sentiment"].slice(start_index,end_index)
+
+                            //TWITTER
+                            const tweet_row = twitter_text.slice(start_index,end_index).map((tweet, k) => {
+                                tweet = preprocess_text(tweet)
+                                // tweet = truncateText(tweet,twitter_sentiment[k],twitter_links_dates[k]["link"],twitter_links_dates[k]["date"],keyword,"twitter")
+                                
+                                let tweet_published_at = format_date(twitter_links_dates[k]["date"])
+                                mentions_table.appendChild(generateTweetRow(keyword, tweet,tweet_published_at,twitter_sentiment[k],twitter_links_dates[k]["link"],twitter_spam_tweets[k]))
+                            })
+                            innerHTML += tweet_row.join("")
+
+                            //NEWS
+                            const news_rows = news_text.slice(start_index,end_index).map((news, k) => {
+                                news = preprocess_text(news)
+                                // news = truncateText(news,news_sentiment[k],news_links[k],news_links_dates[k],keyword,"news")
+                                let news_published_at = format_date(news_links_dates[k])
+                                mentions_table.appendChild(generateNewsRow(keyword,news,news_published_at,news_sentiment[k],news_links[k]))
+                            })
+                            innerHTML += news_rows.join("")
+                            
+                        }
+                    }
+                    document.getElementById("table-container").style.display = "block"
+                    document.getElementById("loading-container").style.display = "none"
+                    // mentions_table.innerHTML += innerHTML
 }
 
 function copyToClipboard(text) {
@@ -902,33 +1017,208 @@ function copyToClipboard(text) {
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
-  }
+}
 
   //"${twitter_text[k]}","twitter","${twitter_sentiment[k]}",${twitter_links_dates[k]},"${twitter_spam_tweets[k]}",${keyword}
-  function popUpMention(text,type,sentiment,link,date,spam,keyword){
-    //wrap keyword in span
-    let wrapped_keyword = "<span style='color: green; font-weight: 900'>" + keyword + "</span>"
-    text = text.replace(keyword, wrapped_keyword)
-    text = text.replace(keyword.toLowerCase(), wrapped_keyword)
-    text = text.replace(keyword.toUpperCase(), wrapped_keyword)
-    // format date
-    let date_obj = new Date(date)
-    let formatted_date = date_obj.getDate() + "/" + date_obj.getMonth() + "/" + date_obj.getFullYear()
-    
-    let popUp = document.getElementById("mention_popup")
-    popUp.style.display = "flex"
-    popUp.innerHTML = `
-    <div class='popup_container'>
-        <div class='popup_header_row'>
-            <button onclick='closePopUp()'><i class='bx bx-x' ></i></button>
-        </div>
-        <h1 class='popup_keyword_header'>${keyword}</h1>
-        <div class='popup_text'><bdi>${text}</bdi></div>
-    </div>
-    `
-  }
+function popUpMention(text,type,sentiment,link,date,keyword){
+//wrap keyword in span
+let wrapped_keyword = "<span style='color: green; font-weight: 900'>" + keyword + "</span>"
+text = text.replace(keyword, wrapped_keyword)
+text = text.replace(keyword.toLowerCase(), wrapped_keyword)
+text = text.replace(keyword.toUpperCase(), wrapped_keyword)
+// format date
+let date_obj = new Date(date)
+let formatted_date = date_obj.getDate() + "/" + date_obj.getMonth() + "/" + date_obj.getFullYear()
 
-  function closePopUp(){
+let popUp = document.getElementById("mention_popup")
+popUp.style.display = "flex"
+popUp.innerHTML = `
+<div class='popup_container'>
+    <div class='popup_header_row'>
+        <button onclick='closePopUp()'><i class='bx bx-x' ></i></button>
+    </div>
+    <h1 class='popup_keyword_header'>${keyword}</h1>
+    <div class='popup_text'><bdi>${text}</bdi></div>
+</div>
+`
+}
+
+function closePopUp(){
     let popUp = document.getElementById("mention_popup")
     popUp.style.display = "none"
-  }
+}
+
+function preprocess_text(tweet){
+    tweet = tweet.replace(/\s+/g, ' ').replace(/"/g, '\\"')
+    return tweet
+}
+
+function generateUniqueId() {
+    return Date.now().toString(36) + Math.random().toString(36).substring(2);
+}
+
+function truncateText(text, sentiment, link, date, keyword,source) {
+    let text_container = document.createElement("div")
+    text_container.className = "mention_text"
+    text_container.innerHTML = `<p><bdi>${text}</bdi></p>`
+    if (text.length > 128) {
+        text_container.innerHTML = ""
+        let id = generateUniqueId();
+        // create button
+        let button = document.createElement("button");
+        button.innerHTML = "View more <i class='bx bx-expand-alt'></i>";
+        button.id = id;
+        button.onclick = function () {
+            popUpMention(text,source,sentiment,link,date,keyword)
+        }
+        let text_p = document.createElement("p")
+        let text_bdi = document.createElement("bdi")
+        text_bdi.innerHTML = text.slice(0,128)
+        text_bdi.appendChild(document.createElement("br"))
+        text_bdi.appendChild(button)
+        text_p.appendChild(text_bdi)
+        text_container.appendChild(text_p)
+    }
+    return text_container;
+}
+
+function format_date(date) {
+    let tweetPublishedAt = new Date(date);
+    return tweetPublishedAt.getDate() + "/" + (tweetPublishedAt.getMonth() + 1) + "/" + tweetPublishedAt.getFullYear();
+}
+
+function wrapKeyword(text, keyword) {
+    const wrappedKeyword = `<span style="color: green; font-weight: 900">${keyword}</span>`;
+    text = text.replace(keyword, wrappedKeyword);
+    text = text.replace(keyword.toLowerCase(), wrappedKeyword);
+    text = text.replace(keyword.toUpperCase(), wrappedKeyword);
+    return text;
+}
+
+function generateTweetRow(keyword, tweet, tweet_published_at, tweet_sentiment, tweet_link,tweet_spam){
+    // create row
+    let row = document.createElement("tr");
+    // create needed columns
+    let item_publish_date = document.createElement("td")
+    item_publish_date.id = "Data"
+    item_publish_date.innerHTML = tweet_published_at
+    row.appendChild(item_publish_date)
+
+    let mention_text = document.createElement("td")
+    mention_text.appendChild(truncateText(tweet, tweet_sentiment, tweet_link, tweet_published_at, keyword,"twitter"))
+    row.appendChild(mention_text)
+
+    let source_item = document.createElement("td")
+    let source_item_div = document.createElement("div")
+    source_item_div.className = "source_item"
+    let source_item_button = document.createElement("button")
+    source_item_button.type = "button"
+    source_item_button.className = "Twitter"
+    source_item_button.id = "Twitter"
+    source_item_button.innerHTML = "Twitter"
+    
+    source_item_div.appendChild(source_item_button)
+    source_item_div.innerHTML += spam[tweet_spam]
+    source_item.appendChild(source_item_div)
+    row.appendChild(source_item)
+
+    let sentiment_item = document.createElement("td")
+    sentiment_item.innerHTML = sentiment[tweet_sentiment]
+    row.appendChild(sentiment_item)
+
+    let summary_item = document.createElement("td")
+    summary_item.id = "Summary"
+    summary_item.innerHTML = "Twitter"
+    row.appendChild(summary_item)
+
+    let action_item = document.createElement("td")
+    let action_item_div = document.createElement("div")
+    let action_item_button_open = document.createElement("button")
+    action_item_button_open.type = "button"
+    action_item_button_open.id = "Open"
+    action_item_button_open.onclick = function () {
+        window.open(tweet_link, '_blank')
+    }
+    let action_item_button_open_i = document.createElement("i")
+    action_item_button_open_i.className = "bx bx-link-external"
+    action_item_button_open.appendChild(action_item_button_open_i)
+    action_item_button_open.innerHTML += "Open"
+    action_item_div.appendChild(action_item_button_open)
+    let action_item_button_copy = document.createElement("button")
+    action_item_button_copy.type = "button"
+    action_item_button_copy.onclick = function () {
+        copyToClipboard(tweet_link)
+    }
+    action_item_button_copy.id = "Copy"
+    let action_item_button_copy_i = document.createElement("i")
+    action_item_button_copy_i.className = "bx bx-copy"
+    action_item_button_copy.appendChild(action_item_button_copy_i)
+    action_item_button_copy.innerHTML += "Copy"
+    action_item_div.appendChild(action_item_button_copy)
+    action_item.appendChild(action_item_div)
+    row.appendChild(action_item)
+    return row
+}
+
+function generateNewsRow(keyword,news, news_published_at, news_sentiment, news_link){
+    let row = document.createElement("tr")
+    let item_publish_date = document.createElement("td")
+    item_publish_date.id = "Data"
+    item_publish_date.innerHTML = news_published_at
+    row.appendChild(item_publish_date)
+
+    let mention_text = document.createElement("td")
+    mention_text.appendChild(truncateText(news, news_sentiment, news_link, news_published_at, keyword,"news"))
+    row.appendChild(mention_text)
+
+    let source_item = document.createElement("td")
+    let source_item_div = document.createElement("div")
+    source_item_div.className = "source_item"
+    let source_item_button = document.createElement("button")
+    source_item_button.type = "button"
+    source_item_button.className = "News"
+    source_item_button.id = "News"
+    source_item_button.innerHTML = "News"
+
+    source_item_div.appendChild(source_item_button)
+    source_item.appendChild(source_item_div)
+    row.appendChild(source_item)
+
+    let sentiment_item = document.createElement("td")
+    sentiment_item.innerHTML = sentiment[news_sentiment]
+    row.appendChild(sentiment_item)
+
+    let summary_item = document.createElement("td")
+    summary_item.id = "Summary"
+    summary_item.innerHTML = "News"
+    row.appendChild(summary_item)
+
+    let action_item = document.createElement("td")
+    let action_item_div = document.createElement("div")
+    let action_item_button_open = document.createElement("button")
+    action_item_button_open.type = "button"
+    action_item_button_open.id = "Open"
+    action_item_button_open.onclick = function () {
+        window.open(news_link, '_blank')
+    }
+    let action_item_button_open_i = document.createElement("i")
+    action_item_button_open_i.className = "bx bx-link-external"
+    action_item_button_open.appendChild(action_item_button_open_i)
+    action_item_button_open.innerHTML += "Open"
+    action_item_div.appendChild(action_item_button_open)
+    let action_item_button_copy = document.createElement("button")
+    action_item_button_copy.type = "button"
+    action_item_button_copy.onclick = function () {
+        copyToClipboard(news_link)
+    }
+    action_item_button_copy.id = "Copy"
+    let action_item_button_copy_i = document.createElement("i")
+    action_item_button_copy_i.className = "bx bx-copy"
+    action_item_button_copy.appendChild(action_item_button_copy_i)
+    action_item_button_copy.innerHTML += "Copy"
+    action_item_div.appendChild(action_item_button_copy)
+    action_item.appendChild(action_item_div)
+    row.appendChild(action_item)
+    return row
+}
+

@@ -9,6 +9,8 @@ class Database(object):
         return self.db[collection].find(query)
     def insert(self, collection, data):
         return self.db[collection].insert_one(data)
+    def insertAll(self, collection, data):
+        return self.db[collection].insert_many(data)
     def update(self, collection, id, data):
         self.db[collection].update_one({
             '_id': id,
@@ -19,3 +21,5 @@ class Database(object):
 
     def delete(self, collection, query):
         return self.db[collection].delete_one(query)
+    def deleteAll(self, collection, query):
+        return self.db[collection].delete_many(query)

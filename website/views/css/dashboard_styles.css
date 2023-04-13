@@ -974,8 +974,7 @@ html, body{
 .table_container{
     background-color: #ffffff;
     text-align: center;
-    width:96.5%;
-    
+    width:100%;
     border-radius: 20px;
     -webkit-border-radius: 20px;
     -moz-border-radius: 20px;
@@ -983,6 +982,8 @@ html, body{
     -o-border-radius: 20px;
     margin-top: 2%;
     padding: 25px;
+    box-sizing: border-box;
+    margin-bottom: 100px;
 }
 
 .table_container table{
@@ -1038,6 +1039,7 @@ html, body{
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointerC;
     gap: 4px;
     padding: 2px 7.5px;
     font-family: "Poppins", sans-serif;
@@ -1070,6 +1072,7 @@ html, body{
     background: #FFD6D6;
     cursor: pointer;
     /* margin: 10px; */
+    pointer-events: none;
     border-radius: 10px;
     border-style: hidden;
     display: flex;
@@ -1082,6 +1085,7 @@ html, body{
     padding: 7.5px 10px;
     background: #D3F1F8;
     cursor: pointer;
+    pointer-events: none;
     /* margin: 10px; */
     border-radius: 10px;
     border-style: hidden;
@@ -1096,6 +1100,7 @@ html, body{
     background:#D6C7FF;
     border-radius: 10px;
     border-style: hidden;
+    pointer-events: none;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1105,25 +1110,25 @@ html, body{
 .Youtube{
     padding: 7.5px 10px;
     background:#FFC2C2;
-    cursor: pointer;
     /* margin: 10px; */
     border-radius: 10px;
     border-style: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    pointer-events: none;
     gap: 4px;
 }
 
 .Podcasts{
     padding: 7.5px 10px;
     background:#E0FFB8;
-    cursor: pointer;
     /* margin: 10px; */
     border-radius: 10px;
     border-style: hidden;
     display: flex;
     justify-content: center;
+    pointer-events: none;
     align-items: center;
     gap: 4px;
 }
@@ -1131,7 +1136,7 @@ html, body{
 .Radio{
     padding: 7.5px 10px;
     background:#eba19f;
-    cursor: pointer;
+    pointer-events: none;
     /* margin: 10px; */
     border-radius: 10px;
     border-style: hidden;
@@ -1319,4 +1324,73 @@ vertical-align:text-bottom;
     font-size: 16px;
     color: #222222;
 
+}
+
+.pagination-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 35px;
+}
+
+.pagination-container .page{
+    outline: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 10px;
+    margin: 0;
+    margin-left: 10px;
+    color: black;
+    background-color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.pagination-container .page:hover{
+    background-color: #a885ff96;
+}
+
+.pagination-container .page.active{
+    background-color: #A785FF;
+    color: white;
+}
+.pagination-container .button-pagination{
+    outline: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 10px;
+    margin: 0;
+    margin-left: 10px;
+    color: black;
+    background-color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.pagination-container .button-pagination:hover{
+    background-color: #a885ff96;
+}
+
+.pagination-container .pagination-numbers{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    overflow-x: auto;
 }

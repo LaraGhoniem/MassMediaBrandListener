@@ -14,6 +14,8 @@ from classes.user import User
 from classes.listener import ObserverListener
 from classes.engine import Engine
 from pydantic import BaseModel
+import itertools
+
 #python -m  uvicorn server:app --host 127.0.0.1 --port 80
 
 app = FastAPI()
@@ -66,8 +68,12 @@ for listener in listeners:
 
 engine.run()
 
+# [listener_id, keyword, source, text, sentiment, spam, summary, created_at, link]
+# for listener in engine.listeners:
+#     db.insert("results", {"listener_id":ObjectId(listener.id), "result":json.dumps(listener.result, ensure_ascii = False), "created_at":datetime.datetime.now()})
 for listener in engine.listeners:
-    db.insert("results", {"listener_id":ObjectId(listener.id), "result":json.dumps(listener.result, ensure_ascii = False), "created_at":datetime.datetime.now()})
+    listener = list(itertools.chain(*listener.result))
+    db.insertAll("results", listener)
 
 @app.post("/listener/")
 async def main(jsonData: JsonData):
@@ -90,6 +96,7 @@ async def main(jsonData: JsonData):
     # print(data)
 
     # update listener in database
+    # [listener_id, keyword_id, source, text, sentiment, spam, summary, created_at, link]
     db.update("listeners", ObjectId(engine.listeners[0].id), {"listener_status":"active", "result":json.dumps(engine.listeners[0].result)})
 
     return "Done"

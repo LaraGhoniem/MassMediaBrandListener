@@ -40,8 +40,8 @@ class Youtube:
         \n`PATH` : A string representing the output path the video will be downloaded to."""
         path = os.path.join(path,self.channel_id)
         os.mkdir(path)
-        urls = self.getVideos()
-        for url in urls:
+        self.urls = self.getVideos()
+        for url in self.urls:
             try:
                 yt = YouTube(url["Link"])
                 video = yt.streams.filter(only_audio=True).first()

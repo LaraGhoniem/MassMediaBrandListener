@@ -15,9 +15,9 @@ class ObserverListener:
     def listen(self):
         result = []
         for keyword in self.keywords:
-            apiCall = ApiCall(keyword, self.category)
+            apiCall = ApiCall(keyword, self.category,self.id)
             apiCall.send()
-            result.append({keyword:apiCall.result})
+            result.append(apiCall.result)
         self.result = result
         
     
