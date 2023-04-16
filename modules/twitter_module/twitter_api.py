@@ -82,7 +82,7 @@ class TwitterAPI:
 
             self.tweet_data.extend(self.data_array)
             self.tweets_preprocessed_array.extend(self.preprocessed_text)
-            if(counter== 10):
+            if(counter== 50):
                 break
             counter += 1
 

@@ -1,58 +1,43 @@
+import { Post } from "./helpers/post.js";
+import { User } from "./helpers/user.js";
 
-async function getDashboardData() {
-  const response = await fetch("/listener-data");
-  const data = await response.json();
-  return data.user;
+// event listeners
+// logout button
+document.getElementById("user-logout").addEventListener("click", async () => await User.logout());
+//navigation
+let nav_slider = document.getElementById('navigation')
+let nav_buttons = nav_slider.children
+for(let i = 0; i < nav_buttons.length; i++){
+    nav_buttons[i].addEventListener('click', () => {
+        navigate(i+1)
+    })
 }
-var userData = {}
-var listenersData = []
-getDashboardData().then((data) => {
-    userData = data;
-    getUserListeners()
+// add keyword button
+document.getElementById("add-keyword").addEventListener("click", () => {
+    addKeyword()
+})
+// remove keyword button
+document.getElementById("remove-1").addEventListener("click", () => {
+    removeKeyword(1)
+})
+//save listener
+document.getElementById("save-listener-button").addEventListener("click", () => {
+    saveListener()
 })
 
-async function logout(){
-    await fetch('/user/signout', {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-        
-        }
-        }).then(async (res) => {
-            if(res.status === 200){
-                window.location.href = "/"
-            }
-            else{
-                console.log(res.status)
-            }
-        }).catch((err) => {
-            console.log(err)
-        })
-}
+var user = {}
+var listenersData = []
 
-async function getUserListeners(){
-    await fetch('/listener/id/'+userData._id, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            }
-            }).then(async (res) => {
-                if(res.status === 200){
-                    await res.json().then(async (data) => {
-                        if(data.listener.length != 0){
-                            listenersData = data.listener
-                            viewStats(listenersData)
-                            viewListener(listenersData[0]._id, listenersData[0].listener_name)
-                            viewListenerMentions(listenersData[0]._id, listenersData[0].listener_name)
-                        }
-                    })
-                }
-                else{
-                    console.log(res.status)
-                }
-            }).catch((err) => {
-                console.log(err)
-            })
+window.onload = async function() {
+    user = await User.create()
+    User.getListeners(user.data.user._id, (data) => {
+        if(data.listener.length != 0){
+            listenersData = data.listener
+            viewStats(listenersData)
+            viewListener(listenersData[0]._id, listenersData[0].listener_name)
+            viewListenerMentions(listenersData[0]._id, listenersData[0].listener_name)
+        }
+    })
 }
 
 var gradient;
@@ -89,6 +74,9 @@ var sentimentsourceneu = []
 var sentimentsourceneg = []
 
 function navigate(page){
+    User.getListeners(user.data.user._id, (data) => {
+        listenersData = data.listener
+    })
     // 0: Home Page 1: Add Listener Page 2: View Listeners Page 3: View Results Page
     if(page === 0){
             document.getElementById("home").style.display = "block";
@@ -103,14 +91,13 @@ function navigate(page){
             document.getElementById("web-mentions").style.display = "none";
     }
     else if(page === 2){
-            getUserListeners()
             document.getElementById("home").style.display = "none";
             document.getElementById("add-listener").style.display = "none";
             document.getElementById("view-listeners").style.display = "block";
             document.getElementById("web-mentions").style.display = "none";
             // 
             // 
-            ctx = document.getElementById('mentionslinechart');
+            var ctx = document.getElementById('mentionslinechart');
             mentionschart = new Chart(
                 ctx,
                 {         
@@ -403,47 +390,44 @@ function navigate(page){
             // 
     }
     else if(page === 3){
-        getUserListeners()
         document.getElementById("home").style.display = "none";
         document.getElementById("add-listener").style.display = "none";
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "block";
 }
 }
+
 var keywordCount = 1;
-function removeKeyword(keyword){
-    var keywords = document.getElementById("listener-keyword-container");
-    if(keywords.children.length > 2){
-        document.getElementById("keyword"+keyword).remove();
+function removeKeyword(i){
+    var keywords = document.getElementById("keywords-container");
+    if(keywords.children.length > 1){
+        document.getElementById("keyword"+i).remove();
         keywordCount--;
     }
 }
+
 function addKeyword(){
     keywordCount++;
-    var keywords = document.getElementById("listener-keyword-container");
+    var keywords = document.getElementById("keywords-container");
     let keyword = document.createElement("div");
     keyword.setAttribute("class", "listenerKeywordInput");
     keyword.setAttribute("id", "keyword"+keywordCount);
     keyword.innerHTML = `
     <input type="text" id="keywordInput${keywordCount}" placeholder="Keyword">
-    <button onclick="removeKeyword(${keywordCount})">-</button>
+    <button id='remove-${keywordCount}'>-</button>
     `
     keywords.appendChild(keyword);
+    //remove keyword buttons
+    keywords.children[keywords.children.length-1].children[1].addEventListener("click", () => {
+        removeKeyword(keywords.children.length)
+    })
 }
-function copyEvent(id)
-{
-    var str = document.getElementById(id);
-    window.getSelection().selectAllChildren(str);
-    document.execCommand("Copy")
-}
-
-var listenerData = {}
 
 async function saveListener(){
-let keywords = document.getElementById("listener-keyword-container").children;
+let keywords = document.getElementById("keywords-container").children;
 let keywordArray = [];
-error = false
-for(let i = 1; i < keywords.length; i++){
+var error = false
+for(let i = 0; i < keywords.length; i++){
     if(keywords[i].children[0].value === ""){
         error = true
         break;
@@ -460,7 +444,7 @@ if(!error){
 let response = {
     listener_name: listenerName,
     listener_status: "inactive",
-    company_id: userData.company_id,
+    company_id: user.data.user.company_id,
     category_id: "63fb78b1737cba7b6d865aae"
 }
 // get company id by user id
@@ -473,7 +457,7 @@ let response = {
         body: JSON.stringify({
             "listener_name": listenerName,
             "listener_status": "inactive",
-            "user_id": userData._id,
+            "user_id": user.data.user._id,
             "category_id": "63fb78b1737cba7b6d865aae"
         })
     }).then(async (res) => {
@@ -533,26 +517,45 @@ function count(arr, value){
 function viewStats(listeners){
     let listener_html = document.getElementById("listeners_list_items")
     let listener_html_2 = document.getElementById("listeners_list_items_2")
-    let listener_html_inner = `<h4>No Listeners Created</h4>`
-    let listener_html_inner_2 = `<h4>No Listeners Created</h4>`
+    listener_html.innerHTML = `<h4>No Listeners Created</h4>`
+    listener_html_2.innerHTML = `<h4>No Listeners Created</h4>`
     if(listeners.length > 0){
-        listener_html_inner = ``
-        listener_html_inner_2 = ``
+        listener_html.innerHTML = ""
+        listener_html_2.innerHTML = ""
         for(let i = 0; i < listeners.length; i++){
-            listener_html_inner += `
-            <div id="${listeners[i]._id}" class="listeners_list_item ${(i==0)?'active':'inactive'}" onclick="viewListener('${listeners[i]._id}', '${listeners[i].listener_name}')">
-                <h3>${listeners[i].listener_name}</h3>
-            </div>
-            `
-            listener_html_inner_2 += `
-            <div id="${listeners[i]._id}_2" class="listeners_list_item ${(i==0)?'active':'inactive'}" onclick="viewListenerMentions('${listeners[i]._id}', '${listeners[i].listener_name}')">
-                <h3>${listeners[i].listener_name}</h3>
-            </div>
-            `
+            let listener_div = document.createElement("div")
+            listener_div.setAttribute("id", listeners[i]._id)
+            listener_div.setAttribute("class", "listeners_list_item")
+            if(i == 0)
+                listener_div.classList.add("active")
+            else
+                listener_div.classList.add("inactive")
+            listener_div.addEventListener("click", () => {
+                viewListener(listeners[i]._id, listeners[i].listener_name)
+            })
+
+            let listener_name = document.createElement("h3")
+            listener_name.innerHTML = listeners[i].listener_name
+            listener_div.appendChild(listener_name)
+            listener_html.appendChild(listener_div)
+
+            let listener_div_2 = document.createElement("div")
+            listener_div_2.setAttribute("id", listeners[i]._id+"_2")
+            listener_div_2.setAttribute("class", "listeners_list_item")
+            if(i == 0)
+                listener_div_2.classList.add("active")
+            else
+                listener_div_2.classList.add("inactive")
+            listener_div_2.addEventListener("click", () => {
+                viewListenerMentions(listeners[i]._id, listeners[i].listener_name)
+            })
+
+            let listener_name_2 = document.createElement("h3")
+            listener_name_2.innerHTML = listeners[i].listener_name
+            listener_div_2.appendChild(listener_name_2)
+            listener_html_2.appendChild(listener_div_2)
         }
     }
-    listener_html.innerHTML = listener_html_inner
-    listener_html_2.innerHTML = listener_html_inner_2
 }
 
 async function viewListener(listenerid, listenername){
@@ -732,7 +735,6 @@ const spam = {
 
 // Pagination
 var currentPage = 0
-var source_parts = 0
 
 async function viewListenerMentions(listenerid, listenername){
     let listenernamecontainer = document.getElementById("listener_name_mentions")
@@ -761,253 +763,112 @@ async function viewListenerMentions(listenerid, listenername){
     }}).then(async (res) => {
         if(res.status==200){
             await res.json().then((data) => {
-                var listener_results = []
-                for(let i = 0; i < data["result"].length; i++){
-                    var jsonvar = JSON.parse(data["result"][i]["result"])
-                    jsonvar["created_at"] = data["result"][i]["created_at"]
-                    listener_results.push(jsonvar)
+                if(data["result"].length == 0){
+                    document.getElementById("loading-container").style.display = "none"
+                    document.getElementById("table-container").style.display = "flex"
+                    document.getElementById("table-container").innerHTML = "No results found. Please note that the listener runs once daily at 12:00 AM."
                 }
-                currentPage = 0
-                source_parts = 0
-                // Initialize pagination div
-                let pagination_div = document.getElementById("pagination_div")
-                pagination_div.innerHTML = ""
-                // calculate number of pages
-                const all_listener_length = listener_results.length
-                var pages = 0
-                
-                for(let i = 0; i < all_listener_length; i++){
-                    const listener_length = listener_results[i].length
-                    for(let j = 0; j < listener_length; j++){
-                        const keyword = Object.keys(listener_results[i][j])[0]
-                        pages += listener_results[i][j][keyword]["twitter"]["text"]["preprocessed_text"].length
-                        pages += listener_results[i][j][keyword]["news"]["text"].length
-                        source_parts++
-                    }
-                }
-                // console.log(pages)
-                pages = Math.ceil(pages/50)
-                
-                // create pagination div
-                //add previous button
-                let previous = document.createElement("div")
-                previous.classList.add("button-pagination")
-                previous.innerHTML = "<i class='bx bx-chevron-left' ></i> Previous"
-                previous.addEventListener("click", () => {
-                    let pages = document.getElementsByClassName("page")
-                    if(currentPage > 0){
-                        for(let j = 0; j < pages.length; j++){
-                            pages[j].classList.remove("active")
-                        }
-                        currentPage--
-                        pages[currentPage].classList.add("active")
-                        viewMentions(listener_results)
-                    }
-                })
-                pagination_div.appendChild(previous)
-                let pagination_numbers = document.createElement("div")
-                pagination_numbers.classList.add("pagination-numbers")
-                for(let i = 0; i < pages; i++){
-                    let page = document.createElement("div")
-                    page.classList.add("page")
-                    page.innerHTML = i+1
-                    page.addEventListener("click", () => {
+                else{
+                    var listener = data["result"]
+                    currentPage = 0
+                    let pagination_div = document.getElementById("pagination_div")
+                    pagination_div.innerHTML = ""
+                    let pages = Math.ceil(listener.length/50)
+
+                    // previous button
+                    let prev_button = document.createElement("div")
+                    prev_button.classList.add("button-pagination")
+                    prev_button.innerHTML = "<i class='bx bx-chevron-left' ></i> Previous"
+                    prev_button.addEventListener("click", () => {
                         let pages = document.getElementsByClassName("page")
-                        for(let j = 0; j < pages.length; j++){
-                            pages[j].classList.remove("active")
+                        if(currentPage > 0){
+                            for(let j = 0; j < pages.length; j++)
+                                pages[j].classList.remove("active")
+                            currentPage--
+                            pages[currentPage].classList.add("active")
+                            viewMentions(listener)
                         }
-                        page.classList.add("active")
-                        currentPage = i
-                        viewMentions(listener_results)
                     })
-                    pagination_numbers.appendChild(page)
-                }
-                pagination_div.appendChild(pagination_numbers)
-                // add next button
-                let next = document.createElement("div")
-                next.classList.add("button-pagination")
-                next.innerHTML = "Next <i class='bx bx-chevron-right' ></i>"
-                next.addEventListener("click", () => {
-                    let pages = document.getElementsByClassName("page")
-                    if(currentPage < pages.length-1){
-                        for(let j = 0; j < pages.length; j++){
-                            pages[j].classList.remove("active")
-                        }
-                        currentPage++
-                        pages[currentPage].classList.add("active")
-                        viewMentions(listener_results)
+                    pagination_div.appendChild(prev_button)
+
+                    //pagination numbers buttons
+                    let pagination_numbers = document.createElement("div")
+                    pagination_numbers.classList.add("pagination-numbers")
+                    for(let i = 0; i < pages; i++){
+                        let page = document.createElement("div")
+                        page.classList.add("page")
+                        page.innerHTML = i+1
+                        page.addEventListener("click", () => {
+                            let pages = document.getElementsByClassName("page")
+                            for(let j = 0; j < pages.length; j++)
+                                pages[j].classList.remove("active")
+                            page.classList.add("active")
+                            currentPage = i
+                            viewMentions(listener)
+                        })
+                        pagination_numbers.appendChild(page)
                     }
-                })
-                pagination_div.appendChild(next)
-                // set first page active
-                let pages_by_class = document.getElementsByClassName("page")
-                pages_by_class[0].classList.add("active")
-                
+                    pagination_div.appendChild(pagination_numbers)
 
-            viewMentions(listener_results)
+                    // next button
+                    let next = document.createElement("div")
+                    next.classList.add("button-pagination")
+                    next.innerHTML = "Next <i class='bx bx-chevron-right' ></i>"
+                    next.addEventListener("click", () => {
+                        let pages = document.getElementsByClassName("page")
+                        if(currentPage < pages.length-1){
+                            for(let j = 0; j < pages.length; j++)
+                                pages[j].classList.remove("active")
+                            currentPage++
+                            pages[currentPage].classList.add("active")
+                            viewMentions(listener)
+                        }
+                    })
+                    pagination_div.appendChild(next)
 
-        })
+                    // set first page active
+                    let pages_by_class = document.getElementsByClassName("page")
+                    pages_by_class[0].classList.add("active")
 
-
-
-        // res.json().then(data => {
-        //     const listener_results = data["result"].map(({result,created_at}) => ({
-        //         ...JSON.parse(result),
-        //         created_at
-        //     }))
-        //     currentPage = 0
-        //     source_parts = 0
-        //     // Initialize pagination div
-        //     let pagination_div = document.getElementById("pagination_div")
-        //     pagination_div.innerHTML = ""
-        //     // calculate number of pages
-        //     const all_listener_length = listener_results.length
-        //     var pages = 0
-            
-        //     for(let i = 0; i < all_listener_length; i++){
-        //         const listener_length = listener_results[i].length
-        //         for(let j = 0; j < listener_length; j++){
-        //             const keyword = Object.keys(listener_results[i][j])[0]
-        //             pages += listener_results[i][j][keyword]["twitter"]["text"]["preprocessed_text"].length
-        //             pages += listener_results[i][j][keyword]["news"]["text"].length
-        //             source_parts++
-        //         }
-        //     }
-        //     // console.log(pages)
-        //     pages = Math.ceil(pages/50)
-            
-        //     // create pagination div
-        //     //add previous button
-        //     let previous = document.createElement("div")
-        //     previous.classList.add("button-pagination")
-        //     previous.innerHTML = "<i class='bx bx-chevron-left' ></i> Previous"
-        //     previous.addEventListener("click", () => {
-        //         let pages = document.getElementsByClassName("page")
-        //         if(currentPage > 0){
-        //             for(let j = 0; j < pages.length; j++){
-        //                 pages[j].classList.remove("active")
-        //             }
-        //             currentPage--
-        //             pages[currentPage].classList.add("active")
-        //             viewMentions(listener_results)
-        //         }
-        //     })
-        //     pagination_div.appendChild(previous)
-        //     let pagination_numbers = document.createElement("div")
-        //     pagination_numbers.classList.add("pagination-numbers")
-        //     for(let i = 0; i < pages; i++){
-        //         let page = document.createElement("div")
-        //         page.classList.add("page")
-        //         page.innerHTML = i+1
-        //         page.addEventListener("click", () => {
-        //             let pages = document.getElementsByClassName("page")
-        //             for(let j = 0; j < pages.length; j++){
-        //                 pages[j].classList.remove("active")
-        //             }
-        //             page.classList.add("active")
-        //             currentPage = i
-        //             viewMentions(listener_results)
-        //         })
-        //         pagination_numbers.appendChild(page)
-        //     }
-        //     pagination_div.appendChild(pagination_numbers)
-        //     // add next button
-        //     let next = document.createElement("div")
-        //     next.classList.add("button-pagination")
-        //     next.innerHTML = "Next <i class='bx bx-chevron-right' ></i>"
-        //     next.addEventListener("click", () => {
-        //         let pages = document.getElementsByClassName("page")
-        //         if(currentPage < pages.length-1){
-        //             for(let j = 0; j < pages.length; j++){
-        //                 pages[j].classList.remove("active")
-        //             }
-        //             currentPage++
-        //             pages[currentPage].classList.add("active")
-        //             viewMentions(listener_results)
-        //         }
-        //     })
-        //     pagination_div.appendChild(next)
-        //     // set first page active
-        //     let pages_by_class = document.getElementsByClassName("page")
-        //     pages_by_class[0].classList.add("active")
-            
-
-        // viewMentions(listener_results)
-        // })
+                    viewMentions(listener)
+                }
+            })
         }
     }).catch((err) => {
         console.log(err)
     })
 }
 
-var view_more_onclick = []
-
-function viewMentions(listener_results){
+export function viewMentions(listener){
     let mentions_table = document.getElementById("mentions-table")
-                    
-                    var innerHTML = ``
-                    mentions_table.innerHTML = `
-                        <tr>
-                            <th scope = "col"><i class='bx bx-list-ul icon'></i>Date</th>
-                            <th scope="col">
-                                <i class='bx bx-list-ul icon'></i>
-                                Mention</th>
-                            <th scope="col">
-                                <i class='bx bx-list-ul icon'></i>
-                                Source</th>
-                            <th scope="col">
-                                <i class='bx bx-list-ul icon'></i>Sentiment</th>
-                            <th scope="col">
-                                <i class='bx bx-list-ul icon'></i>Summary</th>
-                            <th scope="col">
-                                <i class='bx bx-list-ul icon'></i>URL</th>
-                        </tr>
-                    `
-                    let all_listener_length = listener_results.length
-                    view_more_onclick = []
-                    for(let i = 0; i < all_listener_length; i++){
-                        const listener_length = listener_results[i].length
-                        for(let j = 0; j < listener_length; j++){
-                            const keyword = Object.keys(listener_results[i][j])[0]
-                            //calculate the start and end indices for the current page
-                            const start_index = (currentPage)* Math.floor(50/source_parts)
-                            const end_index = start_index + Math.floor(50/source_parts)
-                            
-                            //TWITTER
-                            const twitter_text = listener_results[i][j][keyword]["twitter"]["text"]["preprocessed_text"]
-                            const twitter_links_dates = listener_results[i][j][keyword]["twitter"]["links_dates"].slice(start_index,end_index)
-                            const twitter_sentiment = listener_results[i][j][keyword]["twitter"]["sentiment"].slice(start_index,end_index)
-                            const twitter_spam_tweets = listener_results[i][j][keyword]["twitter"]["spam"].slice(start_index,end_index)
-                            //NEWS
-                            const news_text = listener_results[i][j][keyword]["news"]["text"]
-                            const news_links = listener_results[i][j][keyword]["news"]["links"].slice(start_index,end_index)
-                            const news_links_dates = listener_results[i][j][keyword]["news"]["publishedAt"].slice(start_index,end_index)
-                            const news_sentiment = listener_results[i][j][keyword]["news"]["sentiment"].slice(start_index,end_index)
-
-                            //TWITTER
-                            const tweet_row = twitter_text.slice(start_index,end_index).map((tweet, k) => {
-                                tweet = preprocess_text(tweet)
-                                // tweet = truncateText(tweet,twitter_sentiment[k],twitter_links_dates[k]["link"],twitter_links_dates[k]["date"],keyword,"twitter")
-                                
-                                let tweet_published_at = format_date(twitter_links_dates[k]["date"])
-                                mentions_table.appendChild(generateTweetRow(keyword, tweet,tweet_published_at,twitter_sentiment[k],twitter_links_dates[k]["link"],twitter_spam_tweets[k]))
-                            })
-                            innerHTML += tweet_row.join("")
-
-                            //NEWS
-                            const news_rows = news_text.slice(start_index,end_index).map((news, k) => {
-                                news = preprocess_text(news)
-                                // news = truncateText(news,news_sentiment[k],news_links[k],news_links_dates[k],keyword,"news")
-                                let news_published_at = format_date(news_links_dates[k])
-                                mentions_table.appendChild(generateNewsRow(keyword,news,news_published_at,news_sentiment[k],news_links[k]))
-                            })
-                            innerHTML += news_rows.join("")
-                            
-                        }
-                    }
-                    document.getElementById("table-container").style.display = "block"
-                    document.getElementById("loading-container").style.display = "none"
-                    // mentions_table.innerHTML += innerHTML
+    mentions_table.innerHTML = `
+        <tr>
+            <th scope = "col"><i class='bx bx-list-ul icon'></i>Date</th>
+            <th scope="col">
+                <i class='bx bx-list-ul icon'></i>
+                Mention</th>
+            <th scope="col">
+                <i class='bx bx-list-ul icon'></i>
+                Source</th>
+            <th scope="col">
+                <i class='bx bx-list-ul icon'></i>Sentiment</th>
+            <th scope="col">
+                <i class='bx bx-list-ul icon'></i>Summary</th>
+            <th scope="col">
+                <i class='bx bx-list-ul icon'></i>URL</th>
+        </tr>
+    `
+    const start_index = (currentPage) * 50
+    const end_index = start_index + 50
+    listener = listener.slice(start_index,end_index)
+    const listener_length = listener.length
+    for(let i = 0; i < listener_length; i++){
+        listener[i].created_at = new Date(listener[i].created_at)
+        listener[i].created_at = listener[i].created_at.toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'})
+        mentions_table.appendChild(generateRow(listener[i]))
+    }
+    document.getElementById("table-container").style.display = "block"
+    document.getElementById("loading-container").style.display = "none"
 }
 
 function copyToClipboard(text) {
@@ -1019,28 +880,95 @@ function copyToClipboard(text) {
     document.body.removeChild(dummy);
 }
 
-  //"${twitter_text[k]}","twitter","${twitter_sentiment[k]}",${twitter_links_dates[k]},"${twitter_spam_tweets[k]}",${keyword}
-function popUpMention(text,type,sentiment,link,date,keyword){
-//wrap keyword in span
-let wrapped_keyword = "<span style='color: green; font-weight: 900'>" + keyword + "</span>"
-text = text.replace(keyword, wrapped_keyword)
-text = text.replace(keyword.toLowerCase(), wrapped_keyword)
-text = text.replace(keyword.toUpperCase(), wrapped_keyword)
-// format date
-let date_obj = new Date(date)
-let formatted_date = date_obj.getDate() + "/" + date_obj.getMonth() + "/" + date_obj.getFullYear()
+var source_icon = {
+    "twitter": "<i class='bx bxl-twitter icon'></i>",
+    "news" : "<i class='bx bxs-news icon'></i>",
+    "youtube": "<i class='bx bxl-youtube icon'></i>",
+}
 
-let popUp = document.getElementById("mention_popup")
-popUp.style.display = "flex"
-popUp.innerHTML = `
-<div class='popup_container'>
-    <div class='popup_header_row'>
-        <button onclick='closePopUp()'><i class='bx bx-x' ></i></button>
-    </div>
-    <h1 class='popup_keyword_header'>${keyword}</h1>
-    <div class='popup_text'><bdi>${text}</bdi></div>
-</div>
-`
+function popUpMention(row){
+
+    //wrap keyword in span
+    let wrapped_keyword = "<span style='color: green; font-weight: 900'>" + row["keyword"] + "</span>"
+    row.text = row.text.replace(row["keyword"], wrapped_keyword)
+    row.text = row.text.replace(row["keyword"].toLowerCase(), wrapped_keyword)
+    row.text = row.text.replace(row["keyword"].toUpperCase(), wrapped_keyword)
+    // format date
+    let date_obj = new Date(row["created_at"])
+    let formatted_date = date_obj.getDate() + "/" + date_obj.getMonth() + "/" + date_obj.getFullYear()
+
+    let popUp = document.getElementById("mention_popup")
+    popUp.innerHTML = ""
+    popUp.style.display = "flex"
+    let popUp_div = document.createElement("div")
+    popUp_div.classList.add("popup_container")
+    let popUp_div_header = document.createElement("div")
+    popUp_div_header.classList.add("popup_header_row")
+    let popUp_div_header_button = document.createElement("button")
+    popUp_div_header_button.addEventListener("click", () => {
+        closePopUp()
+    })
+    popUp_div_header_button.innerHTML = "<i class='bx bx-x' ></i>"
+    popUp_div_header.appendChild(popUp_div_header_button)
+    popUp_div.appendChild(popUp_div_header)
+    let popUp_div_header_h1 = document.createElement("h1")
+    popUp_div_header_h1.classList.add("popup_keyword_header")
+    var arabic = /[\u0600-\u06FF]/
+    popUp_div_header_h1.innerHTML = row["keyword"]
+    if(arabic.test(row["keyword"])){
+        popUp_div_header_h1.style.textAlign = "right"
+        popUp_div_header_h1.style.direction = "rtl"
+    }
+    
+    popUp_div.appendChild(popUp_div_header_h1)
+    // Information Row
+    let popUp_div_info = document.createElement("div")
+    popUp_div_info.classList.add("popup_info_row")
+    let popUp_div_info_date = document.createElement("div")
+    popUp_div_info_date.classList.add("popup_info_date")
+    popUp_div_info_date.innerHTML = formatted_date
+    popUp_div_info.appendChild(popUp_div_info_date)
+    let popUp_div_info_source_sentiment = document.createElement("div")
+    
+    let popUp_div_info_source = document.createElement("div")
+    popUp_div_info_source.classList.add(row["source"])
+    popUp_div_info_source.innerHTML = source_icon[row["source"]] + row["source"][0].toUpperCase() + row["source"].slice(1)
+    popUp_div_info_source_sentiment.appendChild(popUp_div_info_source)
+
+    let popUp_div_info_sentiment = document.createElement("div")
+    popUp_div_info_sentiment.classList.add(row["sentiment"])
+    popUp_div_info_sentiment.innerHTML = row["sentiment"][0].toUpperCase() + row["sentiment"].slice(1)
+    popUp_div_info_source_sentiment.appendChild(popUp_div_info_sentiment)
+
+    if(row["source"] == "twitter"){
+        if(row["spam"] == "1"){
+            let spam = document.createElement("div")
+            spam.classList.add("spam")
+            spam.innerHTML = "<i class='bx bx-flag'></i> Spam"
+            popUp_div_info_source_sentiment.appendChild(spam)
+        }
+    }
+
+    popUp_div_info.appendChild(popUp_div_info_source_sentiment)
+    popUp_div.appendChild(popUp_div_info)
+    
+    // Text Row
+    let popUp_div_text = document.createElement("div")
+    popUp_div_text.classList.add("popup_text")
+    popUp_div_text.innerHTML = row["text"]
+    popUp_div.appendChild(popUp_div_text)
+    popUp.appendChild(popUp_div)
+
+
+    // popUp.innerHTML = `
+    // <div class='popup_container'>
+    //     <div class='popup_header_row'>
+    //         <button onclick='closePopUp()'><i class='bx bx-x' ></i></button>
+    //     </div>
+    //     <h1 class='popup_keyword_header'>${row["keyword"]}</h1>
+    //     <div class='popup_text'><bdi>${row["text"]}</bdi></div>
+    // </div>
+    // `
 }
 
 function closePopUp(){
@@ -1057,11 +985,11 @@ function generateUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
-function truncateText(text, sentiment, link, date, keyword,source) {
+function truncateText(row) {
     let text_container = document.createElement("div")
     text_container.className = "mention_text"
-    text_container.innerHTML = `<p><bdi>${text}</bdi></p>`
-    if (text.length > 128) {
+    text_container.innerHTML = `<p><bdi>${row["text"]}</bdi></p>`
+    if (row["text"].length > 128) {
         text_container.innerHTML = ""
         let id = generateUniqueId();
         // create button
@@ -1069,11 +997,11 @@ function truncateText(text, sentiment, link, date, keyword,source) {
         button.innerHTML = "View more <i class='bx bx-expand-alt'></i>";
         button.id = id;
         button.onclick = function () {
-            popUpMention(text,source,sentiment,link,date,keyword)
+            popUpMention(row)
         }
         let text_p = document.createElement("p")
         let text_bdi = document.createElement("bdi")
-        text_bdi.innerHTML = text.slice(0,128)
+        text_bdi.innerHTML = row["text"].slice(0,128)
         text_bdi.appendChild(document.createElement("br"))
         text_bdi.appendChild(button)
         text_p.appendChild(text_bdi)
@@ -1095,59 +1023,66 @@ function wrapKeyword(text, keyword) {
     return text;
 }
 
-function generateTweetRow(keyword, tweet, tweet_published_at, tweet_sentiment, tweet_link,tweet_spam){
-    // create row
-    let row = document.createElement("tr");
-    // create needed columns
+function generateRow(mention){
+    let row = document.createElement("tr") 
+
+    //date row
     let item_publish_date = document.createElement("td")
     item_publish_date.id = "Data"
-    item_publish_date.innerHTML = tweet_published_at
+    item_publish_date.innerHTML = mention.created_at
     row.appendChild(item_publish_date)
 
+    // mention text row
     let mention_text = document.createElement("td")
-    mention_text.appendChild(truncateText(tweet, tweet_sentiment, tweet_link, tweet_published_at, keyword,"twitter"))
+    mention_text.appendChild(truncateText(mention))
     row.appendChild(mention_text)
 
+    // source row
     let source_item = document.createElement("td")
     let source_item_div = document.createElement("div")
     source_item_div.className = "source_item"
     let source_item_button = document.createElement("button")
     source_item_button.type = "button"
-    source_item_button.className = "Twitter"
-    source_item_button.id = "Twitter"
-    source_item_button.innerHTML = "Twitter"
+    source_item_button.className = mention.source.charAt(0).toUpperCase() + mention.source.slice(1)
+    source_item_button.id = mention.source.charAt(0).toUpperCase() + mention.source.slice(1)
+    source_item_button.innerHTML = mention.source.charAt(0).toUpperCase() + mention.source.slice(1)
+    source_item_div.appendChild(source_item_button)
+    if(mention.source == "twitter")
+        source_item_div.innerHTML += spam[mention.spam]
+    source_item.appendChild(source_item_div)
+    row.appendChild(source_item)
+
+    // sentiment row
+    let sentiment_item = document.createElement("td")
+    sentiment_item.innerHTML = sentiment[mention.sentiment]
+    row.appendChild(sentiment_item)
+
+    // summary row
+    let summary_item = document.createElement("td")
+    summary_item.id = "Summary"
+    summary_item.innerHTML = mention.summary
+    row.appendChild(summary_item)
+
+    // action row[OPEN]
+    let action_item = document.createElement("td")
+    let action_item_div = document.createElement("div")
+    let action_item_button_open = document.createElement("button")
+    action_item_button_open.type = "button"
+    action_item_button_open.id = "Open"
+    action_item_button_open.onclick = function () {
+        window.open(mention.link, '_blank')
+    }
+    let action_item_button_open_i = document.createElement("i")
+    action_item_button_open_i.className = "bx bx-link-external"
+    action_item_button_open.appendChild(action_item_button_open_i)
+    action_item_button_open.innerHTML += "Open"
+    action_item_div.appendChild(action_item_button_open)
     
-    source_item_div.appendChild(source_item_button)
-    source_item_div.innerHTML += spam[tweet_spam]
-    source_item.appendChild(source_item_div)
-    row.appendChild(source_item)
-
-    let sentiment_item = document.createElement("td")
-    sentiment_item.innerHTML = sentiment[tweet_sentiment]
-    row.appendChild(sentiment_item)
-
-    let summary_item = document.createElement("td")
-    summary_item.id = "Summary"
-    summary_item.innerHTML = "Twitter"
-    row.appendChild(summary_item)
-
-    let action_item = document.createElement("td")
-    let action_item_div = document.createElement("div")
-    let action_item_button_open = document.createElement("button")
-    action_item_button_open.type = "button"
-    action_item_button_open.id = "Open"
-    action_item_button_open.onclick = function () {
-        window.open(tweet_link, '_blank')
-    }
-    let action_item_button_open_i = document.createElement("i")
-    action_item_button_open_i.className = "bx bx-link-external"
-    action_item_button_open.appendChild(action_item_button_open_i)
-    action_item_button_open.innerHTML += "Open"
-    action_item_div.appendChild(action_item_button_open)
+    // action row[COPY]
     let action_item_button_copy = document.createElement("button")
     action_item_button_copy.type = "button"
     action_item_button_copy.onclick = function () {
-        copyToClipboard(tweet_link)
+        copyToClipboard(mention.link)
     }
     action_item_button_copy.id = "Copy"
     let action_item_button_copy_i = document.createElement("i")
@@ -1157,68 +1092,6 @@ function generateTweetRow(keyword, tweet, tweet_published_at, tweet_sentiment, t
     action_item_div.appendChild(action_item_button_copy)
     action_item.appendChild(action_item_div)
     row.appendChild(action_item)
+
     return row
 }
-
-function generateNewsRow(keyword,news, news_published_at, news_sentiment, news_link){
-    let row = document.createElement("tr")
-    let item_publish_date = document.createElement("td")
-    item_publish_date.id = "Data"
-    item_publish_date.innerHTML = news_published_at
-    row.appendChild(item_publish_date)
-
-    let mention_text = document.createElement("td")
-    mention_text.appendChild(truncateText(news, news_sentiment, news_link, news_published_at, keyword,"news"))
-    row.appendChild(mention_text)
-
-    let source_item = document.createElement("td")
-    let source_item_div = document.createElement("div")
-    source_item_div.className = "source_item"
-    let source_item_button = document.createElement("button")
-    source_item_button.type = "button"
-    source_item_button.className = "News"
-    source_item_button.id = "News"
-    source_item_button.innerHTML = "News"
-
-    source_item_div.appendChild(source_item_button)
-    source_item.appendChild(source_item_div)
-    row.appendChild(source_item)
-
-    let sentiment_item = document.createElement("td")
-    sentiment_item.innerHTML = sentiment[news_sentiment]
-    row.appendChild(sentiment_item)
-
-    let summary_item = document.createElement("td")
-    summary_item.id = "Summary"
-    summary_item.innerHTML = "News"
-    row.appendChild(summary_item)
-
-    let action_item = document.createElement("td")
-    let action_item_div = document.createElement("div")
-    let action_item_button_open = document.createElement("button")
-    action_item_button_open.type = "button"
-    action_item_button_open.id = "Open"
-    action_item_button_open.onclick = function () {
-        window.open(news_link, '_blank')
-    }
-    let action_item_button_open_i = document.createElement("i")
-    action_item_button_open_i.className = "bx bx-link-external"
-    action_item_button_open.appendChild(action_item_button_open_i)
-    action_item_button_open.innerHTML += "Open"
-    action_item_div.appendChild(action_item_button_open)
-    let action_item_button_copy = document.createElement("button")
-    action_item_button_copy.type = "button"
-    action_item_button_copy.onclick = function () {
-        copyToClipboard(news_link)
-    }
-    action_item_button_copy.id = "Copy"
-    let action_item_button_copy_i = document.createElement("i")
-    action_item_button_copy_i.className = "bx bx-copy"
-    action_item_button_copy.appendChild(action_item_button_copy_i)
-    action_item_button_copy.innerHTML += "Copy"
-    action_item_div.appendChild(action_item_button_copy)
-    action_item.appendChild(action_item_div)
-    row.appendChild(action_item)
-    return row
-}
-

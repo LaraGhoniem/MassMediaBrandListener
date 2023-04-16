@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard_styles.css">
-    <script  src="../scripts/dashboard_scripts.js"></script>
+    <script type="module" src="../scripts/dashboard_scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href = "../../icons/css/boxicons.min.css" rel="stylesheet">
 </head>
@@ -27,15 +27,15 @@
     <div class="mainContainer">
         <div class="sliderContainer">
             <h5>LISTENERS</h5>
-            <div class="sliderContent">
-                <button onclick="navigate(1)">Add Listeners</button>
-                <button onclick="navigate(2)">View Listeners</button>
-                <button onclick="navigate(3)">Web Mentions</button>
+            <div class="sliderContent" id="navigation">
+                <button id="navigation-1">Add Listeners</button>
+                <button id="navigation-2">View Listeners</button>
+                <button id="navigation-3">Web Mentions</button>
             </div>
             <h5>SETTINGS</h5>
             <div class="sliderContent">
                 <button>Settings</button>
-                <button onclick="logout()">Logout</button>
+                <button id="user-logout">Logout</button>
             </div>
         </div>
         <div class="GeneralContainer" id="home">
@@ -122,20 +122,23 @@
                     <option value="4">Category 4</option>
                     <option value="5">Category 5</option>
                 </select>
-                <button onclick="addKeyword()">Add Keyword</button>
+                <button id="add-keyword">Add Keyword</button>
                 </span>
                 
             </div>
-            <div class="listenerKeywordInput" id="keyword1">
-                <input type="text" id="keywordInput1" placeholder="Keyword">
-                
-                <button onclick="removeKeyword(1)">-</button>
+            <div id="keywords-container">
+                <div class="listenerKeywordInput" id="keyword1">
+                    <input type="text" id="keywordInput1" placeholder="Keyword">
+                    
+                    <button id="remove-1">-</button>
+                </div>
             </div>
+            
         </div>
         <div class="saveContainer">
             <h3 class="saveHeader">Confirm</h3>
             <p>Confirm the listener name and keywords</p>
-            <button onclick="saveListener()">Save Listener</button>
+            <button id="save-listener-button">Save Listener</button>
         </div>
     </div>
     <div class="viewlistenersPageContainer" id="view-listeners">

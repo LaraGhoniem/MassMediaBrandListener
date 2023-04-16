@@ -1259,8 +1259,8 @@ vertical-align:text-bottom;
 }
 
 .mention_popup .popup_container{
-    width: 50%;
-    height: 50%;
+    height: 60%;
+    width: 60%;
     background: #fff;
     border-radius: 10px;
     padding: 20px;
@@ -1269,11 +1269,35 @@ vertical-align:text-bottom;
     align-items: start;
     flex-direction: column;
     gap: 20px;
+    box-sizing: border-box;
     overflow-y: auto;
 }
 
+/* width */
+.mention_popup .popup_container::-webkit-scrollbar {
+    width: 15px;
+    margin: 20px 0;
+}
+
+/* Track */
+.mention_popup .popup_container::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+/* Handle */
+.mention_popup .popup_container::-webkit-scrollbar-thumb {
+    background: #A785FF;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+.mention_popup .popup_container::-webkit-scrollbar-thumb:hover {
+    background: #CBB7FF;
+}
+
 .mention_popup .popup_container .popup_text{
-    width: 100%;
+    width: 90%;
+    padding: 0 5%;
     text-align: right;
     gap: 10px;
 }
@@ -1304,15 +1328,102 @@ vertical-align:text-bottom;
 .popup_keyword_header{
     line-height: 0.5;
     font-size: 35px;
+    width: 90%;
     font-weight: 600;
     color: #222222;
     font-family: 'Poppins', sans-serif;
-    margin-left: 20px;
-    padding: 0;
+    padding: 0 5%;
 }
 
 .popup_header_row button:hover{
     background-color:rgb(248, 112, 112)
+}
+
+.popup_info_row{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    gap: 10px;
+}
+
+.popup_info_row div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.popup_info_row div .twitter{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #D3F1F8;
+}
+
+.popup_info_row div .news{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #D6C7FF;
+}
+
+.popup_info_row div .neutral{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #EDEDED;
+}
+
+.popup_info_row div .positive{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #C7FFD6;
+}
+
+.popup_info_row div .negative{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #FFC7CC;
+}
+
+.popup_info_row div .spam{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #FFC7CC;
+}
+
+
+.popup_info_date{
+    font-size: 15px;
+    font-weight: 300;
+    color: #222222;
+    font-family: 'Poppins', sans-serif;
+}
+
+.popup_info_source{
+    font-size: 15px;
+    font-weight: 300;
+    color: #222222;
+    font-family: 'Poppins', sans-serif;
 }
 
 .mention_text p{
