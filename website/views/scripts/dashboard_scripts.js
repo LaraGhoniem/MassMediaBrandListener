@@ -5,11 +5,20 @@ import { User } from "./helpers/user.js";
 // logout button
 document.getElementById("user-logout").addEventListener("click", async () => await User.logout());
 //navigation
+
 let nav_slider = document.getElementById('navigation')
+let nav_settings_slider = document.getElementById('navigation-settings')
 let nav_buttons = nav_slider.children
+let nav_settings_buttons = nav_settings_slider.children
+// nav_buttons += nav_settings_buttons
 for(let i = 0; i < nav_buttons.length; i++){
     nav_buttons[i].addEventListener('click', () => {
         navigate(i+1)
+    })
+}
+for(let i = 0; i < nav_settings_buttons.length; i++){
+    nav_settings_buttons[i].addEventListener('click', () => {
+        navigate(i+4)
     })
 }
 // add keyword button
@@ -83,18 +92,21 @@ function navigate(page){
             document.getElementById("add-listener").style.display = "none";
             document.getElementById("view-listeners").style.display = "none";
             document.getElementById("web-mentions").style.display = "none";
+            document.getElementById("Account-Settings").style.display = "none";
     }
     else if(page === 1){
             document.getElementById("home").style.display = "none";
             document.getElementById("add-listener").style.display = "block";
             document.getElementById("view-listeners").style.display = "none";
             document.getElementById("web-mentions").style.display = "none";
+            document.getElementById("Account-Settings").style.display = "none";
     }
     else if(page === 2){
             document.getElementById("home").style.display = "none";
             document.getElementById("add-listener").style.display = "none";
             document.getElementById("view-listeners").style.display = "block";
             document.getElementById("web-mentions").style.display = "none";
+            document.getElementById("Account-Settings").style.display = "none";
             // 
             // 
             var ctx = document.getElementById('mentionslinechart');
@@ -394,6 +406,15 @@ function navigate(page){
         document.getElementById("add-listener").style.display = "none";
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "block";
+        document.getElementById("Account-Settings").style.display = "none";
+}
+else if(page === 4){
+    document.getElementById("home").style.display = "none";
+    document.getElementById("add-listener").style.display = "none";
+    document.getElementById("view-listeners").style.display = "none";
+    document.getElementById("web-mentions").style.display = "none";
+    document.getElementById("Account-Settings").style.display = "block";
+    
 }
 }
 
