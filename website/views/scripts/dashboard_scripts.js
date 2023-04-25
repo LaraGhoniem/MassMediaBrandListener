@@ -25,17 +25,87 @@ for(let i = 0; i < nav_settings_buttons.length; i++){
 document.getElementById("add-keyword").addEventListener("click", () => {
     addKeyword()
 })
-// remove keyword button
-document.getElementById("remove-1").addEventListener("click", () => {
-    removeKeyword(1)
-})
-//save listener
-document.getElementById("save-listener-button").addEventListener("click", () => {
-    saveListener()
-})
+// // remove keyword button
+// document.getElementById("remove-1").addEventListener("click", () => {
+//     if(document.querySelectorAll("#keyword-input-container > div").length > 1)
+//         removeKeyword(document.getElementById("keyword-input-1"))
+// })
+var keywordValues = [];
+document.getElementById('continue-add-listener').addEventListener("click", () => {
+    let keywords = document.querySelectorAll("#keyword-input-container > div > input");
+    
+    let error = false
 
+    let listenerName = document.getElementById("new-listener-name").value;
+    if (listenerName === "") {
+        document.getElementById("new-listener-name").style.border = "3px solid red";
+        document.getElementById("error-message").innerHTML = "Please enter a listener name";
+        error = true
+    }
+    if(keywords.length === 0){
+        document.getElementById("keyword-input-container").style.border = "3px solid red";
+        document.getElementById("error-message").innerHTML += "\nPlease enter at least one keyword";
+        error = true
+    }
+    for (let keyword of keywords) {
+        if (keyword.value === "") {
+            keyword.style.border = "3px solid red";
+            document.getElementById("error-message").innerHTML += "\nPlease enter a keyword";
+            error = true
+            return;
+        } else {
+            keywordValues.push(keyword.value);
+        }
+    }
+
+    if (!error) {
+        document.querySelector(".pop-up-content").style.display = "none";
+        document.querySelector(".pop-up-content-categories").style.display = "block";
+    }
+})
+// add listener popup
+document.querySelectorAll(".listener-header-row button").forEach(function(button) {
+  button.addEventListener("click", function() {
+    document.getElementById("add-listener-popup").style.display = "flex";
+    document.getElementById("add-listener-popup").style.opacity = 1;
+  });
+});
+// close add listener popup
+document.getElementById("cancel-button").addEventListener("click", () => {
+    document.querySelector(".pop-up-content-categories").style.display = "none"
+    document.querySelector(".pop-up-content").style.display = "block"
+    document.getElementById("add-listener-popup").style.display = "none";
+    document.getElementById("add-listener-popup").style.opacity = 0;
+    document.getElementById("new-listener-name").value = "";
+    document.getElementById("keyword-input-container").innerHTML = `<div style="text-align: center; width: 100%">Click on the add button above to add a keyword</div>`;
+    document.getElementById("error-message").innerHTML = "";
+    document.getElementById("keyword-input-container").style.border = "none";
+    document.getElementById("new-listener-name").style.border = "2px solid #5B5B5B";
+    keywordValues = [];
+    keywordCount = 0
+});
+// back button on add listener popup
+document.getElementById("back-button").addEventListener("click", () => {
+    if(document.querySelector(".pop-up-content-categories").style.display === "block"){
+        document.querySelector(".pop-up-content").style.display = "block";
+        document.querySelector(".pop-up-content-categories").style.display = "none";
+        document.getElementById("error-message").innerHTML = "";
+    }
+    else{
+        document.getElementById("add-listener-popup").style.display = "none";
+        document.getElementById("add-listener-popup").style.opacity = 0;
+        document.getElementById("new-listener-name").value = "";
+        document.getElementById("keyword-input-container").innerHTML = `<div style="text-align: center; width: 100%">Click on the add button above to add a keyword</div>`;
+        document.getElementById("error-message").innerHTML = "";
+        document.getElementById("keyword-input-container").style.border = "none";
+    document.getElementById("new-listener-name").style.border = "2px solid #5B5B5B";
+        keywordValues = [];
+        keywordCount = 0;
+    }
+})
 var user = {}
 var listenersData = []
+var categories = []
 
 window.onload = async function() {
     user = await User.create()
@@ -47,6 +117,12 @@ window.onload = async function() {
             viewListenerMentions(listenersData[0]._id, listenersData[0].listener_name)
         }
     })
+    // get all categories from database
+    let post = new Post("/category/all")
+    post.get((data) => {
+        categories = data.category
+        viewCategories(categories)
+    })
 }
 
 var gradient;
@@ -55,7 +131,97 @@ function getGradient(ctx, chartArea) {
     gradient.addColorStop(0, 'rgba(133, 92, 248, 0.4)');
     gradient.addColorStop(1, 'rgba(133, 92, 248, 0)');
 
-  return gradient;
+    return gradient;
+}
+const chosenCategories = [];
+function viewCategories(categories){
+    const container = document.querySelector('.category-container');
+
+    for (let i = 0; i < categories.length; i += 2) {
+        const column = document.createElement('div');
+        column.classList.add('category-column');
+
+        const item1 = document.createElement('div');
+        item1.classList.add('category-item');
+        item1.textContent = categories[i].category_name;
+        const checkIcon1 = document.createElement('span');
+        checkIcon1.classList.add('check-icon');
+        checkIcon1.innerHTML = `
+        <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" fill="#353535"/>
+        <path d="M28 14L17 25L12 20" stroke="#C7BEFF" stroke-opacity="0.87" stroke-width="4" stroke-linecap="square"/>
+        </svg>
+        `;
+        item1.appendChild(checkIcon1);
+        item1.addEventListener('click', () => {
+        if (item1.dataset.bgColor === '#C7BEFF') {
+            item1.style.backgroundColor = '';
+            item1.dataset.bgColor = '';
+            checkIcon1.style.display = 'none';
+            chosenCategories.splice(chosenCategories.indexOf(categories[i]), 1);
+        } else {
+            item1.style.backgroundColor = '#C7BEFF';
+            item1.dataset.bgColor = '#C7BEFF';
+            checkIcon1.style.display = 'block';
+            chosenCategories.push(categories[i]);
+        }
+        });
+        column.appendChild(item1);
+
+        if (categories[i + 1]) {
+        const item2 = document.createElement('div');
+        item2.classList.add('category-item');
+        item2.textContent = categories[i + 1].category_name;
+        const checkIcon2 = document.createElement('span');
+        checkIcon2.classList.add('check-icon');
+        checkIcon2.innerHTML = `
+        <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="20" fill="#353535"/>
+        <path d="M28 14L17 25L12 20" stroke="#C7BEFF" stroke-opacity="0.87" stroke-width="4" stroke-linecap="square"/>
+        </svg>
+        `;
+        item2.appendChild(checkIcon2);
+        item2.addEventListener('click', () => {
+            if (item2.dataset.bgColor === '#C7BEFF') {
+            item2.style.backgroundColor = '';
+            item2.dataset.bgColor = '';
+            checkIcon2.style.display = 'none';
+            chosenCategories.splice(chosenCategories.indexOf(categories[i + 1]), 1);
+            } else {
+            item2.style.backgroundColor = '#C7BEFF';
+            item2.dataset.bgColor = '#C7BEFF';
+            checkIcon2.style.display = 'block';
+            chosenCategories.push(categories[i + 1]);
+            }
+        });
+        column.appendChild(item2);
+        }
+
+        container.appendChild(column);
+    }
+
+    let submitButton = document.getElementById("submit-listener")
+    submitButton.addEventListener("click", () => {
+        let listenerName = document.getElementById("new-listener-name").value
+        let listenerKeywords = keywordValues
+        let listenerCategories = chosenCategories.map((category) => {
+            return category._id
+        })
+        let listener = {
+            listener_name: listenerName,
+            listener_keywords: listenerKeywords,
+            listener_categories: listenerCategories
+        }
+        User.addListener(user.data.user._id, listener, () => {
+            User.getListeners(user.data.user._id, (data) => {
+                listenersData = data.listener
+                viewStats(listenersData)
+                viewListener(listenersData[0]._id, listenersData[0].listener_name)
+                viewListenerMentions(listenersData[0]._id, listenersData[0].listener_name)
+            })
+            document.getElementById("add-listener-popup").style.display = "none";
+        })
+    })
 }
 
 var mentionschart
@@ -86,24 +252,7 @@ function navigate(page){
     User.getListeners(user.data.user._id, (data) => {
         listenersData = data.listener
     })
-    // 0: Home Page 1: Add Listener Page 2: View Listeners Page 3: View Results Page
-    if(page === 0){
-            document.getElementById("home").style.display = "block";
-            document.getElementById("add-listener").style.display = "none";
-            document.getElementById("view-listeners").style.display = "none";
-            document.getElementById("web-mentions").style.display = "none";
-            document.getElementById("Account-Settings").style.display = "none";
-    }
-    else if(page === 1){
-            document.getElementById("home").style.display = "none";
-            document.getElementById("add-listener").style.display = "block";
-            document.getElementById("view-listeners").style.display = "none";
-            document.getElementById("web-mentions").style.display = "none";
-            document.getElementById("Account-Settings").style.display = "none";
-    }
-    else if(page === 2){
-            document.getElementById("home").style.display = "none";
-            document.getElementById("add-listener").style.display = "none";
+    if(page === 1){
             document.getElementById("view-listeners").style.display = "block";
             document.getElementById("web-mentions").style.display = "none";
             document.getElementById("Account-Settings").style.display = "none";
@@ -401,128 +550,55 @@ function navigate(page){
             // 
             // 
     }
-    else if(page === 3){
-        document.getElementById("home").style.display = "none";
-        document.getElementById("add-listener").style.display = "none";
+    else if(page === 2){
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "block";
         document.getElementById("Account-Settings").style.display = "none";
-}
-else if(page === 4){
-    document.getElementById("home").style.display = "none";
-    document.getElementById("add-listener").style.display = "none";
-    document.getElementById("view-listeners").style.display = "none";
-    document.getElementById("web-mentions").style.display = "none";
-    document.getElementById("Account-Settings").style.display = "block";
-    
-}
-}
-
-var keywordCount = 1;
-function removeKeyword(i){
-    var keywords = document.getElementById("keywords-container");
-    if(keywords.children.length > 1){
-        document.getElementById("keyword"+i).remove();
-        keywordCount--;
+    }
+    else if(page === 4){
+        document.getElementById("view-listeners").style.display = "none";
+        document.getElementById("web-mentions").style.display = "none";
+        document.getElementById("Account-Settings").style.display = "block";
     }
 }
+
+var keywordCount = 0;
 
 function addKeyword(){
-    keywordCount++;
-    var keywords = document.getElementById("keywords-container");
-    let keyword = document.createElement("div");
-    keyword.setAttribute("class", "listenerKeywordInput");
-    keyword.setAttribute("id", "keyword"+keywordCount);
-    keyword.innerHTML = `
-    <input type="text" id="keywordInput${keywordCount}" placeholder="Keyword">
-    <button id='remove-${keywordCount}'>-</button>
-    `
-    keywords.appendChild(keyword);
-    //remove keyword buttons
-    keywords.children[keywords.children.length-1].children[1].addEventListener("click", () => {
-        removeKeyword(keywords.children.length)
-    })
-}
+    let keywords = document.getElementById("keyword-input-container");
 
-async function saveListener(){
-let keywords = document.getElementById("keywords-container").children;
-let keywordArray = [];
-var error = false
-for(let i = 0; i < keywords.length; i++){
-    if(keywords[i].children[0].value === ""){
-        error = true
-        break;
+    // remove initial div on first click
+    if (keywordCount === 0) {
+        keywords.removeChild(keywords.firstElementChild);
     }
-    keywordArray.push(keywords[i].children[0].value);
-}
-let listenerName = document.getElementById("addlistenerName").value;
-if(listenerName === "")
-    error = true
-let category = document.getElementById("keyword-category").value;
-if(category == "0")
-    error = true
-if(!error){
-let response = {
-    listener_name: listenerName,
-    listener_status: "inactive",
-    company_id: user.data.user.company_id,
-    category_id: "63fb78b1737cba7b6d865aae"
-}
-// get company id by user id
 
-    await fetch('/listener/add', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "listener_name": listenerName,
-            "listener_status": "inactive",
-            "user_id": user.data.user._id,
-            "category_id": "63fb78b1737cba7b6d865aae"
-        })
-    }).then(async (res) => {
-        if(res.status === 200){
-            console.log("Listener added successfully")
-            await res.json().then(async (data) => {
-                console.log(data)
-                let listener_id = data.listener._id
-                
-                for(let i = 0; i < keywordArray.length; i++){
-                    await fetch('/keyword/add', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            "keyword": keywordArray[i],
-                            "listener_id": listener_id
-                        })
-                    }).then(async (res) => {
-                        if(res.status === 200){
-                            console.log("Keyword added successfully")
-                            alert("Listener added successfully")
-                        }
-                        else{
-                            console.log(res.status)
-                        }
-                    }).catch((err) => {
-                        console.log(err)
-                    })
-                }
-                
-            })
-        }
-        else{
-            console.log(res.status)
-        }
-    }).catch((err) => {
-        console.log(err)
-    })
+    keywordCount++;
+    let keyword = document.createElement("div");
+    keyword.setAttribute("class", "keyword-input");
+    keyword.setAttribute("id", "keyword-container-" + keywordCount);
+    keyword.innerHTML = `
+        <input type="text" id="keyword-input-${keywordCount}" placeholder="Keyword">
+        <button id='remove-${keywordCount}'>
+            <svg width="28" height="28" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.08496 13H20.9135" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    `;
+    keywords.appendChild(keyword);
 
-}else{
-    alert("Please fill out all fields")
-}
+    let removeButton = document.getElementById(`remove-${keywordCount}`);
+    removeButton.addEventListener('click', () => {
+        keywordCount--;
+        keyword.remove();
+
+        // add message if this was the last div
+        if (keywords.childElementCount === 0) {
+            let message = document.createElement("div");
+            message.setAttribute("style", "text-align: center; width: 100%");
+            message.textContent = "Click on the add button above to add a keyword";
+            keywords.appendChild(message);
+        }
+    });
 }
 
 function count(arr, value){
@@ -776,6 +852,7 @@ async function viewListenerMentions(listenerid, listenername){
         }
     })
     document.getElementById("table-container").style.display = "none"
+    document.getElementById("empty-result").style.display = "none"
     document.getElementById("loading-container").style.display = "flex"
     await fetch('/listener/result/'+listenerid,{  
         method: 'GET',
@@ -786,8 +863,8 @@ async function viewListenerMentions(listenerid, listenername){
             await res.json().then((data) => {
                 if(data["result"].length == 0){
                     document.getElementById("loading-container").style.display = "none"
-                    document.getElementById("table-container").style.display = "flex"
-                    document.getElementById("table-container").innerHTML = "No results found. Please note that the listener runs once daily at 12:00 AM."
+                    document.getElementById("table-container").style.display = "none"
+                    document.getElementById("empty-result").style.display = "flex"
                 }
                 else{
                     var listener = data["result"]

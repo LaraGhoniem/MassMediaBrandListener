@@ -28,124 +28,22 @@
         <div class="sliderContainer">
             <h5>LISTENERS</h5>
             <div class="sliderContent" id="navigation">
-                <button id="navigation-1">Add Listeners</button>
-                <button id="navigation-2">View Listeners</button>
-                <button id="navigation-3">Web Mentions</button>
-                
+                <button id="navigation-1">View Listeners</button>
+                <button id="navigation-2">Web Mentions</button>
             </div>
             <h5>SETTINGS</h5>
             <div class="sliderContent" id="navigation-settings">
-               
                 <!-- <button id="Account-Settings">Settings</button> -->
                 <button id="navigation-4">Account Settings</button>
                 <button id="user-logout">Logout</button>
             </div>
         </div>
-        <div class="GeneralContainer" id="home">
-            <h1>General Dashboard</h1>
-            <p class="generalInfo">Views information about all listeners created</p>
-            <div class="gridContainer">
-                <div class="gridItem">
-                    <p>Number of listeners</p>
-                    <h1 id="listeners">0</h1>
-                </div>
-                <div class="gridItem">
-                    <p>Number of Active listeners</p>
-                    <h1 id="activeListeners">0</h1>
-                </div>
-                <div class="gridItem">
-                    <p>Number of Keywords</p>
-                    <h1 id="keywords">0</h1>
-                </div>
-            </div>
-            <div class="listenerContainer">
-                <div class="listenerItem">
-                    <h3>Create Listener</h3>
-                    <h5>A name to group all keywords</h5>
-                    <input type="text" id="listenerName" placeholder="Listener Name">
-                    <div class="textContainer">
-                        <h5>keywords</h5>
-                    <button class="addKeyword">Add Keyword</button>
-                    </div>
-                    
-                    <div id="keywords" class="keywordsContainer">
-                        <div class="keywordItem">
-                            <input type="text" placeholder="Keyword">
-                            <button onclick="removeKeyword(this)">-</button>
-                        </div>
-                    </div>
-                    
-                    <button class="createListener">Create Listener</button>
-                    
-                </div>
-                <div class="listenerListContainer">
-                    <h3>Listeners List</h3>
-                    <div class="listenerList">
-                        <div class="listenerlistitem">
-                            <h5>Listener Name</h5>
-                            <p class="keywordtext">Keywords</p>
-                            <div class="buttonContainer">
-                                <button class="viewListener">View</button>
-                            <button class="deleteListener">Delete</button>
-                            </div>
-                        </div>
-                        <div class="listenerlistitem">
-                            <h5>Listener Name</h5>
-                            <p class="keywordtext">Keywords</p>
-                            <div class="buttonContainer">
-                                <button class="viewListener">View</button>
-                            <button class="deleteListener">Delete</button>
-                            </div>
-                            
-                        </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="addlistenersPageContainer" id="add-listener">
-        <h1>Add Listener</h1>
-        <p class="generalInfo">Create a listener with keywords to start monitoring your brand</p>
-        <div class="listenerNameContainer">
-            <h3>Get started with a name</h3>
-            <p>Enter a name to the listener to group all keywords.</p>
-            <input type="text" id="addlistenerName" placeholder="Listener Name">
-        </div>
-        <div class="listenerKeywordsContainer" id="listener-keyword-container">
-            <div class="keywordContainerTopArea">
-                <span>
-                    <h3>Enter brand's keywords</h3>
-                    <p>Enter keywords to monitor your brand</p>
-                </span>
-                <span>
-                    <select name="category" id="keyword-category">
-                    <option value="0">Select Category</option>
-                    <option value="1">Category 1</option>
-                    <option value="2">Category 2</option>
-                    <option value="3">Category 3</option>
-                    <option value="4">Category 4</option>
-                    <option value="5">Category 5</option>
-                </select>
-                <button id="add-keyword">Add Keyword</button>
-                </span>
-                
-            </div>
-            <div id="keywords-container">
-                <div class="listenerKeywordInput" id="keyword1">
-                    <input type="text" id="keywordInput1" placeholder="Keyword">
-                    
-                    <button id="remove-1">-</button>
-                </div>
-            </div>
-            
-        </div>
-        <div class="saveContainer">
-            <h3 class="saveHeader">Confirm</h3>
-            <p>Confirm the listener name and keywords</p>
-            <button id="save-listener-button">Save Listener</button>
-        </div>
-    </div>
     <div class="viewlistenersPageContainer" id="view-listeners">
-        <h2>Listeners</h2>
+        
+        <div class="listener-header-row">
+            <h2>Listeners</h2>
+            <button id="add-listener-button">Add Listener</button>
+        </div>
         <div class="listeners_list" id = "listeners_list_items">
         </div>
         <h2 id="listener_name">No Listeners</h2>
@@ -224,15 +122,74 @@
     <div class="mention_popup" id="mention_popup">
 
     </div>
+
+    <!-- POPUP ADD-LISTENER -->
+    <div class="add-listener-popup" id="add-listener-popup">
+        <div class="operations-container">
+            <div class="back-button-container">
+                <button id="back-button">
+                    <i class='bx bx-chevron-left'></i>
+                </button>
+            </div>
+            <div class="cancel-button-container">
+                <button id="cancel-button">
+                    <i class='bx bx-x' ></i>
+                </button>
+            </div>
+        </div>
+        <div class="pop-up-content">
+            <h1>Create your brand listener</h1>
+            <h3>Add keywords in your listener to track down their mentions</h3>
+            <br>
+            <div class="listener-input">
+                <input type="text" id="new-listener-name" placeholder=" "/>
+                <label for="new-listener-name">Listener Name</label>
+            </div>
+            
+            <div class="add-keywords-container">
+                <h2>Add keywords</h2>
+                <button id="add-keyword">
+                    <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 22H33M22 33V11" stroke="#282828" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="keyword-input-container" id="keyword-input-container">
+                <div style="text-align: center; width: 100%">Click on the add button above to add a keyword</div>
+            </div>
+            <div class="continue-button-container">
+                <button id="continue-add-listener">Continue</button>
+            </div>
+            <div style="color: red; text-align: center;" id="error-message"></div>
+        </div>
+        <div class="pop-up-content-categories">
+            <h1>Help us understand what you do..</h1>
+            <h3>Pick one or more category that has to do with your brand</h3>
+            <div class="scroll-container">
+                <div class="category-container" id="categories"></div>
+            </div>
+            <br>
+            <div class="category-button-container">
+                <button id="submit-listener">Add Listener</button>
+            </div>
+        </div>
+    </div>
+
     <div class="webmentionsPageContainer" id="web-mentions">
-        <h2>Listeners</h2>
+        <div class="listener-header-row">
+            <h2>Listeners</h2>
+            <button id="add-listener-button-2">Add Listener</button>
+        </div>
         <div class="listeners_list" id = "listeners_list_items_2">
         </div>
         <div>
         <h2 id="listener_name_mentions">No Listeners</h2>
-        <div class="table_container" id="table-container">
+        <div class="table_container" id="table-container" style="display: none;">
             <div class="pagination-container" id="pagination_div"></div>
-            <table class="tableOne" id="mentions-table"></table>
+            <table class="tableOne" id="mentions-table" ></table>
+        </div>
+        <div class="empty-result" id="empty-result" style = "background-color: white; border-radius: 15px; height: 100px;display: none; justify-content: center; align-items: center;flex-direction: column;">
+            No results found. Please note that the listener runs once daily at 12:00 AM.
         </div>
         <div id = "loading-container" style = "background-color: white; border-radius: 15px; height: 500px;display: flex; justify-content: center; align-items: center;flex-direction: column;">
             <div style="width:5%; height: 5%;margin-bottom: 40px;">

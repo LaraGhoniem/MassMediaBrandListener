@@ -1,6 +1,8 @@
 const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
+const Category = require("./models/categoryModel")
+
 
 //packages
 const bodyParser = require('body-parser')
@@ -26,6 +28,7 @@ mongoose.connect(process.env.DATABASE, {
 }).catch(() => {
     console.log("DB CONNECTION FAILED")
 })
+
 
 // Use parsing Middleware
 app.use(bodyParser.json())

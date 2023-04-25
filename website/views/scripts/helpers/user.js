@@ -21,4 +21,27 @@ export class User{
             callback(data)
         })
     }
+    static async addListener(user_id, data,callback){
+        //add listener to the database
+        let listener_post = new Post('/listener/add')
+        let listener_data = {
+            listener_name: data.listener_name,
+            user_id: user_id,
+            categories: data.listener_categories
+        }
+        await listener_post.post(listener_data).then(listener => {
+            //add keywords to the database
+            let keyword_post = new Post('/keyword/add')
+            let keywords = data.listener_keywords
+            for(let keyword of keywords){
+                keyword = {
+                    keyword: keyword,
+                    listener_id: listener.listener._id
+                }
+                keyword_post.post(keyword)
+            }
+        }).then(() => {
+            callback()
+        })
+    }
 }
