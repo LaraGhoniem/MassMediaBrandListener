@@ -364,12 +364,17 @@ html, body{
     font-family: 'Poppins', sans-serif;
 }
 .accsetPageContainer{
+    overflow:auto;
     display: none;
     width: 100%;
     height: 100%;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
     font-family: 'Poppins', sans-serif;
+}
+
+.accsetPageContainer h1{
+    padding-left:5%;
 }
 .accountsettingsPageContainer{
     display: none;
@@ -523,11 +528,12 @@ html, body{
 }
 .accsetContainer{
     width: 90%;
-    background:  #efefef;
-    /* opacity: 0.3; */
+    background-color: rgba(255, 255, 255, 0.3);
+    /*opacity: 0.3;*/
     border-radius: 15px;
     padding: 12px 30px;
     margin: 0 5%;
+    margin-bottom: 3%;
     box-sizing: border-box;
 }
 .accsetContainer h3{
@@ -551,9 +557,8 @@ html, body{
 
 .accsetContainer input[type="text"]{
     width: 45%;
-    
+    border-color: transparent;
     border-radius: 1px;
-    
     margin-left: 500px;
     margin-top:20;
     background-color:white;
@@ -565,19 +570,17 @@ html, body{
     border-radius: 15px;
     font-size: 16px;
     color: #000;
-   
 }
- .ay input[type="image"]{
+.ay input[type="image"]{
     width: 100px;
     height: 100px;
     border-radius: 1px;
     border-style: dashed;
-   
+
     background-color:white;
     padding: 22px 40px;
- display: inline-block;
+display: inline-block;
     /* margin: 0 25px; */
-   
     font-family: 'Poppins', sans-serif;
     border-radius: 15px;
     font-size: 16px;
@@ -589,7 +592,6 @@ html, body{
     
     margin-right: 650px;
     margin-top: 100px;
-   
 }
 
 .listenerKeywordsContainer{
@@ -1975,4 +1977,114 @@ vertical-align:text-bottom;
 .cancel-button-container button:hover{
     background-color: red;
     color: white
+}
+
+/* .Wrapping-box{
+    width: 90%;
+    background:  #efefef;
+    border-radius: 30px;
+    padding: 12px 30px;
+    margin: 0 5%;
+    box-sizing: border-box;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}
+.Wrapping-box h3{
+    color: #000;
+   
+    font-size: 15px;
+    margin-top: 20px;
+}
+.Wrapping-box h2{
+   display: inline-block;
+    color: #000;
+   padding-left: 20px;
+   padding-top: 0px;
+    font-size: 15px;
+    margin-left: 500px;
+    margin-top: 20px;
+}
+.Wrapping-box p{
+    line-height: 0.1;
+} 
+
+.Wrapping-box input[type="text"]{
+    width: 45%;
+    background-color:white;
+    box-sizing: border-box;
+    border-radius: 15px;
+    font-size: 16px;
+}
+
+.row-two{
+    margin: auto;
+}
+*/
+
+.Wrapping-box{
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    margin-left: 5%;
+    backdrop-filter: blur(10px);
+    margin-bottom: 10%;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}
+
+.middle-box{
+    padding-top: 0.5%;
+    padding-bottom: 2%;
+    padding-left: 33%;
+}
+
+.row-two {
+    align-items: center;
+}
+
+.text-input{
+    border-radius: 15px;
+    padding: 1.5%;
+    width:60%;
+    font-size: 16px;
+    background-color:white;
+    border-color: transparent;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}
+
+
+
+.password-text-input{
+    flex:1;
+    background-color:white;
+    border-radius: 15px;
+    padding: 7%;
+    width:130%;
+    font-size: 16px;
+    border-color: transparent;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    -ms-border-radius: 15px;
+    -o-border-radius: 15px;
+}
+
+.Wrapping-box h2{
+    padding-left: 3%;
+}
+
+
+.texting-line{
+    display:flex;
+    justify-content:space-between;
+    padding-right:5%;
+    padding-bottom: 5%;
+    margin-left: 50px;
+    margin-right: 50px;
 }
