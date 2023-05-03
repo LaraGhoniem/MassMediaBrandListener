@@ -1978,6 +1978,7 @@ vertical-align:text-bottom;
     background-color: red;
     color: white
 }
+<<<<<<< Updated upstream
 
 /* .Wrapping-box{
     width: 90%;
@@ -2187,3 +2188,37 @@ vertical-align:text-bottom;
 .Button-two:hover{
     background-color: white;
 } */
+=======
+.rounded-btn {
+    background-color:#A785FF;
+    color: white;
+    border-radius: 10px;
+    padding: 12px 24px;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+.rounded-btn:hover{
+    background-color:#CBB7FF;
+    color: white;
+}
+.delete-btn {
+    background-color:rgb(248, 112, 112);
+    color: white;
+    border-radius: 10px;
+    padding: 12px 24px;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+}
+.delete-btn:hover{
+    background-color:rgb(247, 145, 145);
+    color: white;
+}
+>>>>>>> Stashed changes

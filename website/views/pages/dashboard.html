@@ -34,7 +34,8 @@
             <h5>SETTINGS</h5>
             <div class="sliderContent" id="navigation-settings">
                 <!-- <button id="Account-Settings">Settings</button> -->
-                <button id="navigation-4">Account Settings</button>
+                <button id="navigation-4">Account</button>
+                <button id="navigation-4">Keywords</button>
                 <button id="user-logout">Logout</button>
             </div>
         </div>
@@ -358,6 +359,7 @@
             </div>
         </div>
 
+<<<<<<< Updated upstream
         <div class="Wrapping-box">
             <div class="middle-box">
                 <h2>Email</h2>
@@ -393,6 +395,87 @@
                 </div>
             </div>    
         </div> 
+=======
+
+
+<h2>Full Name</h2>
+<input type="text" id ="addlistenerName"placeholder="Please enter your full Name">
+<h2>Your company's Name</h2>
+<input type="text" id ="addlistenerName"placeholder=" Please Enter Your company's Name">
+      </div>
+    </div>
+    </div>
+    
+     <div class="viewlistenersPageContainer" id="keyword-Settings">
+        <div class="listener-header-row">
+            <h2>Listeners</h2>
+            <button id="add-listener-button-2">Add Listener</button>
+        </div>
+        <div class="listeners_list" id = "listeners_list_items_2">
+        </div>
+       
+        <style>
+            table {
+                border-collapse: collapse;
+                border: 2px none #ccc;
+                border-radius: 10px;
+                background-color: #fff;
+            }
+            
+            th, td {
+                border: 1px thin #ccc;
+                padding: 8px;
+                text-align: left;
+            }
+            
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+        <script>
+            function deleteRow(rowId) {
+  const table = document.getElementById("myTable");
+  const row = rowId.parentNode.parentNode; // get row element
+
+  table.deleteRow(row.rowIndex);
+}
+
+          </script>
+        <table id="myTable" width="80%" height="300">
+            <thead>
+                <tr>
+                    <th>Keyword</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="cell1">Anghami</td>
+                    <td><button class="rounded-btn">Edit</button></td>
+                    <td><button  onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
+                </tr>
+                <tr>
+                    <td id="cell2">MIU</td>
+                    <td><button class="rounded-btn">Edit</button></td>
+                    <td><button onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
+                </tr>
+               
+                <tr>
+                    <td id="cell3">Uber</td>
+                    <td><button class="rounded-btn">Edit</button></td>
+                    <td><button  onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
+                </tr>
+                <tr>
+                    <td id="cell4">Swivl</td>
+                    <td><button class="rounded-btn">Edit</button></td>
+                    <td><button onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div> 
+>>>>>>> Stashed changes
     </div>
     
 </body>
