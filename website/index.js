@@ -2,8 +2,11 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
 const Category = require("./models/categoryModel")
-
-
+// const{addKeyword,view_keywords_by_listener_id }=require("./controllers/keyword")
+// const router=express.Router()
+// router.post("/add",addKeyword)
+// router.get("/view/:id",view_keywords_by_listener_id)
+// module.exports=router
 //packages
 const bodyParser = require('body-parser')
 const session = require('express-session')

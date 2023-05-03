@@ -1,3 +1,4 @@
+// import { response } from "express";
 import { Post } from "./helpers/post.js";
 import { User } from "./helpers/user.js";
 
@@ -256,6 +257,7 @@ function navigate(page){
             document.getElementById("view-listeners").style.display = "block";
             document.getElementById("web-mentions").style.display = "none";
             document.getElementById("Account-Settings").style.display = "none";
+            document.getElementById("keyword-Settings").style.display = "none";
             // 
             // 
             var ctx = document.getElementById('mentionslinechart');
@@ -554,11 +556,19 @@ function navigate(page){
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "block";
         document.getElementById("Account-Settings").style.display = "none";
+        document.getElementById("keyword-Settings").style.display = "none";
     }
     else if(page === 4){
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "none";
         document.getElementById("Account-Settings").style.display = "block";
+        document.getElementById("keyword-Settings").style.display = "none";
+    }
+    else if(page === 5){
+        document.getElementById("view-listeners").style.display = "none";
+        document.getElementById("web-mentions").style.display = "none";
+        document.getElementById("Account-Settings").style.display = "none";
+        document.getElementById("keyword-Settings").style.display = "block";
     }
 }
 
@@ -614,11 +624,14 @@ function count(arr, value){
 function viewStats(listeners){
     let listener_html = document.getElementById("listeners_list_items")
     let listener_html_2 = document.getElementById("listeners_list_items_2")
+    // let listener_html_3 = document.getElementById("listeners_list_items_3")
     listener_html.innerHTML = `<h4>No Listeners Created</h4>`
     listener_html_2.innerHTML = `<h4>No Listeners Created</h4>`
+    //listener_html_3.innerHTML = `<h4>No Listeners Created</h4>`
     if(listeners.length > 0){
         listener_html.innerHTML = ""
         listener_html_2.innerHTML = ""
+        //listener_html_3.innerHTML = ""
         for(let i = 0; i < listeners.length; i++){
             let listener_div = document.createElement("div")
             listener_div.setAttribute("id", listeners[i]._id)
@@ -646,11 +659,26 @@ function viewStats(listeners){
             listener_div_2.addEventListener("click", () => {
                 viewListenerMentions(listeners[i]._id, listeners[i].listener_name)
             })
+            //  let listener_div_3 = document.createElement("div")
+            // listener_div_3.setAttribute("id", listeners[i]._id+"_3")
+            // listener_div_3.setAttribute("class", "listeners_list_item")
+            // if(i == 0)
+            //     listener_div_3.classList.add("active")
+            // else
+            //     listener_div_3.classList.add("inactive")
+            // listener_div_3.addEventListener("click", () => {
+            //     viewkeywordsactions(listeners[i]._id, listeners[i].listener_name)
+            // })
+
 
             let listener_name_2 = document.createElement("h3")
             listener_name_2.innerHTML = listeners[i].listener_name
-            listener_div_2.appendChild(listener_name_2)
-            listener_html_2.appendChild(listener_div_2)
+            listener_div_2.appendChild(listener_name_3)
+            listener_html_2.appendChild(listener_div_3)
+            // let listener_name_3 = document.createElement("h3")
+            // listener_name_3.innerHTML = listeners[i].listener_name
+            // listener_div_3.appendChild(listener_name_3)
+            // listener_html_3.appendChild(listener_div_3)
         }
     }
 }
@@ -936,7 +964,22 @@ async function viewListenerMentions(listenerid, listenername){
         console.log(err)
     })
 }
+// async function viewkeywordsactions(listener_id,listener_name){
+    
+//     let keyword_html = document.getElementById("listeners_list_items_3")
+//     let response =fetch('/keyword/view/'+listener_id)
+//     .then(response=>response.json())
+//     .then(data=>{ 
+//         const keyword_table = document.getElementById("keywords-table")
+//         data.forEach(data => {
+//             const row = keyword_table.insertRow();
+//             row.insertCell().textContent = data.keyword;
+           
+//           });
 
+        
+//     })
+// }
 export function viewMentions(listener){
     let mentions_table = document.getElementById("mentions-table")
     mentions_table.innerHTML = `
