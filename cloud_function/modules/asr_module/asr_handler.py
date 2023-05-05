@@ -1,139 +1,108 @@
-#import library
-import speech_recognition as sr
-import librosa
-from scipy.io import wavfile
-from pydub import AudioSegment
+import math
 import os
 import subprocess
-from ar_corrector.corrector import Corrector
+from pydub import AudioSegment
+import speech_recognition as sr
+from concurrent.futures import ThreadPoolExecutor
+import shutil
 
-class AsrHandler:
-    """Handles the Audio Speech Recognition Syntax using the package: Speech Recognition"""
-    def __init__(self, keyword, platform):
-        self.YOUTUBE_DOWNLOADS_PATH = "modules/youtube_module/downloads"
-        self.PODCASTS_DOWNLOADS_PATH = "modules/podcasts_module/PodcastsMP3"
-        self.keyword = keyword
-        self.platform = platform
-        self.YOUTUBE_PREPROCESSED_DATA_PATH = "modules/asr_module/processed_audio_files/YouTube"
-        self.YOUTUBE_TRIMMED_DATA_PATH = "modules/asr_module/result_trim/YouTube"
-        self.PODCASTS_PREPROCESSED_DATA_PATH = "modules/asr_module/processed_audio_files/Podcasts"
-        self.PODCASTS_TRIMMED_DATA_PATH = "modules/asr_module/result_trim/Podcasts"
-    def preprocess(self):
-        sourcepath = ""
-        destpath = ""
-        if self.platform == "YouTube":
-            sourcepath = self.YOUTUBE_DOWNLOADS_PATH
-            destpath = self.YOUTUBE_PREPROCESSED_DATA_PATH
-        elif self.platform == "Podcasts":
-            sourcepath = self.PODCASTS_DOWNLOADS_PATH
-            destpath = self.PODCASTS_PREPROCESSED_DATA_PATH
-        # radio
-        for keyword in os.listdir(sourcepath):
-            keywordPath = sourcepath + "/" + keyword
-            destinationKeywordPath = destpath + "/" + keyword
-            os.mkdir(destinationKeywordPath)
-            for filename in os.listdir(keywordPath):
-                src = keywordPath + "/" + filename
-                dest = destinationKeywordPath + "/" + filename
-                res = subprocess.Popen(f'ffmpeg -i {src} -ac 1 -ar 22050 {dest}',shell=True,stdout=subprocess.PIPE)
-                res.stdout.read()
-    def trim(self):
-        """Trim videos to 1 minute length or fewer.\n
-        \t`ID` : String of the ID of the keyword given
+
+
+class ASRModule:
+    def __init__(self, audio_youtube, audio_podcast):
+        self.audio_youtube = audio_youtube
+        self.audio_podcast = audio_podcast
+
+    def repair_wav_file(self, filepath):
         """
-        if self.platform == "YouTube":
-            platform_source_path = self.YOUTUBE_PREPROCESSED_DATA_PATH 
-        elif self.platform == "Podcasts":
-            platform_source_path = self.PODCASTS_PREPROCESSED_DATA_PATH 
-        for videos in os.listdir(platform_source_path):
-            if self.platform == "YouTube":
-                keywordPath = self.YOUTUBE_PREPROCESSED_DATA_PATH + "/" + videos
-                trimmedPath = self.YOUTUBE_TRIMMED_DATA_PATH + "/" + videos
-            elif self.platform == "Podcasts":
-                keywordPath = self.PODCASTS_PREPROCESSED_DATA_PATH + "/" + videos
-                trimmedPath = self.PODCASTS_TRIMMED_DATA_PATH + "/" + videos
-            os.mkdir(trimmedPath)
-            for video in os.listdir(keywordPath):
-                length = librosa.get_duration(filename = (keywordPath + "/" +video))
-                start = 0
-                end = 60
-                videoPath = trimmedPath + "/" + video
-                os.mkdir(videoPath)
-                sr,waveData = wavfile.read(keywordPath + "/" + video)
-                if length < 60:
-                    newPath = videoPath + "/0.wav"
-                    wavfile.write(newPath,sr,waveData[0:int(sr*length)])
-                    continue
-                counter = 0
-                while length > 0:
-                    startSample = int(start*sr)
-                    endSample = int(end*sr)
-                    newPath = videoPath + "/" + str(counter) + ".wav"
-                    wavfile.write(newPath,sr,waveData[startSample:endSample])
-                    counter+=1
-                    if(end != length):
-                        start = end
-                        if(end+60 >= length): end = length
-                        else: end+=60
-                    else: break
-                    
-    def  transcribe(self):
-        r = sr.Recognizer()
-        result = []
-        if self.platform == "YouTube":
-            platform_source_path = self.YOUTUBE_PREPROCESSED_DATA_PATH 
-        elif self.platform == "Podcasts":
-            platform_source_path = self.PODCASTS_PREPROCESSED_DATA_PATH
-        
-        for videos in os.listdir(platform_source_path):
-            if self.platform == "YouTube":
-                videosPath = self.YOUTUBE_TRIMMED_DATA_PATH + '/' + videos
-            elif self.platform == "Podcasts":
-                videosPath = self.PODCASTS_TRIMMED_DATA_PATH + '/' + videos
-            for video in os.listdir(videosPath):
-                videoPath = videosPath + "/" + video
-                video_result = []
-                for section in os.listdir(videoPath):
-                    sectionPath = videoPath + "/" + section
-                    with sr.AudioFile(sectionPath) as source:
-                        audio_text = r.listen(source)
-                        try:
-                            text = r.recognize_google(audio_text,language="ar-AR")
-                            video_result.append(text)
-                        except:
-                            continue
-                if(" ".join(video_result).__contains__(self.keyword)):      
-                    result.append(" ".join(video_result))
-            return result
-        
-    def delete_all_folders(self):
-        if self.platform == "YouTube":
-            platform_source_path = self.YOUTUBE_PREPROCESSED_DATA_PATH 
-        elif self.platform == "Podcasts":
-            platform_source_path = self.PODCASTS_PREPROCESSED_DATA_PATH
-        for videos in os.listdir(platform_source_path):
-            if self.platform == "YouTube":
-                videosPath = self.YOUTUBE_PREPROCESSED_DATA_PATH + '/' + videos
-            elif self.platform == "Podcasts":
-                videosPath = self.PODCASTS_PREPROCESSED_DATA_PATH + '/' + videos
-            for video in os.listdir(videosPath):
-                videoPath = videosPath + "/" + video
-                os.remove(videoPath)
-            os.rmdir(videosPath)
+        Attempt to repair a corrupted WAV file using ffmpeg.
+        """
+        repaired_filepath = filepath.replace('.wav', '_repaired.wav')
+        subprocess.call(['ffmpeg', '-y', '-i', filepath, '-c:a', 'flac', 'temp.flac'])
+        subprocess.call(['ffmpeg', '-y', '-i', 'temp.flac', repaired_filepath])
+        os.remove('temp.flac')
+        return repaired_filepath
+    
+    def remove_unrepaired_files(self):
+        for audio_path in [self.audio_youtube, self.audio_podcast]:
+            for filename in os.listdir(audio_path):
+                for medialink in os.listdir(os.path.join(audio_path, filename)):
+                    filepath = os.path.join(os.path.join(audio_path, filename), medialink)
+                    if '_repaired' not in filepath:
+                        os.remove(filepath)
 
-        if self.platform == "YouTube":
-            platform_source_path = self.YOUTUBE_TRIMMED_DATA_PATH 
-        elif self.platform == "Podcasts":
-            platform_source_path = self.YOUTUBE_TRIMMED_DATA_PATH
-        for videos in os.listdir(platform_source_path):
-            if self.platform == "YouTube":
-                videosPath = self.YOUTUBE_TRIMMED_DATA_PATH + '/' + videos
-            elif self.platform == "Podcasts":
-                videosPath = self.PODCASTS_TRIMMED_DATA_PATH + '/' + videos
-            for video in os.listdir(videosPath):
-                videoPath = videosPath + "/" + video
-                for section in os.listdir(videoPath):
-                    sectionPath = videoPath + "/" + section
-                    os.remove(sectionPath)
-                os.rmdir(videoPath)
-            os.rmdir(videosPath)
+    def convert_audio(self, target_sample_rate=22050):
+        """
+        Convert audio files in the given paths to the target sample rate.
+        """
+        for audio_path in [self.audio_youtube, self.audio_podcast]:
+            for filename in os.listdir(audio_path):
+                for medialink in os.listdir(os.path.join(audio_path, filename)):
+                    filepath = os.path.join(os.path.join(audio_path, filename), medialink)
+                    repaired_filepath = self.repair_wav_file(filepath)
+        self.remove_unrepaired_files()
+
+    def divide_audio(self, target_length=60):
+        """
+        Divide audio files in the given paths into multiple parts of the target length (in seconds) if they have not already been divided.
+        """
+        for audio_path in [self.audio_youtube, self.audio_podcast]:
+            for filename in os.listdir(audio_path):
+                for medialink in os.listdir(os.path.join(audio_path, filename)):
+                    try:
+                        new_dir = os.path.join(os.path.join(audio_path, filename), medialink.split('.')[0])
+                        if not os.path.exists(new_dir):
+                            sound = AudioSegment.from_wav(os.path.join(os.path.join(audio_path, filename), medialink))
+                            num_parts = math.ceil(len(sound) / (target_length * 1000))
+                            os.makedirs(new_dir, exist_ok=True)
+                            for i in range(num_parts):
+                                start = i * target_length * 1000
+                                end = min((i + 1) * target_length * 1000, len(sound))
+                                part = sound[start:end]
+                                part.export(os.path.join(new_dir, f'{medialink}_{i}.wav'), format="wav")
+                            os.remove(os.path.join(os.path.join(audio_path, filename), medialink))
+                    except Exception as e:
+                        print(e)
+
+    def transcribe_audio_file(self,audio_path, filename, medialink, audiofile):
+        """
+        Transcribe a single audio file using the speech_recognition package and return the transcribed text.
+        """
+        r = sr.Recognizer()
+        try:
+            with sr.AudioFile(os.path.join(os.path.join(os.path.join(audio_path, filename),medialink),audiofile)) as source:
+                audio = r.record(source)
+                text = r.recognize_google(audio, language='ar-EG')
+                return text
+        except Exception as e:
+            print(e)
+            return None
+
+    def transcribe_audio(self):
+        """
+        Transcribe audio files in the given paths using the speech_recognition package and return the transcribed text as an array.
+        """
+        result = []
+        with ThreadPoolExecutor() as executor:
+            for audio_path in [self.audio_youtube, self.audio_podcast]:
+                for filename in os.listdir(audio_path):
+                    for medialink in os.listdir(os.path.join(audio_path, filename)):
+                        futures = []
+                        for audiofile in os.listdir(os.path.join(os.path.join(audio_path, filename),medialink)):
+                            future = executor.submit(self.transcribe_audio_file, audio_path, filename, medialink, audiofile)
+                            futures.append(future)
+                        medialink_text = ""
+                        for future in futures:
+                            text = future.result()
+                            if text is not None:
+                                medialink_text += text + " "
+                        result.append(medialink_text.strip())
+        return result
+
+    def delete_audio_files(self):
+        """
+        Delete all audio files in the given paths.
+        """
+        for audio_path in [self.audio_youtube, self.audio_podcast]:
+            for filename in os.listdir(audio_path):
+                shutil.rmtree(os.path.join(audio_path, filename))

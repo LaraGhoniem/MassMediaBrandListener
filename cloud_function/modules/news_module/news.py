@@ -62,7 +62,7 @@ class NewsScraper:
         :return: A list of dictionaries containing the URL, publish date, and text of each article.
         """
         result = []
-        seen_tweet_ids = set()
+        seen_news_ids = set()
         headers = {"Ocp-Apim-Subscription-Key": self.api_key}
         
         for market in markets:
@@ -72,8 +72,8 @@ class NewsScraper:
             search_results = response.json()
 
             for url in search_results["value"]:
-                if url['url'] not in seen_tweet_ids:
-                    seen_tweet_ids.add(url['url'])
+                if url['url'] not in seen_news_ids:
+                    seen_news_ids.add(url['url'])
                     text = self.download_article(url["url"])
                     if text is not None:
                         preprocessed_text = self.preprocess_text(text, keyword)

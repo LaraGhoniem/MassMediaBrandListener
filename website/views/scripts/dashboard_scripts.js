@@ -1,7 +1,7 @@
 // import { response } from "express";
 import { Post } from "./helpers/post.js";
 import { User } from "./helpers/user.js";
-
+import ChartDataPreparer from "./helpers/chart_data_preparer.js";
 // event listeners
 // logout button
 document.getElementById("user-logout").addEventListener("click", async () => await User.logout());
@@ -17,20 +17,15 @@ for(let i = 0; i < nav_buttons.length; i++){
         navigate(i+1)
     })
 }
-for(let i = 0; i < nav_settings_buttons.length; i++){
+for(let i = 1; i < nav_settings_buttons.length; i++){
     nav_settings_buttons[i].addEventListener('click', () => {
-        navigate(i+4)
+        navigate(i+3)
     })
 }
 // add keyword button
 document.getElementById("add-keyword").addEventListener("click", () => {
     addKeyword()
 })
-// // remove keyword button
-// document.getElementById("remove-1").addEventListener("click", () => {
-//     if(document.querySelectorAll("#keyword-input-container > div").length > 1)
-//         removeKeyword(document.getElementById("keyword-input-1"))
-// })
 var keywordValues = [];
 document.getElementById('continue-add-listener').addEventListener("click", () => {
     let keywords = document.querySelectorAll("#keyword-input-container > div > input");
@@ -69,6 +64,7 @@ document.querySelectorAll(".listener-header-row button").forEach(function(button
   button.addEventListener("click", function() {
     document.getElementById("add-listener-popup").style.display = "flex";
     document.getElementById("add-listener-popup").style.opacity = 1;
+    document.getElementById("pagination_fixed_position").style.display = "none";
   });
 });
 // close add listener popup
@@ -82,6 +78,7 @@ document.getElementById("cancel-button").addEventListener("click", () => {
     document.getElementById("error-message").innerHTML = "";
     document.getElementById("keyword-input-container").style.border = "none";
     document.getElementById("new-listener-name").style.border = "2px solid #5B5B5B";
+    document.getElementById("pagination_fixed_position").style.display = "flex";
     keywordValues = [];
     keywordCount = 0
 });
@@ -100,6 +97,7 @@ document.getElementById("back-button").addEventListener("click", () => {
         document.getElementById("error-message").innerHTML = "";
         document.getElementById("keyword-input-container").style.border = "none";
     document.getElementById("new-listener-name").style.border = "2px solid #5B5B5B";
+    document.getElementById("pagination_fixed_position").style.display = "flex";
         keywordValues = [];
         keywordCount = 0;
     }
@@ -113,9 +111,10 @@ window.onload = async function() {
     User.getListeners(user.data.user._id, (data) => {
         if(data.listener.length != 0){
             listenersData = data.listener
-            viewStats(listenersData)
-            viewListener(listenersData[0]._id, listenersData[0].listener_name)
-            viewListenerMentions(listenersData[0]._id, listenersData[0].listener_name)
+            view_listeners_buttons(listenersData)
+            view_listener_graphs(listenersData[0]._id, listenersData[0].listener_name)
+            view_listener_mentions(listenersData[0]._id, listenersData[0].listener_name)
+            viewkeywordsactions(listenersData[0]._id, listenersData[0].listener_name)
         }
     })
     // get all categories from database
@@ -125,6 +124,8 @@ window.onload = async function() {
         viewCategories(categories)
     })
 }
+
+document.getElementById('navigation-2').classList.add('active')
 
 var gradient;
 function getGradient(ctx, chartArea) {
@@ -216,309 +217,303 @@ function viewCategories(categories){
         User.addListener(user.data.user._id, listener, () => {
             User.getListeners(user.data.user._id, (data) => {
                 listenersData = data.listener
-                viewStats(listenersData)
-                viewListener(listenersData[0]._id, listenersData[0].listener_name)
-                viewListenerMentions(listenersData[0]._id, listenersData[0].listener_name)
+                view_listeners_buttons(listenersData)
+                view_listener_graphs(listenersData[0]._id, listenersData[0].listener_name)
+                view_listener_mentions(listenersData[0]._id, listenersData[0].listener_name)
             })
             document.getElementById("add-listener-popup").style.display = "none";
         })
     })
 }
 
-var mentionschart
-var mentionschartlabels = []
-var mentionschartdata = []
+// MENTIONS OVER TIME CHART //
+    // The variable that handles the ChartJS object
+    var mentionschart
+    var ctx = document.getElementById('mentionslinechart');
+    mentionschart = new Chart(
+        ctx,
+        {         
+            type: 'line',
+            data:  
+                {
+                labels: mentionschartlabels,
+                datasets: [{
+                    label: 'Mentions over time',
+                    order: screenLeft,
+                    data: mentionschartdata,
+                    fill: true,
+                    borderWidth: 2.5,
+                    backgroundColor: function(context) {
+                        const chart = context.chart;
+                        const {ctx, chartArea} = chart;
+                
+                        if (!chartArea) {
+                            // This case happens on initial chart load
+                            return null;
+                        }
+                        return getGradient(ctx, chartArea);
+                        },
+                    borderColor: 'rgba(133, 92, 248, 0.6)',
+                    // tension: 0.1
+                    pointStyle: false,
+                
+                }],
+                
+            },
+            options: {
+                    plugins: {
 
-var topsourceschart
+                        legend: {
+                            display: false,
+                        },
+                        }}
+        },
+        
+    );
+    // The labels that will be displayed below the graph. Mainly the labels will be the dates these listeners worked on.
+    var mentionschartlabels = []
+    // The numbers that will be shown on the graph.
+    var mentionschartdata = []
+
+// TOP SOURCES CHART //
+ctx = document.getElementById('topSources')
+var topsourceschart = new Chart(
+    ctx,
+    {         
+        type: 'bar',
+        data:  
+            {
+            labels: 
+            ['YouTube',
+            'Podcasts',
+            'Twitter',
+            'News'],
+            datasets: [{
+                label: 'Top keyword mentions',
+                data: [],
+                backgroundColor: [
+                    'rgb(133,92,248)',
+                    'rgba(133, 92, 248, 0.8)',
+                    'rgba(133, 92, 248, 0.6)',
+                    'rgba(133, 92, 248, 0.5)',
+                    'rgba(133, 92, 248, 0.4)',
+                    'rgba(101, 101, 102,0.4)',
+                ],
+                borderColor: [
+                    'rgb(133,92,248)',
+                    'rgba(133, 92, 248, 0.8)',
+                    'rgba(133, 92, 248, 0.6)',
+                    'rgba(133, 92, 248, 0.5)',
+                    'rgba(133, 92, 248, 0.4)',
+                    'rgba(101, 101, 102, 0.4)',
+                ],
+                borderWidth: 1
+                }]
+            
+            },
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                },
+            indexAxis: 'y',
+            }
+    },
+    
+);
 var topsourcesdata = []
 
-var posmentionschart
+// POSITIVE MENTIONS OVER TIME CHART //
+ctx = document.getElementById('posMentions')
+var positive_mentions_over_time_chart = new Chart(
+    ctx,
+    {         
+        type: 'line',
+        data:  
+            {
+            labels: posmentionslabels,
+            datasets: [{
+                label: 'Positive mentions over time',
+                order: screenLeft,
+                data: posmentionsdata,
+                fill: true,
+                backgroundColor: "rgb(206, 234, 226)",
+                borderColor: 'rgb(137,102,232)',
+                tension: 0.5,
+                borderWidth: 1.2
+            }],
+            
+            
+        },options: {
+                plugins: {
+
+                    legend: {
+                        display: false,
+                    },
+                    },
+                    elements: {
+                        point:{
+                            backgroundColor: 'rgb(137,110,240)',
+                        }
+                    }
+            }
+    },
+);
 var posmentionslabels = []
 var posmentionsdata = []
 
-var topkeywordschart
+ctx = document.getElementById('topKeywords').getContext('2d')
+var topkeywordschart = new Chart(
+    ctx,
+    {
+        type: 'bar',
+        data:  
+            {
+            labels: [],
+            datasets: [{
+                label: 'Top keyword mentions',
+                data: [],
+                backgroundColor: [
+                    'rgb(133,92,248)',
+                    'rgba(133, 92, 248, 0.8)',
+                    'rgba(133, 92, 248, 0.6)',
+                    'rgba(133, 92, 248, 0.5)',
+                    'rgba(101, 101, 102,0.4)',
+                ],
+                borderColor: [
+                    'rgb(133,92,248)',
+                    'rgba(133, 92, 248, 0.8)',
+                    'rgba(133, 92, 248, 0.6)',
+                    'rgba(133, 92, 248, 0.5)',
+                    'rgba(101, 101, 102, 0.4)',
+                ],
+                borderWidth: 1
+                }]
+            
+            },
+        options: {
+            indexAxis: 'y',
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            }
+        }
+    },
+    
+);
 var topkeywordslabels = []
 var topkeywordsdata = []
 
-var sentimentsharechart
-// var sentimentsharelabels = []
-var sentimentsharedata = []
 
-var sentimentsourcechart
-var sentimentsourcepos = []
-var sentimentsourceneu = []
-var sentimentsourceneg = []
+// Sentiment Share Chart //
+var sentimentsharedata = []
+ctx = document.getElementById('sentimentShare')
+var sentimentsharechart = new Chart(
+    ctx,
+    {         
+        type: 'pie',
+        data:  
+            {
+            labels: [
+                'Positive',
+                'Neutral',
+                'Negative'
+                ],
+                datasets: [{
+                label: 'Number of mentions',
+                data: [],
+                backgroundColor: [
+                    'rgb(133,92,248)',
+                    'rgba(80,55,149)',
+                    'rgb(18,0,29)',
+                ],
+                hoverOffset: 4
+                }]
+        },
+        options: {
+            plugins: {
+
+            legend: {
+                position: 'bottom',
+                },
+            }
+        }
+    },
+);
+
+// Sentiment By Source Chart //
+    ctx = document.getElementById('sentimentSource')
+    var sentiment_source_chart = new Chart(
+        ctx,
+        {         
+            type: 'bar',
+            data: {
+                labels:['youtube', 'podcast', 'twitter', 'news'],
+                datasets: [
+                {label: 'Positive',
+                data: sentimentsourcepos,
+            backgroundColor:'rgba(133, 92, 248, 0.6)'},
+                {label: 'Neutral',
+                data: sentimentsourceneu,
+            backgroundColor:'rgba(133, 92, 248)'},
+                {label: 'Negative',
+                data: sentimentsourceneg,
+            backgroundColor:'rgb(18,0,29)',}
+                ]
+            },
+                options: {
+                plugins: {
+                legend: {
+                    // position: 'bottom',
+                    display: false,
+                    },
+                title: {
+                    display: true,
+                    text: 'Sentiment by source'
+                },
+                },
+                responsive: true,
+                scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true
+                }
+                }
+            }
+        },
+    );
+    var sentimentsourcepos = []
+    var sentimentsourceneu = []
+    var sentimentsourceneg = []
+
+var keywordmentions = []
 
 function navigate(page){
     User.getListeners(user.data.user._id, (data) => {
         listenersData = data.listener
     })
+    // remove active class from all buttons of navigation
+    let nav_slider = document.getElementById('navigation')
+    let nav_settings_slider = document.getElementById('navigation-settings')
+    let nav_buttons = nav_slider.children
+    let nav_settings_buttons = nav_settings_slider.children
+    // nav_buttons += nav_settings_buttons
+    for(let i = 0; i < nav_buttons.length; i++){
+        nav_buttons[i].removeAttribute('class')
+    }
+    for(let i = 0; i < nav_settings_buttons.length; i++){
+        nav_settings_buttons[i].removeAttribute('class')
+    }
+    document.getElementById('navigation-'+page).classList.add('active')
     if(page === 1){
             document.getElementById("view-listeners").style.display = "block";
             document.getElementById("web-mentions").style.display = "none";
             document.getElementById("Account-Settings").style.display = "none";
             document.getElementById("keyword-Settings").style.display = "none";
-            // 
-            // 
-            var ctx = document.getElementById('mentionslinechart');
-            mentionschart = new Chart(
-                ctx,
-                {         
-                 type: 'line',
-                    data:  
-                     {
-                        labels: mentionschartlabels,
-                        datasets: [{
-                            label: 'Mentions over time',
-                            order: screenLeft,
-                            data: mentionschartdata,
-                            fill: true,
-                            borderWidth: 2.5,
-                            backgroundColor: function(context) {
-                                const chart = context.chart;
-                                const {ctx, chartArea} = chart;
-                        
-                                if (!chartArea) {
-                                  // This case happens on initial chart load
-                                  return null;
-                                }
-                                return getGradient(ctx, chartArea);
-                              },
-                            borderColor: 'rgba(133, 92, 248, 0.6)',
-                            // tension: 0.1
-                            pointStyle: false,
-                        
-                        }],
-                        
-                    },
-                    options: {
-                            plugins: {
-
-                                legend: {
-                                    display: false,
-                                },
-                                }}
-                },
-                
-            );
-            // 
-            ctx = document.getElementById('topSources'),
-            topsourceschart = new Chart(
-                ctx,
-                {         
-                    type: 'bar',
-                    data:  
-                     {
-                        labels: 
-                        ['News',
-                        'Twitter',
-                        'YouTube',
-                        'Television',
-                        'Radio',
-                        'Podcasts'],
-                        datasets: [{
-                            label: 'Top keyword mentions',
-                            data: topsourcesdata,
-                            backgroundColor: [
-                              'rgb(133,92,248)',
-                              'rgba(133, 92, 248, 0.8)',
-                              'rgba(133, 92, 248, 0.6)',
-                              'rgba(133, 92, 248, 0.5)',
-                              'rgba(133, 92, 248, 0.4)',
-                              'rgba(101, 101, 102,0.4)',
-                            ],
-                            borderColor: [
-                              'rgb(133,92,248)',
-                              'rgba(133, 92, 248, 0.8)',
-                              'rgba(133, 92, 248, 0.6)',
-                              'rgba(133, 92, 248, 0.5)',
-                              'rgba(133, 92, 248, 0.4)',
-                              'rgba(101, 101, 102, 0.4)',
-                            ],
-                            borderWidth: 1
-                          }]
-                        
-                        },
-                    options: {
-                        plugins: {
-
-                            legend: {
-                                display: false,
-                            },
-                            },
-                        indexAxis: 'y',
-                      }
-                },
-                
-            );
-            // 
-            // summary
-            // 
-            
-            ctx = document.getElementById('posMentions'),
-            posmentionschart = new Chart(
-                ctx,
-                {         
-                 type: 'line',
-                    data:  
-                     {
-                        labels: posmentionslabels,
-                        datasets: [{
-                            label: 'Positive mentions over time',
-                            order: screenLeft,
-                            data: posmentionsdata,
-                            fill: true,
-                            backgroundColor: "rgb(206, 234, 226)",
-                            borderColor: 'rgb(137,102,232)',
-                            tension: 0.5,
-                            borderWidth: 1.2
-                        }],
-                        
-                        
-                    },options: {
-                            plugins: {
-
-                                legend: {
-                                    display: false,
-                                },
-                                },
-                                elements: {
-                                    point:{
-                                        backgroundColor: 'rgb(137,110,240)',
-                                    }
-                                }
-                        }
-                },
-                
-            );
-            // 
-            ctx = document.getElementById('topKeywords'),
-            topkeywordschart = new Chart(
-                ctx,
-                {
-                    type: 'bar',
-                    data:  
-                     {
-                        labels: topkeywordslabels,
-                        datasets: [{
-                            label: 'Top keyword mentions',
-                            data: topkeywordsdata,
-                            backgroundColor: [
-                                'rgb(133,92,248)',
-                              'rgba(133, 92, 248, 0.8)',
-                              'rgba(133, 92, 248, 0.6)',
-                              'rgba(133, 92, 248, 0.5)',
-                              'rgba(101, 101, 102,0.4)',
-                            ],
-                            borderColor: [
-                              'rgb(133,92,248)',
-                              'rgba(133, 92, 248, 0.8)',
-                              'rgba(133, 92, 248, 0.6)',
-                              'rgba(133, 92, 248, 0.5)',
-                              'rgba(101, 101, 102, 0.4)',
-                            ],
-                            borderWidth: 1
-                          }]
-                        
-                        }
-                    ,
-                    options: {
-                        indexAxis: 'y',
-                        plugins: {
-
-                            legend: {
-                                display: false,
-                            },
-                            }
-                      }
-                },
-                
-            );
-            // 
-            ctx = document.getElementById('sentimentShare'),
-            sentimentsharechart = new Chart(
-                ctx,
-                {         
-                 type: 'pie',
-                    data:  
-                     {
-                        labels: [
-                            'Positive',
-                            'Neutral',
-                            'Negative'
-                          ],
-                          datasets: [{
-                            label: 'Number of mentions',
-                            data: sentimentsharedata,
-                            backgroundColor: [
-                                'rgb(133,92,248)',
-                                'rgba(80,55,149)',
-                                'rgb(18,0,29)',
-                            ],
-                            hoverOffset: 4
-                          }]
-                    },
-                    options: {
-                        plugins: {
-
-                        legend: {
-                            position: 'bottom',
-                          },
-                        }
-                    }
-                },
-                
-            );
-            // 
-            ctx = document.getElementById('sentimentSource'),
-            sentimentsource = new Chart(
-                ctx,
-                {         
-                    type: 'bar',
-                    data: {
-                        labels:
-                        ['News',
-                        'Twitter',
-                        'YouTube',
-                        'Television',
-                        'Radio',
-                        'Podcasts'],
-                        datasets: [
-                        {label: 'Positive',
-                        data: sentimentsourcepos,
-                    backgroundColor:'rgba(133, 92, 248, 0.6)'},
-                        {label: 'Neutral',
-                        data: sentimentsourceneu,
-                    backgroundColor:'rgba(133, 92, 248)'},
-                        {label: 'Negative',
-                        data: sentimentsourceneg,
-                    backgroundColor:'rgb(18,0,29)',}
-                        ]
-                    },
-                      options: {
-                      plugins: {
-                        legend: {
-                            // position: 'bottom',
-                            display: false,
-                          },
-                        title: {
-                          display: true,
-                          text: 'Sentiment by source'
-                        },
-                      },
-                      responsive: true,
-                      scales: {
-                        x: {
-                          stacked: true,
-                        },
-                        y: {
-                          stacked: true
-                        }
-                      }
-                    }
-                },
-                
-            );
             // 
             // ctx = document.getElementById('topTopics'),
             // new Chart(
@@ -611,27 +606,18 @@ function addKeyword(){
     });
 }
 
-function count(arr, value){
-    let count = 0;
-    for(let i = 0; i < arr.length; i++){
-        if(arr[i] === value)
-            count++;
-    }
-    return count;
-}
 
-
-function viewStats(listeners){
+function view_listeners_buttons(listeners){
     let listener_html = document.getElementById("listeners_list_items")
     let listener_html_2 = document.getElementById("listeners_list_items_2")
-    // let listener_html_3 = document.getElementById("listeners_list_items_3")
+    let listener_html_3 = document.getElementById("listeners_list_items_3")
     listener_html.innerHTML = `<h4>No Listeners Created</h4>`
     listener_html_2.innerHTML = `<h4>No Listeners Created</h4>`
-    //listener_html_3.innerHTML = `<h4>No Listeners Created</h4>`
+    listener_html_3.innerHTML = `<h4>No Listeners Created</h4>`
     if(listeners.length > 0){
         listener_html.innerHTML = ""
         listener_html_2.innerHTML = ""
-        //listener_html_3.innerHTML = ""
+        listener_html_3.innerHTML = ""
         for(let i = 0; i < listeners.length; i++){
             let listener_div = document.createElement("div")
             listener_div.setAttribute("id", listeners[i]._id)
@@ -641,7 +627,7 @@ function viewStats(listeners){
             else
                 listener_div.classList.add("inactive")
             listener_div.addEventListener("click", () => {
-                viewListener(listeners[i]._id, listeners[i].listener_name)
+                view_listener_graphs(listeners[i]._id, listeners[i].listener_name)
             })
 
             let listener_name = document.createElement("h3")
@@ -657,33 +643,40 @@ function viewStats(listeners){
             else
                 listener_div_2.classList.add("inactive")
             listener_div_2.addEventListener("click", () => {
-                viewListenerMentions(listeners[i]._id, listeners[i].listener_name)
+                view_listener_mentions(listeners[i]._id, listeners[i].listener_name)
             })
-            //  let listener_div_3 = document.createElement("div")
-            // listener_div_3.setAttribute("id", listeners[i]._id+"_3")
-            // listener_div_3.setAttribute("class", "listeners_list_item")
-            // if(i == 0)
-            //     listener_div_3.classList.add("active")
-            // else
-            //     listener_div_3.classList.add("inactive")
-            // listener_div_3.addEventListener("click", () => {
-            //     viewkeywordsactions(listeners[i]._id, listeners[i].listener_name)
-            // })
+            
+
+            let listener_div_3 = document.createElement("div")
+            listener_div_3.setAttribute("id", listeners[i]._id+"_3")
+            listener_div_3.setAttribute("class", "listeners_list_item")
+            if(i == 0)
+                listener_div_3.classList.add("active")
+            else
+                listener_div_3.classList.add("inactive")
+            listener_div_3.addEventListener("click", () => {
+                viewkeywordsactions(listeners[i]._id, listeners[i].listener_name)
+            })
+
+
 
 
             let listener_name_2 = document.createElement("h3")
             listener_name_2.innerHTML = listeners[i].listener_name
-            listener_div_2.appendChild(listener_name_3)
-            listener_html_2.appendChild(listener_div_3)
-            // let listener_name_3 = document.createElement("h3")
-            // listener_name_3.innerHTML = listeners[i].listener_name
-            // listener_div_3.appendChild(listener_name_3)
-            // listener_html_3.appendChild(listener_div_3)
+            listener_div_2.appendChild(listener_name_2)
+            listener_html_2.appendChild(listener_div_2)
+            // listener_div_2.appendChild(listener_div_2)
+            // listener_div_2.appendChild(listener_name_3)
+            // listener_html_2.appendChild(listener_div_3)
+            let listener_name_3 = document.createElement("h3")
+            listener_name_3.innerHTML = listeners[i].listener_name
+            listener_div_3.appendChild(listener_name_3)
+            listener_html_3.appendChild(listener_div_3)
         }
     }
 }
 
-async function viewListener(listenerid, listenername){
+async function view_listener_graphs(listenerid, listenername){
     let listenernamecontainer = document.getElementById("listener_name")
     listenernamecontainer.innerHTML = listenername
     let listener_html = document.getElementById("listeners_list_items")
@@ -699,6 +692,9 @@ async function viewListener(listenerid, listenername){
             node.classList.add("inactive")}
         }
     })
+    document.getElementById("listener_data_api").style.display = "none"
+    document.getElementById("empty-result-charts").style.display = "none"
+    document.getElementById("loading-container-charts").style.display = "flex" 
     await fetch('/listener/result/'+listenerid,{  
         method: 'GET',
         headers: {
@@ -706,141 +702,77 @@ async function viewListener(listenerid, listenername){
             }}).then(async (res) => {
                 if(res.status==200){
                     await res.json().then((data) => {
-                        var listener_results = []
-                        var mentions = 0
-                        for(let i = 0; i < data["result"].length; i++){
-                            var jsonvar = JSON.parse(data["result"][i]["result"])
-                            jsonvar["created_at"] = data["result"][i]["created_at"]
-                            listener_results.push(jsonvar)
-
+                    if(data.result.length === 0){
+                        document.getElementById("listener_data_api").style.display = "none"
+                        document.getElementById("empty-result-charts").style.display = "flex"
+                        document.getElementById("loading-container-charts").style.display = "none"
                     }
+                    else{
+                        var listener_data = data["result"]
+                        listener_data.sort((a, b) => (a.created_at > b.created_at) ? 1 : -1)
+                        let chartPreparer = new ChartDataPreparer(listener_data)
 
-                    var twitter_pos = 0
-                    var twitter_neg = 0
-                    var twitter_neu = 0
-                    var news_pos = 0
-                    var news_neg = 0 
-                    var news_neu = 0
+                        // MENTIONS CHART DATA
+                        var mentions_chart_data = chartPreparer.mentions_over_time_chart_data()
+                        mentionschartlabels = mentions_chart_data[0]
+                        mentionschartdata = mentions_chart_data[1]
 
-                    mentionschartdata = []
-                    mentionschartlabels = []
+                        // POSITIVE MENTIONS OVER TIME DATA
+                        var pos_mentions_chart_data = chartPreparer.pos_mentions_over_time_chart_data()
+                        posmentionslabels = pos_mentions_chart_data[0]
+                        posmentionsdata = pos_mentions_chart_data[1]
 
-                    topkeywordsdata = []
-                    topkeywordslabels = []
-                    topsourcesdata = [0,0,0,0,0,0]
+                        // SENTIMENT BY SOURCE DATA
+                        var sentiment_data = chartPreparer.sentiment_source_chart_data()
 
-                    posmentionsdata = []
-                    posmentionslabels = []
-                    keywordmentions = []
+                        // TOP KEYWORDS CHART
+                        var keywords_data = chartPreparer.top_keywords_chart_data()
+                        let topKeywords = Object.entries(keywords_data).sort((a, b) => b[1] - a[1]).slice(0, 3);
+                        topkeywordslabels = topKeywords.map(entry => entry[0]);
+                        topkeywordsdata = topKeywords.map(entry => entry[1]);
+                        
+                        // SENTIMENT SHARE //
+                        var sentiment_counts = chartPreparer.sentiment_share_chart_data()
 
-                    sentimentsourcepos = [0,0,0,0,0,0]
-                    sentimentsourceneu = [0,0,0,0,0,0]
-                    sentimentsourceneg = [0,0,0,0,0,0]
+                        // SOURCE SHARE //
+                        var source_counts = chartPreparer.sources_chart_data()
 
-                    sentimentsharedata = [0,0,0]
-                    for(let i = 0; i < listener_results.length; i++){
-                        mentions = 0
-                        for(let j = 0; j < listener_results[i].length; j++){
-                            let keyword = Object.keys(listener_results[i][j])[0]
-                            let twitter_text = listener_results[i][j][keyword]["twitter"]["text"]["preprocessed_text"]
-                            let news_text = listener_results[i][j][keyword]["news"]["text"]
-                            
-                            let twitter_sen = listener_results[i][j][keyword]["twitter"]["sentiment"]
-                            let news_sen = listener_results[i][j][keyword]["news"]["sentiment"]
-                            twitter_pos = count(twitter_sen, 'positive')
-                            twitter_neg = count(twitter_sen, 'negative')
-                            twitter_neu = count(twitter_sen, 'neutral')
-                            news_pos = count(news_sen, 'positive')
-                            news_neg = count(news_sen, 'negative')
-                            news_neu = count(news_sen, 'neutral')
+                        // update the charts
 
-                            if(keywordmentions[keyword] == undefined)
-                                keywordmentions[keyword] = (twitter_text.length + news_text.length)
-                            else
-                                keywordmentions[keyword] += (twitter_text.length + news_text.length)
+                        /** MENTIONS CHART **/ 
+                        mentionschart.data.labels = mentionschartlabels
+                        mentionschart.data.datasets[0].data = mentionschartdata
+                        mentionschart.update()
 
-                            if(sentimentsharedata[0] == 0 && sentimentsharedata[1] == 0 && sentimentsharedata[2] == 0){
-                                sentimentsharedata[0]=(twitter_pos+news_pos)
-                                sentimentsharedata[1]=(twitter_neu+news_neu)
-                                sentimentsharedata[2]=(twitter_neg+news_neg)}
-                            else{
-                                sentimentsharedata[0]+=(twitter_pos+news_pos)
-                                sentimentsharedata[1]+=(twitter_neu+news_neu)
-                                sentimentsharedata[2]+=(twitter_neg+news_neg)}
+                        /** POSITIVE MENTIONS OVER TIME CHART **/
+                        positive_mentions_over_time_chart.data.labels = posmentionslabels
+                        positive_mentions_over_time_chart.data.datasets[0].data = posmentionsdata
+                        positive_mentions_over_time_chart.update()
 
+                        /** SENTIMENT BY SOURCE CHART **/
+                        sentiment_source_chart.data.datasets[0].data = [sentiment_data['youtube']['positive'], sentiment_data['podcast']['positive'], sentiment_data['twitter']['positive'], sentiment_data['news']['positive']]
+                        sentiment_source_chart.data.datasets[1].data = [sentiment_data['youtube']['negative'], sentiment_data['podcast']['negative'], sentiment_data['twitter']['negative'], sentiment_data['news']['negative']]
+                        sentiment_source_chart.data.datasets[2].data = [sentiment_data['youtube']['neutral'], sentiment_data['podcast']['neutral'], sentiment_data['twitter']['neutral'], sentiment_data['news']['neutral']]
+                        sentiment_source_chart.update()
 
-                            sentimentsourcepos[0] += news_pos
-                            sentimentsourcepos[1] += twitter_pos
-                            sentimentsourceneu[0] += news_neu
-                            sentimentsourceneu[1] += twitter_neu
-                            sentimentsourceneg[0] += news_neg
-                            sentimentsourceneg[1] += twitter_neg
+                        /** TOP KEYWORDS CHART **/
+                        topkeywordschart.data.labels = topkeywordslabels
+                        topkeywordschart.data.datasets[0].data = topkeywordsdata
+                        topkeywordschart.update()
 
-                            // console.log(twitter_pos)
-                            // let yt_text = listener_results[i][j][keyword]["youtube"]["text"]
-                            // let podcast_text = listener_results[i][j][keyword]["podcast"]["text"]
+                        /** SENTIMENT SHARE CHART **/
+                        sentimentsharechart.data.datasets[0].data = sentiment_counts
+                        sentimentsharechart.update()
 
-                            mentions += twitter_text.length + news_text.length
-                            // console.log(twitter_text.length)
-                            topsourcesdata[0]+=news_text.length
-                            topsourcesdata[1]+=twitter_text.length
+                        /** SOURCE SHARE CHART **/
+                        topsourceschart.data.datasets[0].data = source_counts
+                        topsourceschart.update()
 
-                           
-    
-                        }
-                        console.log(sentimentsharedata)
-
-                        // console.log('b')          
-                        // console.log(keywordmentions)
-                        // keywordmentions.sort(function(first, second) {
-                        //         return second[1] - first[1];
-                        // })
-                        // keywordmentions = keywordmentions.slice(0,5)
-                        // console.log('a')
-                        // console.log(keywordmentions)   
-
-                        mentionschartdata.push(mentions)
-                        var created_at = new Date(listener_results[i]["created_at"].substring(0,listener_results[i]["created_at"].indexOf('T')))
-                        mentionschartlabels.push(created_at.getDate()+'/'+(created_at.getMonth()+1))
-                       
-                        posmentionslabels.push(created_at.getDate()+'/'+(created_at.getMonth()+1))
-                        posmentionsdata.push((twitter_pos+news_pos))
-
-                    }    
-                    var items = Object.keys(keywordmentions).map(function(key) {
-                        return [key, keywordmentions[key]];
-                      });
-                    items.sort(function(first, second) {
-                            return second[1] - first[1];
-                    })
-                    keywordmentions = items.slice(0,5)
-
-                    for(let i = 0; i < keywordmentions.length; i++){
-                        topkeywordsdata[i] = keywordmentions[i][1]
-                        topkeywordslabels[i] = keywordmentions[i][0]
+                        // remove the loading screen to view the data
+                        document.getElementById("loading-container-charts").style.display = "none"
+                        document.getElementById("listener_data_api").style.display = "flex"
+                        document.getElementById("empty-result-charts").style.display = "none"
                     }
-                    topkeywordschart.data.labels = topkeywordslabels
-                    topkeywordschart.data.datasets[0].data = topkeywordsdata
-                    topkeywordschart.update()
-
-                    mentionschart.data.labels = mentionschartlabels
-                    mentionschart.data.datasets[0].data = mentionschartdata
-                    mentionschart.update()
-                    topsourceschart.data.datasets[0].data = topsourcesdata
-                    topsourceschart.update()
-
-                    posmentionschart.data.labels = posmentionslabels
-                    posmentionschart.data.datasets[0].data = posmentionsdata
-                    posmentionschart.update()
-
-                    sentimentsourcechart.data.datasets[0].data = sentimentsourcepos
-                    sentimentsourcechart.data.datasets[1].data = sentimentsourceneu
-                    sentimentsourcechart.data.datasets[2].data = sentimentsourceneg
-                    sentimentsourcechart.update()
-
-                    sentimentsharechart.data.datasets[0].data = sentimentsharedata
-                    sentimentsharechart.update()
-
                 })
         }
     }).catch((err) => {
@@ -861,7 +793,7 @@ const spam = {
 // Pagination
 var currentPage = 0
 
-async function viewListenerMentions(listenerid, listenername){
+async function view_listener_mentions(listenerid, listenername){
     let listenernamecontainer = document.getElementById("listener_name_mentions")
     listenernamecontainer.innerHTML = listenername
     let listener_html = document.getElementById("listeners_list_items_2")
@@ -897,65 +829,25 @@ async function viewListenerMentions(listenerid, listenername){
                 else{
                     var listener = data["result"]
                     currentPage = 0
-                    let pagination_div = document.getElementById("pagination_div")
-                    pagination_div.innerHTML = ""
                     let pages = Math.ceil(listener.length/50)
-
+                    let page_number_container = document.getElementById("page_number_container")
+                    page_number_container.innerHTML = `Page 0 of ${pages}`
                     // previous button
-                    let prev_button = document.createElement("div")
-                    prev_button.classList.add("button-pagination")
-                    prev_button.innerHTML = "<i class='bx bx-chevron-left' ></i> Previous"
-                    prev_button.addEventListener("click", () => {
-                        let pages = document.getElementsByClassName("page")
+                    document.getElementById("previous_page").addEventListener("click", () => {
                         if(currentPage > 0){
-                            for(let j = 0; j < pages.length; j++)
-                                pages[j].classList.remove("active")
                             currentPage--
-                            pages[currentPage].classList.add("active")
+                            page_number_container.innerHTML = `Page ${currentPage} of ${pages}`
                             viewMentions(listener)
                         }
                     })
-                    pagination_div.appendChild(prev_button)
-
-                    //pagination numbers buttons
-                    let pagination_numbers = document.createElement("div")
-                    pagination_numbers.classList.add("pagination-numbers")
-                    for(let i = 0; i < pages; i++){
-                        let page = document.createElement("div")
-                        page.classList.add("page")
-                        page.innerHTML = i+1
-                        page.addEventListener("click", () => {
-                            let pages = document.getElementsByClassName("page")
-                            for(let j = 0; j < pages.length; j++)
-                                pages[j].classList.remove("active")
-                            page.classList.add("active")
-                            currentPage = i
-                            viewMentions(listener)
-                        })
-                        pagination_numbers.appendChild(page)
-                    }
-                    pagination_div.appendChild(pagination_numbers)
-
-                    // next button
-                    let next = document.createElement("div")
-                    next.classList.add("button-pagination")
-                    next.innerHTML = "Next <i class='bx bx-chevron-right' ></i>"
-                    next.addEventListener("click", () => {
-                        let pages = document.getElementsByClassName("page")
-                        if(currentPage < pages.length-1){
-                            for(let j = 0; j < pages.length; j++)
-                                pages[j].classList.remove("active")
+                    document.getElementById("next_page").addEventListener("click", () => {
+                        if(currentPage < pages-1){
                             currentPage++
-                            pages[currentPage].classList.add("active")
+                            page_number_container.innerHTML = `Page ${currentPage} of ${pages}`
+                            // pages[currentPage].classList.add("active")
                             viewMentions(listener)
                         }
                     })
-                    pagination_div.appendChild(next)
-
-                    // set first page active
-                    let pages_by_class = document.getElementsByClassName("page")
-                    pages_by_class[0].classList.add("active")
-
                     viewMentions(listener)
                 }
             })
@@ -964,22 +856,51 @@ async function viewListenerMentions(listenerid, listenername){
         console.log(err)
     })
 }
-// async function viewkeywordsactions(listener_id,listener_name){
-    
-//     let keyword_html = document.getElementById("listeners_list_items_3")
-//     let response =fetch('/keyword/view/'+listener_id)
-//     .then(response=>response.json())
-//     .then(data=>{ 
-//         const keyword_table = document.getElementById("keywords-table")
-//         data.forEach(data => {
-//             const row = keyword_table.insertRow();
-//             row.insertCell().textContent = data.keyword;
-           
-//           });
-
-        
-//     })
-// }
+async function viewkeywordsactions(listener_id,listener_name){
+    let listener_name_header = document.getElementById("listener_name_3")
+    listener_name_header.innerHTML = listener_name
+    let listener_html = document.getElementById("listeners_list_items_3")
+    Array.from(listener_html.children).forEach((node) => {
+        if(node.id === listener_id+"_3"){
+            if(node.classList.contains("inactive")){
+                node.classList.remove("inactive")
+                node.classList.add("active")
+            }
+        }
+        else{
+            if(node.classList.contains("active")){
+                node.classList.remove("active")
+                node.classList.add("inactive")
+            }
+        }
+    })
+    document.getElementById("edit_keywords_table").style.display = "none"
+    document.getElementById("edit_keywords_table").innerHTML = `
+        <thead>
+            <tr>
+                <th>Keyword</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+    `
+    document.getElementById("loading-container-edit-keywords").style.display = "flex"
+    let keyword_html = document.getElementById("listeners_list_items_3")
+    let response =fetch('/keyword/view/'+listener_id)
+    .then(response=>response.json())
+    .then(data=>{ 
+        const keyword_table = document.getElementById("edit_keywords_table")
+        for(let keyword in data["keywords"]){
+            const row = keyword_table.insertRow()
+            row.insertCell().textContent = data["keywords"][keyword]["keyword"]
+            row.insertCell().innerHTML = `<button class="rounded-btn" onclick="editRow('${data["keywords"][keyword]["_id"]}','${data["keywords"][keyword]["keyword"]}')">Edit</button>`
+            row.insertCell().innerHTML = `<button class="delete-btn" onclick="deleteRow('${data["keywords"][keyword]["_id"]}','${data["keywords"][keyword]["keyword"]}')">Delete</button>`
+        }
+    }).then(()=>{
+        document.getElementById("loading-container-edit-keywords").style.display = "none"
+        document.getElementById("edit_keywords_table").style.display = "table"
+    })
+}
 export function viewMentions(listener){
     let mentions_table = document.getElementById("mentions-table")
     mentions_table.innerHTML = `

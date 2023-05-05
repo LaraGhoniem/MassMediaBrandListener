@@ -63,9 +63,8 @@ html, body{
     justify-content: space-around;
     align-items: left;
     flex-direction: column;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
     font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
 }
 .sliderContainer h5{
     line-height: 0.15;
@@ -78,92 +77,55 @@ html, body{
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    
+    justify-content: center;
+    align-items: stretch;
+}
+.sliderContainer h5{
+    text-align: left;
 }
 .sliderContent button{
     text-decoration: none;
-    width: 80%;
-    padding: 10px 5px;
-    color: #000;
+    width: 100%;
+    padding: 10px 20px;
+    margin: 6px 0;
+    color: #6A686F;
     background-color: transparent;
-    margin: 0 10px;
-    font-family: sans-serif;
     outline: none;
     border: none;
-    text-align: left;
+    text-align: center;
     transition: all 0.3s ease-in-out;
     display: flex;
     flex-direction: row;
     align-items: center;
     font-family: "Rubik", sans-serif;
-    font-size: 15px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
 }
+.sliderContent .active{
+    background-color: #EFE9FF;
+    color: #6425FE;
+}
+.home-icon path, .account-icon path, .keywords-icon path{
+    fill: #6A686F;
+    stroke: transparent;
+}
+.sliderContent .active svg path{
+    stroke: #6425FE;
+}
+.sliderContent .active .home-icon, .sliderContent .active .account-icon path, .sliderContent .active .keywords-icon path{
+    fill: #6425FE;
+}
+
 .sliderContent button svg{
     margin-right: 10px;
+}
+.sliderContent button svg path{
+    stroke: #6A686F;
 }
 .sliderContent button:hover{
     background-color: #EFE9FF;
     color: #6425FE;
-}
-.GeneralContainer{
-    width: 100%;
-    height: 100%;
-    display: none;
-    font-family: 'Poppins', sans-serif;
-}
-
-.GeneralContainer h1, .addlistenersPageContainer h1{
-    padding: 0 10px;
-    margin-top: 60px;
-    color: #000;
-    line-height: 0.75;
-}
-.GeneralContainer .generalInfo, .addlistenersPageContainer .generalInfo{
-    line-height: 0.15;
-    padding: 0 10px;
-    margin-bottom: 40px;
-    color: gray;
-}
-
-.gridContainer{
-    
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 30px;
-    height: 15%;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.gridContainer .gridItem{
-    width: 30%;
-    height: 100%;
-    background-color: white;
-    border-radius: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.01);
-    transition: all 0.3s ease-in-out;
-}
-.gridContainer .gridItem:hover{
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-.gridContainer .gridItem h1{
-    color: #000;
-    line-height: 0.15;
-    font-size: 30px;
-}
-.gridContainer .gridItem p{
-    color: gray;
-    line-height: 0.15;
 }
 
 .listenerContainer{
@@ -448,7 +410,28 @@ html, body{
     overflow-y: auto;
 }
 
-.webmentionsPageContainer .listeners_list{
+/* width */
+.webmentionsPageContainer::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Track */
+.webmentionsPageContainer::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+/* Handle */
+.webmentionsPageContainer::-webkit-scrollbar-thumb {
+    background: #5b5b5b70; 
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Handle on hover */
+.webmentionsPageContainer::-webkit-scrollbar-thumb:hover {
+    background: #5b5b5b;
+}
+
+.listeners_list{
     width: 100%;
     text-align: auto;
     background: white;
@@ -467,7 +450,7 @@ html, body{
     -o-border-radius: 15px;
 }
 
-.webmentionsPageContainer .listeners_list .listeners_list_item{
+.listeners_list .listeners_list_item{
     background-color: #CBB7FF;
     color: #2C2C2C;
     text-align: auto;
@@ -487,11 +470,11 @@ html, body{
     -ms-border-radius: 15px;
     -o-border-radius: 15px;
 }
-.webmentionsPageContainer .listeners_list .inactive:hover{
+.listeners_list .inactive:hover{
     background-color: #A785FF;
     color: #fff;
 }
-.webmentionsPageContainer .listeners_list .active{
+.listeners_list .active{
     background-color: #A785FF;
 }
 
@@ -835,7 +818,7 @@ display: inline-block;
 }
 
 .col2{
-    width: 100%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -845,7 +828,7 @@ display: inline-block;
 }
 
 .col3{
-    width: 60%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -991,7 +974,11 @@ display: inline-block;
     text-align: left;
 }
 
+.sentimentSource canvas{
+    width: 100%;
+    height: 100%;
 
+}
 
 .viewListenerData .topKeywords{
     width: 100%;
@@ -1071,7 +1058,7 @@ display: inline-block;
     margin-top: 2%;
     padding: 25px;
     box-sizing: border-box;
-    margin-bottom: 100px;
+    margin-bottom: 175px;
 }
 
 .table_container table{
@@ -1534,6 +1521,28 @@ vertical-align:text-bottom;
     margin-bottom: 35px;
 }
 
+.pagination_fixed_position{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+    position: fixed;
+    bottom: 2%;
+    left: 40%;
+    right: 25%;
+    width: 35%;
+    height: 5%;
+    background-color: #966efb;
+    border-radius: 15px;
+    z-index: 100;
+    padding: 10px 0;
+    box-shadow: 0px 0px 30px 0px #3333334b;
+}
+
+.page_number_container{
+    color: white
+}
+
 .pagination-container .page{
     outline: none;
     border: none;
@@ -1562,7 +1571,7 @@ vertical-align:text-bottom;
     background-color: #A785FF;
     color: white;
 }
-.pagination-container .button-pagination{
+#next_page, #previous_page{
     outline: none;
     border: none;
     background: none;
@@ -1570,10 +1579,10 @@ vertical-align:text-bottom;
     padding: 10px 20px;
     font-size: 15px;
     border-radius: 10px;
+    width: 30%;
     margin: 0;
-    margin-left: 10px;
-    color: black;
-    background-color: white;
+    color: white;
+    background-color: #A785FF;
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     display: flex;
@@ -1582,7 +1591,7 @@ vertical-align:text-bottom;
     transition: all 0.3s ease-in-out;
 }
 
-.pagination-container .button-pagination:hover{
+#next_page:hover, #previous_page:hover{
     background-color: #a885ff96;
 }
 
@@ -1634,8 +1643,6 @@ vertical-align:text-bottom;
     right: 0;
     background: url(../assets/add_listener_background.png);
     padding: 20px;
-    opacity: 0;
-    transition: opacity 0.5s;
     height: 93vh;
     display: none;
     justify-content: center;
@@ -1978,7 +1985,6 @@ vertical-align:text-bottom;
     background-color: red;
     color: white
 }
-<<<<<<< Updated upstream
 
 /* .Wrapping-box{
     width: 90%;
@@ -2188,7 +2194,13 @@ vertical-align:text-bottom;
 .Button-two:hover{
     background-color: white;
 } */
-=======
+.edit-listener-container{
+    display: none;
+    width: 100%;
+    padding: 0 30px;
+}
+
+
 .rounded-btn {
     background-color:#A785FF;
     color: white;
@@ -2221,4 +2233,21 @@ vertical-align:text-bottom;
     background-color:rgb(247, 145, 145);
     color: white;
 }
->>>>>>> Stashed changes
+
+
+.edit_keywords_table_container {
+    border-collapse: collapse;
+    border: 2px none #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.edit_keywords_table_container th,.edit_keywords_table_container td {
+    border: 1px thin #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.edit_keywords_table_container th {
+    background-color: #f2f2f2;
+}

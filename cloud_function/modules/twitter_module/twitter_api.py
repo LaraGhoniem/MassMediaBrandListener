@@ -1,7 +1,6 @@
 import requests
 import os
 from dotenv import load_dotenv
-from api_keys import Keys
 from modules.preprocessing_module.spam_detection.spam import Spam
 import time
 
@@ -61,7 +60,12 @@ class TwitterAPI:
             'max_results': '10',
             'tweet.fields': 'author_id,in_reply_to_user_id,entities,public_metrics,created_at,text,lang'
         }
-        json_response = self.connect_to_endpoint(query_params)
+        try:
+            json_response = self.connect_to_endpoint(query_params)
+        except Exception as e:
+            print('Rate limit exceeded. Sleeping for 15 minutes.')
+            time.sleep(15 * 60)
+            json_response = self.connect_to_endpoint(query_params)
         self.tweet_data = []
         self.tweets_preprocessed_array = []
         counter = 0
@@ -69,11 +73,15 @@ class TwitterAPI:
         while json_response["meta"].get("next_token"):
             query_params["pagination_token"] = json_response["meta"]["next_token"]
             json_response = self.make_request(query_params)
-            self.preprocessing(json_response["data"])
-            for tweet in self.data_array:
-                tweet.pop('text', None)
-                self.tweet_data.append(tweet)
-            self.tweets_preprocessed_array.extend(self.preprocessed_text)
+            try:
+                self.preprocessing(json_response["data"])
+                for tweet in self.data_array:
+                    tweet.pop('text', None)
+                    self.tweet_data.append(tweet)
+                self.tweets_preprocessed_array.extend(self.preprocessed_text)
+            except KeyError:
+                print("KeyError: Data not found")
+                continue
             if counter == 50:
                 break
             counter += 1

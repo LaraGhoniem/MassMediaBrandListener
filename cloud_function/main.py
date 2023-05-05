@@ -5,6 +5,7 @@ from bson.objectid import ObjectId
 from classes.user import User
 import itertools
 
+
 db = Database()
 
 def get_listeners():
@@ -17,7 +18,7 @@ def get_keywords(listeners):
 
 def get_categories(listeners):
     """Retrieve categories for each listener"""
-    return [[data for data in db.find("Category", {"_id":ObjectId(listener["category_id"])})] for listener in listeners]
+    return [[[data for data in db.find("categories", {"_id":ObjectId(category_id)})] for category_id in listener["categories"]] for listener in listeners]
 
 def get_users(listeners):
     """Retrieve users for each listener"""
@@ -32,7 +33,7 @@ def initialize_engine():
     users = get_users(listeners)
 
     # Create ObserverListener objects and add them to the engine
-    listeners = [ObserverListener(listener["_id"],listener["listener_name"],keywords[i],categories[i][0]["_id"],users[i][0]) for i,listener in enumerate(listeners)]
+    listeners = [ObserverListener(listener["_id"],listener["listener_name"],keywords[i],categories[i][0],users[i][0]) for i,listener in enumerate(listeners)]
     for listener in listeners:
         engine.addListener(listener)
     
@@ -50,6 +51,7 @@ def update_database(engine):
 
 def main(event, context):
     """Main function to run the engine"""
+    print("Engine is running")
     engine = initialize_engine()
     engine.run()
     update_database(engine)
@@ -57,5 +59,3 @@ def main(event, context):
 
 if __name__ == "__main__":
     main(None,None)
-
-    

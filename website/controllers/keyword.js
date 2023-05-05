@@ -19,16 +19,16 @@ exports.addKeyword = (req, res) => {
 
 
     exports.view_keywords_by_listener_id = (req, res) => {
-    Keyword.find({ listener_id: req.params.id }, (err, keywords) => {
-        if (err) {
-        return res.status(400).json({
-            err: err.toString(),
+        keyword.find({ listener_id: req.params.id }, (err, keywords) => {
+            if (err) {
+            return res.status(400).json({
+                err: err.toString(),
+            });
+            }
+            return res.json({
+            keywords,
+            });
         });
-        }
-        return res.json({
-        keywords,
-        });
-    });
     };
 
 
