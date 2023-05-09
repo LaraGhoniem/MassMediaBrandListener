@@ -1,6 +1,10 @@
 // import { response } from "express";
-import { Post } from "./helpers/post.js";
-import { User } from "./helpers/user.js";
+import {
+    Post
+} from "./helpers/post.js";
+import {
+    User
+} from "./helpers/user.js";
 import ChartDataPreparer from "./helpers/chart_data_preparer.js";
 // event listeners
 // logout button
@@ -12,14 +16,14 @@ let nav_settings_slider = document.getElementById('navigation-settings')
 let nav_buttons = nav_slider.children
 let nav_settings_buttons = nav_settings_slider.children
 // nav_buttons += nav_settings_buttons
-for(let i = 0; i < nav_buttons.length; i++){
+for (let i = 0; i < nav_buttons.length; i++) {
     nav_buttons[i].addEventListener('click', () => {
-        navigate(i+1)
+        navigate(i + 1)
     })
 }
-for(let i = 1; i < nav_settings_buttons.length; i++){
+for (let i = 1; i < nav_settings_buttons.length; i++) {
     nav_settings_buttons[i].addEventListener('click', () => {
-        navigate(i+3)
+        navigate(i + 3)
     })
 }
 // add keyword button
@@ -29,7 +33,7 @@ document.getElementById("add-keyword").addEventListener("click", () => {
 var keywordValues = [];
 document.getElementById('continue-add-listener').addEventListener("click", () => {
     let keywords = document.querySelectorAll("#keyword-input-container > div > input");
-    
+
     let error = false
 
     let listenerName = document.getElementById("new-listener-name").value;
@@ -38,7 +42,7 @@ document.getElementById('continue-add-listener').addEventListener("click", () =>
         document.getElementById("error-message").innerHTML = "Please enter a listener name";
         error = true
     }
-    if(keywords.length === 0){
+    if (keywords.length === 0) {
         document.getElementById("keyword-input-container").style.border = "3px solid red";
         document.getElementById("error-message").innerHTML += "\nPlease enter at least one keyword";
         error = true
@@ -60,13 +64,84 @@ document.getElementById('continue-add-listener').addEventListener("click", () =>
     }
 })
 // add listener popup
-document.querySelectorAll(".listener-header-row button").forEach(function(button) {
-  button.addEventListener("click", function() {
-    document.getElementById("add-listener-popup").style.display = "flex";
-    document.getElementById("add-listener-popup").style.opacity = 1;
-    document.getElementById("pagination_fixed_position").style.display = "none";
-  });
+document.querySelectorAll(".listener-header-row button").forEach(function (button) {
+    button.addEventListener("click", function () {
+        document.getElementById("add-listener-popup").style.display = "flex";
+        document.getElementById("add-listener-popup").style.opacity = 1;
+        document.getElementById("pagination_fixed_position").style.display = "none";
+    });
 });
+//updating profile settings
+function validateEditForm() {
+    let addlistenerName = document.getElementById("addlistenerName");
+    let addCompanyName = document.getElementById("addCompanyName");
+    let addlistenerEmail = document.getElementById("addlistenerEmail");
+
+    if (addlistenerName.value.trim() === "") {
+        alert("Please enter your name.");
+        addlistenerName.focus();
+        return false;
+    }
+    if (addCompanyName.value.trim() === "") {
+        alert("Please enter your company name.");
+        addCompanyName.focus();
+        return false;
+    }
+    if (addlistenerEmail.value.trim() === "") {
+        alert("Please enter your email.");
+        addlistenerEmail.focus();
+        return false;
+    } else if (!validateEmail(addlistenerEmail.value.trim())) {
+        alert("Please enter a valid email address.");
+        addlistenerEmail.focus();
+        return false;
+    }
+    return true;
+}
+
+function validateEmail(email) {
+    let specialChar = /\S+@\S+\.\S+/;
+    return specialChar.test(email);
+}
+
+document.getElementById("Update-Profile").addEventListener("click", function (event) {
+    event.preventDefault();
+
+    if (validateEditForm() == true) {
+        fetch('/user/editProfile ', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: document.getElementById('addlistenerName').value,
+                email: document.getElementById('addlistenerEmail').value,
+                company: document.getElementById('addCompanyName').value,
+                currentPassword: document.getElementById("currentpassword").value,
+                newPassword: document.getElementById("Newpassword").value,
+                confirmPassword: document.getElementById('confirmpassword').value
+            })
+        }).then((res) => {
+            if (res.status === 200) {
+                res.json().then((data) => {
+                    user.data.user = data.user.name
+                    user.data.user = data.user.email
+                    user.data.user = data.user.company
+                    user.data.user = data.user.currentPassword
+                    user.data.user = data.user.newPassword
+                    user.data.user = data.user.confirmPassword
+                })
+            } else {
+                console.log(res.status)
+            }
+        }).catch((err) => {
+            console.log(err)
+        });
+    }
+});
+
+
+
 // close add listener popup
 document.getElementById("cancel-button").addEventListener("click", () => {
     document.querySelector(".pop-up-content-categories").style.display = "none"
@@ -84,20 +159,19 @@ document.getElementById("cancel-button").addEventListener("click", () => {
 });
 // back button on add listener popup
 document.getElementById("back-button").addEventListener("click", () => {
-    if(document.querySelector(".pop-up-content-categories").style.display === "block"){
+    if (document.querySelector(".pop-up-content-categories").style.display === "block") {
         document.querySelector(".pop-up-content").style.display = "block";
         document.querySelector(".pop-up-content-categories").style.display = "none";
         document.getElementById("error-message").innerHTML = "";
-    }
-    else{
+    } else {
         document.getElementById("add-listener-popup").style.display = "none";
         document.getElementById("add-listener-popup").style.opacity = 0;
         document.getElementById("new-listener-name").value = "";
         document.getElementById("keyword-input-container").innerHTML = `<div style="text-align: center; width: 100%">Click on the add button above to add a keyword</div>`;
         document.getElementById("error-message").innerHTML = "";
         document.getElementById("keyword-input-container").style.border = "none";
-    document.getElementById("new-listener-name").style.border = "2px solid #5B5B5B";
-    document.getElementById("pagination_fixed_position").style.display = "flex";
+        document.getElementById("new-listener-name").style.border = "2px solid #5B5B5B";
+        document.getElementById("pagination_fixed_position").style.display = "flex";
         keywordValues = [];
         keywordCount = 0;
     }
@@ -106,12 +180,19 @@ var user = {}
 var listenersData = []
 var categories = []
 
-window.onload = async function() {
+function displayProfileData() {
+    document.getElementById("addlistenerName").value = user.data.user.name
+    document.getElementById("addlistenerEmail").value = user.data.user.email
+    document.getElementById("addCompanyName").value = user.data.user.company
+}
+
+window.onload = async function () {
     user = await User.create()
     User.getListeners(user.data.user._id, (data) => {
-        if(data.listener.length != 0){
+        if (data.listener.length != 0) {
             listenersData = data.listener
             view_listeners_buttons(listenersData)
+            displayProfileData()
             view_listener_graphs(listenersData[0]._id, listenersData[0].listener_name)
             view_listener_mentions(listenersData[0]._id, listenersData[0].listener_name)
             viewkeywordsactions(listenersData[0]._id, listenersData[0].listener_name)
@@ -128,6 +209,7 @@ window.onload = async function() {
 document.getElementById('navigation-2').classList.add('active')
 
 var gradient;
+
 function getGradient(ctx, chartArea) {
     gradient = ctx.createLinearGradient(0, 0, 0, 250);
     gradient.addColorStop(0, 'rgba(133, 92, 248, 0.4)');
@@ -136,7 +218,8 @@ function getGradient(ctx, chartArea) {
     return gradient;
 }
 const chosenCategories = [];
-function viewCategories(categories){
+
+function viewCategories(categories) {
     const container = document.querySelector('.category-container');
 
     for (let i = 0; i < categories.length; i += 2) {
@@ -156,47 +239,47 @@ function viewCategories(categories){
         `;
         item1.appendChild(checkIcon1);
         item1.addEventListener('click', () => {
-        if (item1.dataset.bgColor === '#C7BEFF') {
-            item1.style.backgroundColor = '';
-            item1.dataset.bgColor = '';
-            checkIcon1.style.display = 'none';
-            chosenCategories.splice(chosenCategories.indexOf(categories[i]), 1);
-        } else {
-            item1.style.backgroundColor = '#C7BEFF';
-            item1.dataset.bgColor = '#C7BEFF';
-            checkIcon1.style.display = 'block';
-            chosenCategories.push(categories[i]);
-        }
+            if (item1.dataset.bgColor === '#C7BEFF') {
+                item1.style.backgroundColor = '';
+                item1.dataset.bgColor = '';
+                checkIcon1.style.display = 'none';
+                chosenCategories.splice(chosenCategories.indexOf(categories[i]), 1);
+            } else {
+                item1.style.backgroundColor = '#C7BEFF';
+                item1.dataset.bgColor = '#C7BEFF';
+                checkIcon1.style.display = 'block';
+                chosenCategories.push(categories[i]);
+            }
         });
         column.appendChild(item1);
 
         if (categories[i + 1]) {
-        const item2 = document.createElement('div');
-        item2.classList.add('category-item');
-        item2.textContent = categories[i + 1].category_name;
-        const checkIcon2 = document.createElement('span');
-        checkIcon2.classList.add('check-icon');
-        checkIcon2.innerHTML = `
+            const item2 = document.createElement('div');
+            item2.classList.add('category-item');
+            item2.textContent = categories[i + 1].category_name;
+            const checkIcon2 = document.createElement('span');
+            checkIcon2.classList.add('check-icon');
+            checkIcon2.innerHTML = `
         <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="20" cy="20" r="20" fill="#353535"/>
         <path d="M28 14L17 25L12 20" stroke="#C7BEFF" stroke-opacity="0.87" stroke-width="4" stroke-linecap="square"/>
         </svg>
         `;
-        item2.appendChild(checkIcon2);
-        item2.addEventListener('click', () => {
-            if (item2.dataset.bgColor === '#C7BEFF') {
-            item2.style.backgroundColor = '';
-            item2.dataset.bgColor = '';
-            checkIcon2.style.display = 'none';
-            chosenCategories.splice(chosenCategories.indexOf(categories[i + 1]), 1);
-            } else {
-            item2.style.backgroundColor = '#C7BEFF';
-            item2.dataset.bgColor = '#C7BEFF';
-            checkIcon2.style.display = 'block';
-            chosenCategories.push(categories[i + 1]);
-            }
-        });
-        column.appendChild(item2);
+            item2.appendChild(checkIcon2);
+            item2.addEventListener('click', () => {
+                if (item2.dataset.bgColor === '#C7BEFF') {
+                    item2.style.backgroundColor = '';
+                    item2.dataset.bgColor = '';
+                    checkIcon2.style.display = 'none';
+                    chosenCategories.splice(chosenCategories.indexOf(categories[i + 1]), 1);
+                } else {
+                    item2.style.backgroundColor = '#C7BEFF';
+                    item2.dataset.bgColor = '#C7BEFF';
+                    checkIcon2.style.display = 'block';
+                    chosenCategories.push(categories[i + 1]);
+                }
+            });
+            column.appendChild(item2);
         }
 
         container.appendChild(column);
@@ -227,67 +310,67 @@ function viewCategories(categories){
 }
 
 // MENTIONS OVER TIME CHART //
-    // The variable that handles the ChartJS object
-    var mentionschart
-    var ctx = document.getElementById('mentionslinechart');
-    mentionschart = new Chart(
-        ctx,
-        {         
-            type: 'line',
-            data:  
-                {
-                labels: mentionschartlabels,
-                datasets: [{
-                    label: 'Mentions over time',
-                    order: screenLeft,
-                    data: mentionschartdata,
-                    fill: true,
-                    borderWidth: 2.5,
-                    backgroundColor: function(context) {
-                        const chart = context.chart;
-                        const {ctx, chartArea} = chart;
-                
-                        if (!chartArea) {
-                            // This case happens on initial chart load
-                            return null;
-                        }
-                        return getGradient(ctx, chartArea);
-                        },
-                    borderColor: 'rgba(133, 92, 248, 0.6)',
-                    // tension: 0.1
-                    pointStyle: false,
-                
-                }],
-                
-            },
-            options: {
-                    plugins: {
+// The variable that handles the ChartJS object
+var mentionschart
+var ctx = document.getElementById('mentionslinechart');
+mentionschart = new Chart(
+    ctx, {
+        type: 'line',
+        data: {
+            labels: mentionschartlabels,
+            datasets: [{
+                label: 'Mentions over time',
+                order: screenLeft,
+                data: mentionschartdata,
+                fill: true,
+                borderWidth: 2.5,
+                backgroundColor: function (context) {
+                    const chart = context.chart;
+                    const {
+                        ctx,
+                        chartArea
+                    } = chart;
 
-                        legend: {
-                            display: false,
-                        },
-                        }}
+                    if (!chartArea) {
+                        // This case happens on initial chart load
+                        return null;
+                    }
+                    return getGradient(ctx, chartArea);
+                },
+                borderColor: 'rgba(133, 92, 248, 0.6)',
+                // tension: 0.1
+                pointStyle: false,
+
+            }],
+
         },
-        
-    );
-    // The labels that will be displayed below the graph. Mainly the labels will be the dates these listeners worked on.
-    var mentionschartlabels = []
-    // The numbers that will be shown on the graph.
-    var mentionschartdata = []
+        options: {
+            plugins: {
+
+                legend: {
+                    display: false,
+                },
+            }
+        }
+    },
+
+);
+// The labels that will be displayed below the graph. Mainly the labels will be the dates these listeners worked on.
+var mentionschartlabels = []
+// The numbers that will be shown on the graph.
+var mentionschartdata = []
 
 // TOP SOURCES CHART //
 ctx = document.getElementById('topSources')
 var topsourceschart = new Chart(
-    ctx,
-    {         
+    ctx, {
         type: 'bar',
-        data:  
-            {
-            labels: 
-            ['YouTube',
-            'Podcasts',
-            'Twitter',
-            'News'],
+        data: {
+            labels: ['YouTube',
+                'Podcasts',
+                'Twitter',
+                'News'
+            ],
             datasets: [{
                 label: 'Top keyword mentions',
                 data: [],
@@ -308,30 +391,28 @@ var topsourceschart = new Chart(
                     'rgba(101, 101, 102, 0.4)',
                 ],
                 borderWidth: 1
-                }]
-            
-            },
+            }]
+
+        },
         options: {
             plugins: {
                 legend: {
                     display: false,
                 },
-                },
+            },
             indexAxis: 'y',
-            }
+        }
     },
-    
+
 );
 var topsourcesdata = []
 
 // POSITIVE MENTIONS OVER TIME CHART //
 ctx = document.getElementById('posMentions')
 var positive_mentions_over_time_chart = new Chart(
-    ctx,
-    {         
+    ctx, {
         type: 'line',
-        data:  
-            {
+        data: {
             labels: posmentionslabels,
             datasets: [{
                 label: 'Positive mentions over time',
@@ -343,21 +424,22 @@ var positive_mentions_over_time_chart = new Chart(
                 tension: 0.5,
                 borderWidth: 1.2
             }],
-            
-            
-        },options: {
-                plugins: {
 
-                    legend: {
-                        display: false,
-                    },
-                    },
-                    elements: {
-                        point:{
-                            backgroundColor: 'rgb(137,110,240)',
-                        }
-                    }
+
+        },
+        options: {
+            plugins: {
+
+                legend: {
+                    display: false,
+                },
+            },
+            elements: {
+                point: {
+                    backgroundColor: 'rgb(137,110,240)',
+                }
             }
+        }
     },
 );
 var posmentionslabels = []
@@ -365,11 +447,9 @@ var posmentionsdata = []
 
 ctx = document.getElementById('topKeywords').getContext('2d')
 var topkeywordschart = new Chart(
-    ctx,
-    {
+    ctx, {
         type: 'bar',
-        data:  
-            {
+        data: {
             labels: [],
             datasets: [{
                 label: 'Top keyword mentions',
@@ -389,9 +469,9 @@ var topkeywordschart = new Chart(
                     'rgba(101, 101, 102, 0.4)',
                 ],
                 borderWidth: 1
-                }]
-            
-            },
+            }]
+
+        },
         options: {
             indexAxis: 'y',
             plugins: {
@@ -401,7 +481,7 @@ var topkeywordschart = new Chart(
             }
         }
     },
-    
+
 );
 var topkeywordslabels = []
 var topkeywordsdata = []
@@ -411,17 +491,15 @@ var topkeywordsdata = []
 var sentimentsharedata = []
 ctx = document.getElementById('sentimentShare')
 var sentimentsharechart = new Chart(
-    ctx,
-    {         
+    ctx, {
         type: 'pie',
-        data:  
-            {
+        data: {
             labels: [
                 'Positive',
                 'Neutral',
                 'Negative'
-                ],
-                datasets: [{
+            ],
+            datasets: [{
                 label: 'Number of mentions',
                 data: [],
                 backgroundColor: [
@@ -430,13 +508,13 @@ var sentimentsharechart = new Chart(
                     'rgb(18,0,29)',
                 ],
                 hoverOffset: 4
-                }]
+            }]
         },
         options: {
             plugins: {
 
-            legend: {
-                position: 'bottom',
+                legend: {
+                    position: 'bottom',
                 },
             }
         }
@@ -444,55 +522,59 @@ var sentimentsharechart = new Chart(
 );
 
 // Sentiment By Source Chart //
-    ctx = document.getElementById('sentimentSource')
-    var sentiment_source_chart = new Chart(
-        ctx,
-        {         
-            type: 'bar',
-            data: {
-                labels:['youtube', 'podcast', 'twitter', 'news'],
-                datasets: [
-                {label: 'Positive',
-                data: sentimentsourcepos,
-            backgroundColor:'rgba(133, 92, 248, 0.6)'},
-                {label: 'Neutral',
-                data: sentimentsourceneu,
-            backgroundColor:'rgba(133, 92, 248)'},
-                {label: 'Negative',
-                data: sentimentsourceneg,
-            backgroundColor:'rgb(18,0,29)',}
-                ]
-            },
-                options: {
-                plugins: {
+ctx = document.getElementById('sentimentSource')
+var sentiment_source_chart = new Chart(
+    ctx, {
+        type: 'bar',
+        data: {
+            labels: ['youtube', 'podcast', 'twitter', 'news'],
+            datasets: [{
+                    label: 'Positive',
+                    data: sentimentsourcepos,
+                    backgroundColor: 'rgba(133, 92, 248, 0.6)'
+                },
+                {
+                    label: 'Neutral',
+                    data: sentimentsourceneu,
+                    backgroundColor: 'rgba(133, 92, 248)'
+                },
+                {
+                    label: 'Negative',
+                    data: sentimentsourceneg,
+                    backgroundColor: 'rgb(18,0,29)',
+                }
+            ]
+        },
+        options: {
+            plugins: {
                 legend: {
                     // position: 'bottom',
                     display: false,
-                    },
+                },
                 title: {
                     display: true,
                     text: 'Sentiment by source'
                 },
-                },
-                responsive: true,
-                scales: {
+            },
+            responsive: true,
+            scales: {
                 x: {
                     stacked: true,
                 },
                 y: {
                     stacked: true
                 }
-                }
             }
-        },
-    );
-    var sentimentsourcepos = []
-    var sentimentsourceneu = []
-    var sentimentsourceneg = []
+        }
+    },
+);
+var sentimentsourcepos = []
+var sentimentsourceneu = []
+var sentimentsourceneg = []
 
 var keywordmentions = []
 
-function navigate(page){
+function navigate(page) {
     User.getListeners(user.data.user._id, (data) => {
         listenersData = data.listener
     })
@@ -502,64 +584,61 @@ function navigate(page){
     let nav_buttons = nav_slider.children
     let nav_settings_buttons = nav_settings_slider.children
     // nav_buttons += nav_settings_buttons
-    for(let i = 0; i < nav_buttons.length; i++){
+    for (let i = 0; i < nav_buttons.length; i++) {
         nav_buttons[i].removeAttribute('class')
     }
-    for(let i = 0; i < nav_settings_buttons.length; i++){
+    for (let i = 0; i < nav_settings_buttons.length; i++) {
         nav_settings_buttons[i].removeAttribute('class')
     }
-    document.getElementById('navigation-'+page).classList.add('active')
-    if(page === 1){
-            document.getElementById("view-listeners").style.display = "block";
-            document.getElementById("web-mentions").style.display = "none";
-            document.getElementById("Account-Settings").style.display = "none";
-            document.getElementById("keyword-Settings").style.display = "none";
-            // 
-            // ctx = document.getElementById('topTopics'),
-            // new Chart(
-            //     ctx,
-            //     {         
-            //         type: 'bubble',
-            //         data: {
-            //             labels: ['January',
-            //             'February',
-            //             'March',
-            //             'April',
-            //             'May',
-            //             'June',],
-                        
-            //         data: [65, 59, 80, 81, 56, 55, 40]},
-            //         options: {
-            //           responsive: true,
-            //           plugins: {
-            //             legend: {
-            //               position: 'bottom',
-            //             },
-            //             title: {
-            //               display: true,
-            //               text: 'Top topics'
-            //             }
-            //           }
-            //         },
-            //     },
-                
-            // );
-            // 
-            // 
-    }
-    else if(page === 2){
+    document.getElementById('navigation-' + page).classList.add('active')
+    if (page === 1) {
+        document.getElementById("view-listeners").style.display = "block";
+        document.getElementById("web-mentions").style.display = "none";
+        document.getElementById("Account-Settings").style.display = "none";
+        document.getElementById("keyword-Settings").style.display = "none";
+        // 
+        // ctx = document.getElementById('topTopics'),
+        // new Chart(
+        //     ctx,
+        //     {         
+        //         type: 'bubble',
+        //         data: {
+        //             labels: ['January',
+        //             'February',
+        //             'March',
+        //             'April',
+        //             'May',
+        //             'June',],
+
+        //         data: [65, 59, 80, 81, 56, 55, 40]},
+        //         options: {
+        //           responsive: true,
+        //           plugins: {
+        //             legend: {
+        //               position: 'bottom',
+        //             },
+        //             title: {
+        //               display: true,
+        //               text: 'Top topics'
+        //             }
+        //           }
+        //         },
+        //     },
+
+        // );
+        // 
+        // 
+    } else if (page === 2) {
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "block";
         document.getElementById("Account-Settings").style.display = "none";
         document.getElementById("keyword-Settings").style.display = "none";
-    }
-    else if(page === 4){
+    } else if (page === 4) {
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "none";
         document.getElementById("Account-Settings").style.display = "block";
         document.getElementById("keyword-Settings").style.display = "none";
-    }
-    else if(page === 5){
+    } else if (page === 5) {
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "none";
         document.getElementById("Account-Settings").style.display = "none";
@@ -569,7 +648,7 @@ function navigate(page){
 
 var keywordCount = 0;
 
-function addKeyword(){
+function addKeyword() {
     let keywords = document.getElementById("keyword-input-container");
 
     // remove initial div on first click
@@ -607,22 +686,22 @@ function addKeyword(){
 }
 
 
-function view_listeners_buttons(listeners){
+function view_listeners_buttons(listeners) {
     let listener_html = document.getElementById("listeners_list_items")
     let listener_html_2 = document.getElementById("listeners_list_items_2")
     let listener_html_3 = document.getElementById("listeners_list_items_3")
     listener_html.innerHTML = `<h4>No Listeners Created</h4>`
     listener_html_2.innerHTML = `<h4>No Listeners Created</h4>`
     listener_html_3.innerHTML = `<h4>No Listeners Created</h4>`
-    if(listeners.length > 0){
+    if (listeners.length > 0) {
         listener_html.innerHTML = ""
         listener_html_2.innerHTML = ""
         listener_html_3.innerHTML = ""
-        for(let i = 0; i < listeners.length; i++){
+        for (let i = 0; i < listeners.length; i++) {
             let listener_div = document.createElement("div")
             listener_div.setAttribute("id", listeners[i]._id)
             listener_div.setAttribute("class", "listeners_list_item")
-            if(i == 0)
+            if (i == 0)
                 listener_div.classList.add("active")
             else
                 listener_div.classList.add("inactive")
@@ -636,21 +715,21 @@ function view_listeners_buttons(listeners){
             listener_html.appendChild(listener_div)
 
             let listener_div_2 = document.createElement("div")
-            listener_div_2.setAttribute("id", listeners[i]._id+"_2")
+            listener_div_2.setAttribute("id", listeners[i]._id + "_2")
             listener_div_2.setAttribute("class", "listeners_list_item")
-            if(i == 0)
+            if (i == 0)
                 listener_div_2.classList.add("active")
             else
                 listener_div_2.classList.add("inactive")
             listener_div_2.addEventListener("click", () => {
                 view_listener_mentions(listeners[i]._id, listeners[i].listener_name)
             })
-            
+
 
             let listener_div_3 = document.createElement("div")
-            listener_div_3.setAttribute("id", listeners[i]._id+"_3")
+            listener_div_3.setAttribute("id", listeners[i]._id + "_3")
             listener_div_3.setAttribute("class", "listeners_list_item")
-            if(i == 0)
+            if (i == 0)
                 listener_div_3.classList.add("active")
             else
                 listener_div_3.classList.add("inactive")
@@ -676,104 +755,105 @@ function view_listeners_buttons(listeners){
     }
 }
 
-async function view_listener_graphs(listenerid, listenername){
+async function view_listener_graphs(listenerid, listenername) {
     let listenernamecontainer = document.getElementById("listener_name")
     listenernamecontainer.innerHTML = listenername
     let listener_html = document.getElementById("listeners_list_items")
     Array.from(listener_html.children).forEach((node) => {
-        if(node.id === listenerid){
-            if(node.classList.contains("inactive")){
-            node.classList.remove("inactive")
-            node.classList.add("active")}
-        }
-        else{
-            if(node.classList.contains("active")){
-            node.classList.remove("active")
-            node.classList.add("inactive")}
+        if (node.id === listenerid) {
+            if (node.classList.contains("inactive")) {
+                node.classList.remove("inactive")
+                node.classList.add("active")
+            }
+        } else {
+            if (node.classList.contains("active")) {
+                node.classList.remove("active")
+                node.classList.add("inactive")
+            }
         }
     })
     document.getElementById("listener_data_api").style.display = "none"
     document.getElementById("empty-result-charts").style.display = "none"
-    document.getElementById("loading-container-charts").style.display = "flex" 
-    await fetch('/listener/result/'+listenerid,{  
+    document.getElementById("loading-container-charts").style.display = "flex"
+    await fetch('/listener/result/' + listenerid, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            }}).then(async (res) => {
-                if(res.status==200){
-                    await res.json().then((data) => {
-                    if(data.result.length === 0){
-                        document.getElementById("listener_data_api").style.display = "none"
-                        document.getElementById("empty-result-charts").style.display = "flex"
-                        document.getElementById("loading-container-charts").style.display = "none"
-                    }
-                    else{
-                        var listener_data = data["result"]
-                        listener_data.sort((a, b) => (a.created_at > b.created_at) ? 1 : -1)
-                        let chartPreparer = new ChartDataPreparer(listener_data)
+        }
+    }).then(async (res) => {
+        if (res.status == 200) {
+            await res.json().then((data) => {
+                if (data.result.length === 0) {
+                    document.getElementById("listener_data_api").style.display = "none"
+                    document.getElementById("empty-result-charts").style.display = "flex"
+                    document.getElementById("loading-container-charts").style.display = "none"
+                } else {
+                    var listener_data = data["result"]
+                    listener_data.sort((a, b) => (a.created_at > b.created_at) ? 1 : -1)
+                    let chartPreparer = new ChartDataPreparer(listener_data)
 
-                        // MENTIONS CHART DATA
-                        var mentions_chart_data = chartPreparer.mentions_over_time_chart_data()
-                        mentionschartlabels = mentions_chart_data[0]
-                        mentionschartdata = mentions_chart_data[1]
+                    // MENTIONS CHART DATA
+                    var mentions_chart_data = chartPreparer.mentions_over_time_chart_data()
+                    mentionschartlabels = mentions_chart_data[0]
+                    mentionschartdata = mentions_chart_data[1]
 
-                        // POSITIVE MENTIONS OVER TIME DATA
-                        var pos_mentions_chart_data = chartPreparer.pos_mentions_over_time_chart_data()
-                        posmentionslabels = pos_mentions_chart_data[0]
-                        posmentionsdata = pos_mentions_chart_data[1]
+                    // POSITIVE MENTIONS OVER TIME DATA
+                    var pos_mentions_chart_data = chartPreparer.pos_mentions_over_time_chart_data()
+                    posmentionslabels = pos_mentions_chart_data[0]
+                    posmentionsdata = pos_mentions_chart_data[1]
 
-                        // SENTIMENT BY SOURCE DATA
-                        var sentiment_data = chartPreparer.sentiment_source_chart_data()
+                    // SENTIMENT BY SOURCE DATA
+                    var sentiment_data = chartPreparer.sentiment_source_chart_data()
 
-                        // TOP KEYWORDS CHART
-                        var keywords_data = chartPreparer.top_keywords_chart_data()
-                        let topKeywords = Object.entries(keywords_data).sort((a, b) => b[1] - a[1]).slice(0, 3);
-                        topkeywordslabels = topKeywords.map(entry => entry[0]);
-                        topkeywordsdata = topKeywords.map(entry => entry[1]);
-                        
-                        // SENTIMENT SHARE //
-                        var sentiment_counts = chartPreparer.sentiment_share_chart_data()
+                    // TOP KEYWORDS CHART
+                    var keywords_data = chartPreparer.top_keywords_chart_data()
+                    let topKeywords = Object.entries(keywords_data).sort((a, b) => b[1] - a[1]).slice(0, 3);
+                    topkeywordslabels = topKeywords.map(entry => entry[0]);
+                    topkeywordsdata = topKeywords.map(entry => entry[1]);
 
-                        // SOURCE SHARE //
-                        var source_counts = chartPreparer.sources_chart_data()
+                    // SENTIMENT SHARE //
+                    var sentiment_counts = chartPreparer.sentiment_share_chart_data()
 
-                        // update the charts
+                    // SOURCE SHARE //
+                    var source_counts = chartPreparer.sources_chart_data()
 
-                        /** MENTIONS CHART **/ 
-                        mentionschart.data.labels = mentionschartlabels
-                        mentionschart.data.datasets[0].data = mentionschartdata
-                        mentionschart.update()
+                    // update the charts
 
-                        /** POSITIVE MENTIONS OVER TIME CHART **/
-                        positive_mentions_over_time_chart.data.labels = posmentionslabels
-                        positive_mentions_over_time_chart.data.datasets[0].data = posmentionsdata
-                        positive_mentions_over_time_chart.update()
+                    /** MENTIONS CHART **/
+                    mentionschart.data.labels = mentionschartlabels
+                    mentionschart.data.datasets[0].data = mentionschartdata
+                    mentionschart.update()
 
-                        /** SENTIMENT BY SOURCE CHART **/
-                        sentiment_source_chart.data.datasets[0].data = [sentiment_data['youtube']['positive'], sentiment_data['podcast']['positive'], sentiment_data['twitter']['positive'], sentiment_data['news']['positive']]
-                        sentiment_source_chart.data.datasets[1].data = [sentiment_data['youtube']['negative'], sentiment_data['podcast']['negative'], sentiment_data['twitter']['negative'], sentiment_data['news']['negative']]
-                        sentiment_source_chart.data.datasets[2].data = [sentiment_data['youtube']['neutral'], sentiment_data['podcast']['neutral'], sentiment_data['twitter']['neutral'], sentiment_data['news']['neutral']]
-                        sentiment_source_chart.update()
+                    /** POSITIVE MENTIONS OVER TIME CHART **/
+                    positive_mentions_over_time_chart.data.labels = posmentionslabels
+                    positive_mentions_over_time_chart.data.datasets[0].data = posmentionsdata
+                    positive_mentions_over_time_chart.update()
 
-                        /** TOP KEYWORDS CHART **/
-                        topkeywordschart.data.labels = topkeywordslabels
-                        topkeywordschart.data.datasets[0].data = topkeywordsdata
-                        topkeywordschart.update()
+                    /** SENTIMENT BY SOURCE CHART **/
+                    sentiment_source_chart.data.datasets[0].data = [sentiment_data['youtube']['positive'], sentiment_data['podcast']['positive'], sentiment_data['twitter']['positive'], sentiment_data['news']['positive']]
+                    sentiment_source_chart.data.datasets[1].data = [sentiment_data['youtube']['negative'], sentiment_data['podcast']['negative'], sentiment_data['twitter']['negative'], sentiment_data['news']['negative']]
+                    sentiment_source_chart.data.datasets[2].data = [sentiment_data['youtube']['neutral'], sentiment_data['podcast']['neutral'], sentiment_data['twitter']['neutral'], sentiment_data['news']['neutral']]
+                    sentiment_source_chart.update()
 
-                        /** SENTIMENT SHARE CHART **/
-                        sentimentsharechart.data.datasets[0].data = sentiment_counts
-                        sentimentsharechart.update()
+                    /** TOP KEYWORDS CHART **/
+                    topkeywordschart.data.labels = topkeywordslabels
+                    topkeywordschart.data.datasets[0].data = topkeywordsdata
+                    topkeywordschart.update()
 
-                        /** SOURCE SHARE CHART **/
-                        topsourceschart.data.datasets[0].data = source_counts
-                        topsourceschart.update()
+                    /** SENTIMENT SHARE CHART **/
+                    sentimentsharechart.data.datasets[0].data = sentiment_counts
+                    sentimentsharechart.update()
 
-                        // remove the loading screen to view the data
-                        document.getElementById("loading-container-charts").style.display = "none"
-                        document.getElementById("listener_data_api").style.display = "flex"
-                        document.getElementById("empty-result-charts").style.display = "none"
-                    }
-                })
+                    /** SOURCE SHARE CHART **/
+                    topsourceschart.data.datasets[0].data = source_counts
+                    topsourceschart.update()
+
+                    // remove the loading screen to view the data
+                    document.getElementById("loading-container-charts").style.display = "none"
+                    document.getElementById("listener_data_api").style.display = "flex"
+                    document.getElementById("empty-result-charts").style.display = "none"
+                }
+            })
         }
     }).catch((err) => {
         console.log(err)
@@ -781,31 +861,30 @@ async function view_listener_graphs(listenerid, listenername){
 }
 
 const sentiment = {
-    "negative":`<button type="button" class="Negative" id="Negative">Negative</button>`,
-    "positive":`<button type="button" class="Positive" id="Positive">Positive</button>`, 
-    "neutral":`<button type="button" class="Neutral" id="Neutral">Neutral</button>`
+    "negative": `<button type="button" class="Negative" id="Negative">Negative</button>`,
+    "positive": `<button type="button" class="Positive" id="Positive">Positive</button>`,
+    "neutral": `<button type="button" class="Neutral" id="Neutral">Neutral</button>`
 }
 const spam = {
-    "0":"",
+    "0": "",
     "1": `<button type="button" class="Spam" id="Spam"><i class='bx bx-error'></i> Spam</button>`
 }
 
 // Pagination
 var currentPage = 0
 
-async function view_listener_mentions(listenerid, listenername){
+async function view_listener_mentions(listenerid, listenername) {
     let listenernamecontainer = document.getElementById("listener_name_mentions")
     listenernamecontainer.innerHTML = listenername
     let listener_html = document.getElementById("listeners_list_items_2")
     Array.from(listener_html.children).forEach((node) => {
-        if(node.id === listenerid+"_2"){
-            if(node.classList.contains("inactive")){
+        if (node.id === listenerid + "_2") {
+            if (node.classList.contains("inactive")) {
                 node.classList.remove("inactive")
                 node.classList.add("active")
             }
-        }
-        else{
-            if(node.classList.contains("active")){
+        } else {
+            if (node.classList.contains("active")) {
                 node.classList.remove("active")
                 node.classList.add("inactive")
             }
@@ -814,34 +893,34 @@ async function view_listener_mentions(listenerid, listenername){
     document.getElementById("table-container").style.display = "none"
     document.getElementById("empty-result").style.display = "none"
     document.getElementById("loading-container").style.display = "flex"
-    await fetch('/listener/result/'+listenerid,{  
+    await fetch('/listener/result/' + listenerid, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-    }}).then(async (res) => {
-        if(res.status==200){
+        }
+    }).then(async (res) => {
+        if (res.status == 200) {
             await res.json().then((data) => {
-                if(data["result"].length == 0){
+                if (data["result"].length == 0) {
                     document.getElementById("loading-container").style.display = "none"
                     document.getElementById("table-container").style.display = "none"
                     document.getElementById("empty-result").style.display = "flex"
-                }
-                else{
+                } else {
                     var listener = data["result"]
                     currentPage = 0
-                    let pages = Math.ceil(listener.length/50)
+                    let pages = Math.ceil(listener.length / 50)
                     let page_number_container = document.getElementById("page_number_container")
                     page_number_container.innerHTML = `Page 0 of ${pages}`
                     // previous button
                     document.getElementById("previous_page").addEventListener("click", () => {
-                        if(currentPage > 0){
+                        if (currentPage > 0) {
                             currentPage--
                             page_number_container.innerHTML = `Page ${currentPage} of ${pages}`
                             viewMentions(listener)
                         }
                     })
                     document.getElementById("next_page").addEventListener("click", () => {
-                        if(currentPage < pages-1){
+                        if (currentPage < pages - 1) {
                             currentPage++
                             page_number_container.innerHTML = `Page ${currentPage} of ${pages}`
                             // pages[currentPage].classList.add("active")
@@ -856,19 +935,18 @@ async function view_listener_mentions(listenerid, listenername){
         console.log(err)
     })
 }
-async function viewkeywordsactions(listener_id,listener_name){
+async function viewkeywordsactions(listener_id, listener_name) {
     let listener_name_header = document.getElementById("listener_name_3")
     listener_name_header.innerHTML = listener_name
     let listener_html = document.getElementById("listeners_list_items_3")
     Array.from(listener_html.children).forEach((node) => {
-        if(node.id === listener_id+"_3"){
-            if(node.classList.contains("inactive")){
+        if (node.id === listener_id + "_3") {
+            if (node.classList.contains("inactive")) {
                 node.classList.remove("inactive")
                 node.classList.add("active")
             }
-        }
-        else{
-            if(node.classList.contains("active")){
+        } else {
+            if (node.classList.contains("active")) {
                 node.classList.remove("active")
                 node.classList.add("inactive")
             }
@@ -886,22 +964,22 @@ async function viewkeywordsactions(listener_id,listener_name){
     `
     document.getElementById("loading-container-edit-keywords").style.display = "flex"
     let keyword_html = document.getElementById("listeners_list_items_3")
-    let response =fetch('/keyword/view/'+listener_id)
-    .then(response=>response.json())
-    .then(data=>{ 
-        const keyword_table = document.getElementById("edit_keywords_table")
-        for(let keyword in data["keywords"]){
-            const row = keyword_table.insertRow()
-            row.insertCell().textContent = data["keywords"][keyword]["keyword"]
-            row.insertCell().innerHTML = `<button class="rounded-btn" onclick="editRow('${data["keywords"][keyword]["_id"]}','${data["keywords"][keyword]["keyword"]}')">Edit</button>`
-            row.insertCell().innerHTML = `<button class="delete-btn" onclick="deleteRow('${data["keywords"][keyword]["_id"]}','${data["keywords"][keyword]["keyword"]}')">Delete</button>`
-        }
-    }).then(()=>{
-        document.getElementById("loading-container-edit-keywords").style.display = "none"
-        document.getElementById("edit_keywords_table").style.display = "table"
-    })
+    let response = fetch('/keyword/view/' + listener_id)
+        .then(response => response.json())
+        .then(data => {
+            const keyword_table = document.getElementById("edit_keywords_table")
+            for (let keyword in data["keywords"]) {
+                const row = keyword_table.insertRow()
+                row.insertCell().textContent = data["keywords"][keyword]["keyword"]
+                row.insertCell().innerHTML = `<button class="rounded-btn" onclick="editRow('${data["keywords"][keyword]["_id"]}','${data["keywords"][keyword]["keyword"]}')">Edit</button>`
+                row.insertCell().innerHTML = `<button class="delete-btn" onclick="deleteRow('${data["keywords"][keyword]["_id"]}','${data["keywords"][keyword]["keyword"]}')">Delete</button>`
+            }
+        }).then(() => {
+            document.getElementById("loading-container-edit-keywords").style.display = "none"
+            document.getElementById("edit_keywords_table").style.display = "table"
+        })
 }
-export function viewMentions(listener){
+export function viewMentions(listener) {
     let mentions_table = document.getElementById("mentions-table")
     mentions_table.innerHTML = `
         <tr>
@@ -922,11 +1000,15 @@ export function viewMentions(listener){
     `
     const start_index = (currentPage) * 50
     const end_index = start_index + 50
-    listener = listener.slice(start_index,end_index)
+    listener = listener.slice(start_index, end_index)
     const listener_length = listener.length
-    for(let i = 0; i < listener_length; i++){
+    for (let i = 0; i < listener_length; i++) {
         listener[i].created_at = new Date(listener[i].created_at)
-        listener[i].created_at = listener[i].created_at.toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'})
+        listener[i].created_at = listener[i].created_at.toLocaleDateString("en-US", {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        })
         mentions_table.appendChild(generateRow(listener[i]))
     }
     document.getElementById("table-container").style.display = "block"
@@ -944,11 +1026,11 @@ function copyToClipboard(text) {
 
 var source_icon = {
     "twitter": "<i class='bx bxl-twitter icon'></i>",
-    "news" : "<i class='bx bxs-news icon'></i>",
+    "news": "<i class='bx bxs-news icon'></i>",
     "youtube": "<i class='bx bxl-youtube icon'></i>",
 }
 
-function popUpMention(row){
+function popUpMention(row) {
 
     //wrap keyword in span
     let wrapped_keyword = "<span style='color: green; font-weight: 900'>" + row["keyword"] + "</span>"
@@ -977,11 +1059,11 @@ function popUpMention(row){
     popUp_div_header_h1.classList.add("popup_keyword_header")
     var arabic = /[\u0600-\u06FF]/
     popUp_div_header_h1.innerHTML = row["keyword"]
-    if(arabic.test(row["keyword"])){
+    if (arabic.test(row["keyword"])) {
         popUp_div_header_h1.style.textAlign = "right"
         popUp_div_header_h1.style.direction = "rtl"
     }
-    
+
     popUp_div.appendChild(popUp_div_header_h1)
     // Information Row
     let popUp_div_info = document.createElement("div")
@@ -991,7 +1073,7 @@ function popUpMention(row){
     popUp_div_info_date.innerHTML = formatted_date
     popUp_div_info.appendChild(popUp_div_info_date)
     let popUp_div_info_source_sentiment = document.createElement("div")
-    
+
     let popUp_div_info_source = document.createElement("div")
     popUp_div_info_source.classList.add(row["source"])
     popUp_div_info_source.innerHTML = source_icon[row["source"]] + row["source"][0].toUpperCase() + row["source"].slice(1)
@@ -1002,8 +1084,8 @@ function popUpMention(row){
     popUp_div_info_sentiment.innerHTML = row["sentiment"][0].toUpperCase() + row["sentiment"].slice(1)
     popUp_div_info_source_sentiment.appendChild(popUp_div_info_sentiment)
 
-    if(row["source"] == "twitter"){
-        if(row["spam"] == "1"){
+    if (row["source"] == "twitter") {
+        if (row["spam"] == "1") {
             let spam = document.createElement("div")
             spam.classList.add("spam")
             spam.innerHTML = "<i class='bx bx-flag'></i> Spam"
@@ -1013,7 +1095,7 @@ function popUpMention(row){
 
     popUp_div_info.appendChild(popUp_div_info_source_sentiment)
     popUp_div.appendChild(popUp_div_info)
-    
+
     // Text Row
     let popUp_div_text = document.createElement("div")
     popUp_div_text.classList.add("popup_text")
@@ -1033,12 +1115,12 @@ function popUpMention(row){
     // `
 }
 
-function closePopUp(){
+function closePopUp() {
     let popUp = document.getElementById("mention_popup")
     popUp.style.display = "none"
 }
 
-function preprocess_text(tweet){
+function preprocess_text(tweet) {
     tweet = tweet.replace(/\s+/g, ' ').replace(/"/g, '\\"')
     return tweet
 }
@@ -1063,7 +1145,7 @@ function truncateText(row) {
         }
         let text_p = document.createElement("p")
         let text_bdi = document.createElement("bdi")
-        text_bdi.innerHTML = row["text"].slice(0,128)
+        text_bdi.innerHTML = row["text"].slice(0, 128)
         text_bdi.appendChild(document.createElement("br"))
         text_bdi.appendChild(button)
         text_p.appendChild(text_bdi)
@@ -1085,8 +1167,8 @@ function wrapKeyword(text, keyword) {
     return text;
 }
 
-function generateRow(mention){
-    let row = document.createElement("tr") 
+function generateRow(mention) {
+    let row = document.createElement("tr")
 
     //date row
     let item_publish_date = document.createElement("td")
@@ -1109,7 +1191,7 @@ function generateRow(mention){
     source_item_button.id = mention.source.charAt(0).toUpperCase() + mention.source.slice(1)
     source_item_button.innerHTML = mention.source.charAt(0).toUpperCase() + mention.source.slice(1)
     source_item_div.appendChild(source_item_button)
-    if(mention.source == "twitter")
+    if (mention.source == "twitter")
         source_item_div.innerHTML += spam[mention.spam]
     source_item.appendChild(source_item_div)
     row.appendChild(source_item)
@@ -1139,7 +1221,7 @@ function generateRow(mention){
     action_item_button_open.appendChild(action_item_button_open_i)
     action_item_button_open.innerHTML += "Open"
     action_item_div.appendChild(action_item_button_open)
-    
+
     // action row[COPY]
     let action_item_button_copy = document.createElement("button")
     action_item_button_copy.type = "button"
