@@ -9,7 +9,13 @@
     <link rel="stylesheet" href="../css/dashboard_styles.css">
     <script type="module" src="../scripts/dashboard_scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<<<<<<< Updated upstream
     <link href="../../icons/css/boxicons.min.css" rel="stylesheet">
+=======
+    <link href = "../../icons/css/boxicons.min.css" rel="stylesheet">
+    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+>>>>>>> Stashed changes
 </head>
 
 <body>
@@ -333,6 +339,91 @@
                         </div>
                     </div>
                 </div>
+<<<<<<< Updated upstream
+=======
+                <div class="button-styling-two">
+                    <button id="Reset">Reset</button>
+                </div>
+            </div>    
+        </div> 
+    </div>
+
+    <div class="edit-listener-container" id="keyword-Settings">
+        <div class="listener-header-row">
+            <h2>Listeners</h2>
+            <button id="add-listener-button-2">Add Listener</button>
+        </div>
+        <div class="listeners_list" id = "listeners_list_items_3"></div>
+        <script>
+            function deleteRow(rowId) {
+            const table = document.getElementById("myTable");
+            const row = rowId.parentNode.parentNode; // get row element
+
+            table.deleteRow(row.rowIndex);
+            }
+            $(function() {
+    $('.delete-btn').on('click', function() {
+      var documentId = $(this).data('id');
+      $.ajax({
+        type: 'DELETE',
+        url: '/keyword/' + documentId + '/keyword',
+        success: function(response) {
+          alert('Keyword deleted successfully');
+          // Add any additional handling here, such as refreshing the page
+        },
+        error: function(error) {
+          alert('Error deleting keyword: ' + error.responseText);
+        }
+      });
+    });
+  });
+        </script>
+        <h2 id="listener_name_3">No Listeners</h2>
+        <table class = "edit_keywords_table_container" id="edit_keywords_table" width="100%" style="display: none">
+            <div id="edit-popup" style="display: none;">
+                <!-- Popup contents -->
+                <input type="text" id="edit-keyword-input" placeholder="Enter keyword">
+                <button id="save-keyword-btn">Save</button>
+              </div>
+              
+            <tbody>
+                <tr>
+                    <td id="cell1">Anghami</td>
+                    <td><button class="rounded-btn">Edit</button></td>
+                    <!-- <td><button  class="delete-btn">Delete</button></td> -->
+                </tr>
+                <tr>
+                    <td id="cell2">MIU</td>
+                    <td><button class="rounded-btn">Edit</button></td>
+                    <td><button onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
+                </tr>
+               
+                <tr>
+                    <td id="cell3">Uber</td>
+                    <td><button class="rounded-btn">Edit</button></td>
+                    <td><button  onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
+                </tr>
+                <tr>
+                    <td id="cell4">Swivl</td>
+                    <td><button class="rounded-btn">Edit</button></td>
+                    <td><button onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <div id = "loading-container-edit-keywords" style = "background-color: white; border-radius: 15px; height: 500px;display: flex; justify-content: center; align-items: center;flex-direction: column;">
+            <div style="width:5%; height: 5%;margin-bottom: 40px;">
+                <svg version="1.1" id="loading-circle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                    <path d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                        <animateTransform attributeType="XML"
+                        attributeName="transform"
+                        type="rotate"
+                        from="0 25 25"
+                        to="360 25 25"
+                        dur="0.6s"
+                        repeatCount="indefinite"/>
+                    </path>
+                </svg>
+>>>>>>> Stashed changes
             </div>
 
             <div class="edit-listener-container" id="keyword-Settings">

@@ -71,6 +71,7 @@ document.querySelectorAll(".listener-header-row button").forEach(function (butto
         document.getElementById("pagination_fixed_position").style.display = "none";
     });
 });
+<<<<<<< Updated upstream
 //updating profile settings
 function validateEditForm() {
     let addlistenerName = document.getElementById("addlistenerName");
@@ -139,6 +140,24 @@ document.getElementById("Update-Profile").addEventListener("click", function (ev
         });
     }
 });
+=======
+// document.getElementById("delete-keyword").addEventListener("click", function() {
+//     const idToDelete = "_id"; // replace with actual id of item to delete
+//     fetch(/deleteKeyword/$,{idToDelete}, {
+//         method: 'DELETE'
+//     })
+//     .then(response => {
+//         if (response.ok) {
+//             console.log("Item deleted successfully");
+//         } else {
+//             console.log("Error deleting item. Status code: ${response.status}");
+//         }
+//     })
+//     .catch(error => {
+//         console.log("Error deleting item ${error}");
+//     });
+// });
+>>>>>>> Stashed changes
 
 
 
@@ -684,6 +703,42 @@ function addKeyword() {
         }
     });
 }
+function addKeyword1(){
+    let keywords = document.getElementById("keyword-input-container");
+
+    // remove initial div on first click
+    if (keywordCount === 0) {
+        keywords.removeChild(keywords.firstElementChild);
+    }
+
+    keywordCount++;
+    let keyword = document.createElement("div");
+    keyword.setAttribute("class", "keyword-input");
+    keyword.setAttribute("id", "keyword-container-" + keywordCount);
+    keyword.innerHTML = `
+        <input type="text" id="keyword-input-${keywordCount}" placeholder="Keyword">
+        <button id='remove-${keywordCount}'>
+            <svg width="28" height="28" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.08496 13H20.9135" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    `;
+    keywords.appendChild(keyword);
+
+    let removeButton = document.getElementById(`remove-${keywordCount}`);
+    removeButton.addEventListener('click', () => {
+        keywordCount--;
+        keyword.remove();
+
+        // add message if this was the last div
+        if (keywords.childElementCount === 0) {
+            let message = document.createElement("div");
+            message.setAttribute("style", "text-align: center; width: 100%");
+            message.textContent = "Click on the add button above to add a keyword";
+            keywords.appendChild(message);
+        }
+    });
+}
 
 
 function view_listeners_buttons(listeners) {
@@ -964,6 +1019,7 @@ async function viewkeywordsactions(listener_id, listener_name) {
     `
     document.getElementById("loading-container-edit-keywords").style.display = "flex"
     let keyword_html = document.getElementById("listeners_list_items_3")
+<<<<<<< Updated upstream
     let response = fetch('/keyword/view/' + listener_id)
         .then(response => response.json())
         .then(data => {
@@ -980,6 +1036,108 @@ async function viewkeywordsactions(listener_id, listener_name) {
         })
 }
 export function viewMentions(listener) {
+=======
+    let response =fetch('/keyword/view/'+listener_id)
+    .then(response=>response.json())
+    .then(data=>{ 
+        var button = document.createElement("button");
+        button.innerHTML = "Add";
+        button.className = "add-key-btn";
+        button.id = "unique-button-id"; // Set the unique ID for the button
+        
+        // Add event listener to the button
+        button.addEventListener("click", addKeyword1);
+        
+        // Append the button to the document body
+        document.body.appendChild(button);
+        
+        const keyword_table = document.getElementById("edit_keywords_table")
+       
+        for(let keyword in data["keywords"]){
+            const row = keyword_table.insertRow()
+            row.insertCell().textContent = data["keywords"][keyword]["keyword"]
+            row.insertCell().innerHTML = `<button class="rounded-btn " id="edit-keyword-${data["keywords"][keyword]["_id"]}">Edit</button>`
+           
+              
+              document.querySelectorAll(".edit-keyword-btn").forEach(function(button) {
+                button.addEventListener("click", function() {
+                  // Show the popup
+                  document.getElementById("popup").style.display = "block";
+                });
+              });
+              
+              
+                            
+            row.insertCell().innerHTML = `<button id ="delete-keyword-${data["keywords"][keyword]["_id"]}" class="delete-btn" >Delete</button>`
+          
+              
+            document.getElementById(`delete-keyword-${data["keywords"][keyword]["_id"]}`).addEventListener("click", () =>{fetch('/keyword/delete/'+data["keywords"][keyword]["_id"], {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                
+            }).then((res) => {
+                if (res.status === 200) {
+                    res.json().then((data) => {
+                       alert("Keyword deleted successfully")
+                       viewkeywordsactions(listener_id,listener_name)
+                    })
+                } else {
+                    console.log(res.status)
+                }
+            }).catch((err) => {
+                console.log(err)
+            });
+            });
+            function updateKeyword(button,keywordId, updatedKeyword) {
+                if (updatedKeyword) {
+                  fetch(`/keyword/${keywordId}/${updatedKeyword}`, {
+                    method: 'PUT',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    // Add any additional request body if required
+                  })
+                    .then((res) => {
+                      if (res.status === 200) {
+                        res.json().then((data) => {
+                          // Handle the successful response
+                          alert("Keyword updated successfully");
+                          // to solve the refresh thing
+                          viewkeywordsactions(listener_id,listener_name)
+                        });
+                      } else {
+                        console.log(res.status);
+                      }
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }
+              }
+              
+              document.getElementById(`edit-keyword-${data["keywords"][keyword]["_id"]}`).addEventListener('click', function() {
+                const button = this;
+                const keywordId = button.id.split('-')[2];
+                const updatedKeyword = prompt('Enter the updated keyword:');
+                updateKeyword(button, keywordId, updatedKeyword);
+              });
+              
+              
+              
+            
+            
+        }
+    }).then(()=>{
+        document.getElementById("loading-container-edit-keywords").style.display = "none"
+        document.getElementById("edit_keywords_table").style.display = "table"
+        
+    })
+}
+
+export function viewMentions(listener){
+>>>>>>> Stashed changes
     let mentions_table = document.getElementById("mentions-table")
     mentions_table.innerHTML = `
         <tr>
