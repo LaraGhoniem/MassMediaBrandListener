@@ -63,6 +63,9 @@ app.get('/view/register', (req,res) => {
 app.get('/view/dashboard', (req,res) => {
     res.sendFile(path.join(__dirname, 'views/pages/dashboard.html'))
 })
+app.get('/view/admin', (req,res) => {
+    res.sendFile(path.join(__dirname, 'views/pages/admin.html'))
+})
 
 //get data from database
 const listener = require('./models/listenerModel')
@@ -75,6 +78,11 @@ app.get('/listener-data', (req, res) => {
             res.send(req.session)
         }
     })
+})
+
+//a get request to get session data
+app.get('/session-data', (req, res) => {
+    res.send(req.session)
 })
 
 

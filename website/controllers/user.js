@@ -48,26 +48,15 @@ exports.signin = (req, res) => {
             })
         }
 
-        const token = jwt.sign({
-            _id: user._id
-        }, process.env.SECRET)
-        res.cookie("token", token, {
-            expire: new Date() + 1
-        })
+        const token = jwt.sign({_id: user._id}, process.env.SECRET)
+        res.cookie("token", token, {expire: new Date() + 1})
+        // res.cookie("user", user, {expire: new Date() + 1})
         req.session.user = user
         req.session.save()
-        const {
-            _id,
-            name,
-            email
-        } = user
+        const { _id, name, email,role } = user
         return res.json({
             token,
-            user: {
-                _id,
-                name,
-                email
-            },
+            user: {_id, name, email, role},
         })
     })
 }

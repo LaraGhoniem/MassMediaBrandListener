@@ -10,7 +10,14 @@ async function login(){
         })
     }).then((res) => {
         if(res.status === 200){
-            window.location.href = '/view/dashboard'
+            res.json().then((data) => {
+                if(data.user.role === 'admin'){
+                    window.location.href = '/view/admin'
+                }
+                else{
+                    window.location.href = '/view/dashboard'
+                }
+            })
         }
         else{
             console.log(res.status)

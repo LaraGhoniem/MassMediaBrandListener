@@ -64,7 +64,7 @@ class ChartDataPreparer {
     sentiment_source_chart_data() {
         // Define the sources and sentiments to include in the chart
         let sources = ['youtube', 'podcast', 'twitter', 'news'];
-        let sentiments = ['positive', 'negative', 'neutral'];
+        let sentiments = ['positive', 'neutral', 'negative'];
 
         // Initialize the result object
         let result = {};
@@ -94,13 +94,14 @@ class ChartDataPreparer {
         return counts;
     }
 
+
     sentiment_share_chart_data() {
         // Count the number of positive, negative, and neutral mentions
         let positiveCount = this.listener_data.filter(obj => obj['sentiment'] === 'positive').length;
         let negativeCount = this.listener_data.filter(obj => obj['sentiment'] === 'negative').length;
         let neutralCount = this.listener_data.filter(obj => obj['sentiment'] === 'neutral').length;
 
-        return [positiveCount, negativeCount, neutralCount];
+        return [positiveCount, neutralCount, negativeCount];
     }
 
     sources_chart_data() {

@@ -7,6 +7,7 @@
     <title>Welcome</title>
     <link rel="stylesheet" href="css/landing_page_styles.css">
     <script src="scripts/landing_page_scripts.js"></script>
+    <link href = "../../icons/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="mainContainer">
@@ -26,11 +27,74 @@
             <div class="rightContainer">
                 <h1>Be informed, stay competitive.</h1>
                 <p>Our all-in-one brand monitoring tool will help you stay alert by tracking mentions about any brand through news, blogs, social media, podcasts and videos.</p>
-                <button class="btn">Sign up for free</button>
+                <button onclick="location.href='/view/register'" class="btn">Sign up for free</button>
             </div>
             <div class="leftContainer">
                 <img src="../assets/landing_page_image.png" alt="landing page image">
+            </div>
+            
+        </div>
+        <div class="arrow-down-container">
+                <a href="#mentions"><i class='bx bxs-chevrons-down'></i></a> 
+        </div>
+    </div>  
+    <div class="sections section-1" id="mentions">
+        <div class="section-content">
+            <h1>Track Down Mentions</h1>
+            <p>
+            Keep track of your brand mentions with ease using our website application. Enter keywords to monitor and select the media platforms you want to search, including social media platforms, blogs and articles, radio stations, podcasts, and television. Our system gathers data from these platforms using various tools and APIs and processes it to provide you with data visualization on a web application. Stay up to date with the latest mentions of your company and respond correctly to protect your reputation.
+            </p>
+        </div>
+        <div class="image-container">
+            <img src="../assets/landing_page_mentions.png" alt="Mentions over time">
         </div>
     </div>
+    <div class="sections section-2">
+        <h2>What we listen over?</h2>
+        <br>
+        <div class="sources-row">
+            <div class="source-item">
+                <i class='bx bxl-youtube' ></i>
+                <h3>YouTube</h3>
+            </div>
+            <div class="source-item">
+                <i class='bx bxl-twitter' ></i>
+                <h3>Twitter</h3>
+            </div>
+            <div class="source-item">
+                <i class='bx bxs-news'></i>
+                <h3>News & Articles</h3>
+            </div>
+            <div class="source-item">
+                <i class='bx bx-podcast'></i>
+                <h3>Podcasts</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="sections section-1">
+        <div class="section-content">
+            <h1>Listeners Creation</h1>
+            <p>
+            Enter keywords to monitor and select the media platforms you want to search. Our website application supports a wide range of media platforms, including social media platforms, blogs and articles, radio stations, podcasts, and television.
+            </p>
+        </div>
+        <div class="image-container">
+            <img src="../assets/landing_page_add_keyword.png" alt="Mentions over time" width="750px" height="400px">
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-logo">
+                <h2>Brand Listening Tool</h2>
+            </div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/view/register">Sign Up</a>
+                <a href="/view/login">Sign in</a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

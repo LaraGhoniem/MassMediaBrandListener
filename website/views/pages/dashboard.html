@@ -9,105 +9,80 @@
     <link rel="stylesheet" href="../css/dashboard_styles.css">
     <script type="module" src="../scripts/dashboard_scripts.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<<<<<<< Updated upstream
-    <link href="../../icons/css/boxicons.min.css" rel="stylesheet">
-=======
     <link href = "../../icons/css/boxicons.min.css" rel="stylesheet">
     
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
->>>>>>> Stashed changes
 </head>
 
-<body>
+<div>
     <div class="main">
         <div class="navbar">
             <div class="nav-items">
                 <a href="/">Home</a>
-                <a href="/view/register">About</a>
             </div>
             <div class="logo">
                 <h2>Brand Listening Tool</h2>
             </div>
             <div class="buttons_navbar">
-                <h5>Mohammed Yasser</h5>
+                <h5 id="user-name"></h5>
             </div>
         </div>
-        <div class="mainContainer">
-            <div class="sliderContainer">
-                <div class="sliderContent" id="navigation">
-                    <button id="navigation-1">
-                        <svg id="dashboard_icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path class="home-icon"
-                                d="M13 9V3H21V9H13ZM3 13V3H11V13H3ZM13 21V11H21V21H13ZM3 21V15H11V21H3Z"
-                                fill="#6A686F" />
-                        </svg>
-                        Dashboard
-                    </button>
-                    <button id="navigation-2">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M18.6667 10.3333C18.6667 14.9357 14.9357 18.6667 10.3333 18.6667C7.84438 18.6667 2 18.6667 2 18.6667C2 18.6667 2 12.4468 2 10.3333C2 5.73096 5.73096 2 10.3333 2C14.9357 2 18.6667 5.73096 18.6667 10.3333Z"
-                                stroke="#6A686E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M6.16602 7.83301H13.666" stroke="#6A686E" stroke-width="2.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M6.16602 11.166H13.666" stroke="#6A686E" stroke-width="2.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M6.16602 14.5H10.3327" stroke="#6A686E" stroke-width="2.5" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                        </svg>
-                        Mentions
-                    </button>
-                </div>
-
-                <div class="sliderContent" id="navigation-settings">
-                    <h5>SETTINGS</h5>
-                    <!-- <button id="Account-Settings">Settings</button> -->
-                    <button id="navigation-4">
-
-                        <svg class="keywords-icon" width="24" height="19" viewBox="0 0 24 19" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-width="0.5"
-                                d="M15 4.57895C15 5.90157 13.7644 7.15789 12 7.15789V9.15789C14.6539 9.15789 17 7.20952 17 4.57895H15ZM12 7.15789C10.2356 7.15789 9 5.90157 9 4.57895H7C7 7.20952 9.34607 9.15789 12 9.15789V7.15789ZM9 4.57895C9 3.25633 10.2356 2 12 2V0C9.34607 0 7 1.94837 7 4.57895H9ZM12 2C13.7644 2 15 3.25633 15 4.57895H17C17 1.94837 14.6539 0 12 0V2ZM9 11.8421H15V9.8421H9V11.8421ZM15 17H9V19H15V17ZM9 17C7.23565 17 6 15.7437 6 14.4211H4C4 17.0516 6.34607 19 9 19V17ZM18 14.4211C18 15.7437 16.7644 17 15 17V19C17.6539 19 20 17.0516 20 14.4211H18ZM15 11.8421C16.7644 11.8421 18 13.0984 18 14.4211H20C20 11.7905 17.6539 9.8421 15 9.8421V11.8421ZM9 9.8421C6.34607 9.8421 4 11.7905 4 14.4211H6C6 13.0984 7.23565 11.8421 9 11.8421V9.8421Z"
-                                fill="#6A686E" />
-                        </svg>
-                        Account
-                    </button>
-                    <button id="navigation-5">
-                        <svg class="account-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 20L12 3.71191" stroke="#6A686F" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path d="M5 20V5M19 17V10.5M19 6V2" stroke="#6A686F" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" />
-                            <path stroke="" d="M2 10H8V17H2V10ZM9 6H15V13H9V6Z" fill="#6A686F" />
-                            <path d="M16 5H22V11.5H16V5Z" fill="#6A686F" />
-                        </svg>
-                        Keywords
-                    </button>
-                    <button id="user-logout">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-log-out">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                            <polyline points="16 17 21 12 16 7"></polyline>
-                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                        </svg>
-                        Logout
-                    </button>
-                </div>
+    <div class="mainContainer">
+        <div class="sliderContainer">
+            <div class="sliderContent" id="navigation">
+                <button id="navigation-1">
+                    <svg id="dashboard_icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path class="home-icon" d="M13 9V3H21V9H13ZM3 13V3H11V13H3ZM13 21V11H21V21H13ZM3 21V15H11V21H3Z" fill="#6A686F"/>
+                    </svg>
+                    Dashboard
+                </button>
+                <button id="navigation-2">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18.6667 10.3333C18.6667 14.9357 14.9357 18.6667 10.3333 18.6667C7.84438 18.6667 2 18.6667 2 18.6667C2 18.6667 2 12.4468 2 10.3333C2 5.73096 5.73096 2 10.3333 2C14.9357 2 18.6667 5.73096 18.6667 10.3333Z" stroke="#6A686E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.16602 7.83301H13.666" stroke="#6A686E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.16602 11.166H13.666" stroke="#6A686E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.16602 14.5H10.3327" stroke="#6A686E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    Mentions
+                </button>
             </div>
-            <div class="viewlistenersPageContainer" id="view-listeners">
-
-                <div class="listener-header-row">
-                    <h2>Listeners</h2>
-                    <button id="add-listener-button">Add Listener</button>
-                </div>
-                <div class="listeners_list" id="listeners_list_items">
-                </div>
-                <h2 id="listener_name">No Listeners</h2>
-                <div class="viewListenerData" id="listener_data_api">
-                    <div class="col1">
+            
+            <div class="sliderContent" id="navigation-settings">
+                <h5>SETTINGS</h5>
+                <!-- <button id="Account-Settings">Settings</button> -->
+                <button id="navigation-4">
+                    
+                    <svg class="keywords-icon" width="24" height="19" viewBox="0 0 24 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-width = "0.5" d="M15 4.57895C15 5.90157 13.7644 7.15789 12 7.15789V9.15789C14.6539 9.15789 17 7.20952 17 4.57895H15ZM12 7.15789C10.2356 7.15789 9 5.90157 9 4.57895H7C7 7.20952 9.34607 9.15789 12 9.15789V7.15789ZM9 4.57895C9 3.25633 10.2356 2 12 2V0C9.34607 0 7 1.94837 7 4.57895H9ZM12 2C13.7644 2 15 3.25633 15 4.57895H17C17 1.94837 14.6539 0 12 0V2ZM9 11.8421H15V9.8421H9V11.8421ZM15 17H9V19H15V17ZM9 17C7.23565 17 6 15.7437 6 14.4211H4C4 17.0516 6.34607 19 9 19V17ZM18 14.4211C18 15.7437 16.7644 17 15 17V19C17.6539 19 20 17.0516 20 14.4211H18ZM15 11.8421C16.7644 11.8421 18 13.0984 18 14.4211H20C20 11.7905 17.6539 9.8421 15 9.8421V11.8421ZM9 9.8421C6.34607 9.8421 4 11.7905 4 14.4211H6C6 13.0984 7.23565 11.8421 9 11.8421V9.8421Z" fill="#6A686E"/>
+                    </svg>
+                    Account
+                </button>
+                <button id="navigation-5">
+                    <svg class="account-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 20L12 3.71191" stroke="#6A686F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M5 20V5M19 17V10.5M19 6V2" stroke="#6A686F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path stroke= "" d="M2 10H8V17H2V10ZM9 6H15V13H9V6Z" fill="#6A686F"/>
+                        <path d="M16 5H22V11.5H16V5Z" fill="#6A686F"/>
+                    </svg>
+                    Keywords
+                </button>
+                <button id="user-logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    <div class="viewlistenersPageContainer" id="view-listeners">
+        
+        <div class="listener-header-row">
+            <h2>Listeners</h2>
+            <button id="add-listener-button">Add Listener</button>
+        </div>
+        <div class="listeners_list" id = "listeners_list_items">
+        </div>
+        <h2 id="listener_name"></h2>
+        <div class="viewListenerData" id="listener_data_api" style="display: none;">
+            <div class="col1">
                         <div class="mentions">
                             <h1>Mentions Over Time</h1>
                             <canvas id="mentionslinechart">
@@ -126,8 +101,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="col2">
+            <div class="col2">
                         <div class="topSources">
                             <h1>Top Sources</h1>
                             <canvas width="300" height="250" id="topSources">
@@ -139,157 +113,173 @@
                             </canvas>
                         </div>
                     </div>
-
-                    <div class="col3">
-                        <div class="summary">
-                            <h1>Summary</h1>
-                            <canvas width="300" height="200" id="summary">
-                            </canvas>
+            <div class="col3">
+                <div class="summary">
+                    <h1>Summary</h1>
+                    <div id="summary-content" class="summary_container">
+                        <div class="mentions-row">
+                            <div class="mentions-item">
+                                <span id="mentions-number"></span>
+                                <span>Total</span>
+                            </div>
+                            <div class="mentions-item">
+                                <span id="mentions-number-positive"></span>
+                                <span>Positive</span>
+                            </div>
+                            <div class="mentions-item">
+                                <span id="mentions-number-neutral"></span>
+                                <span>Neutral</span>
+                            </div>
+                            <div class="mentions-item">
+                                <span id="mentions-number-negative"></span>
+                                <span>Negative</span>
+                            </div>
+                            
                         </div>
-                        <div class="sentimentSource">
+                        <hr>
+                        <h3>Mentions through sources</h3>
+                        <div class="mentions-row">
+                            <div class="mentions-item">
+                                <span id="mentions-number-twitter"></span>
+                                <span>Twitter</span>
+                            </div>
+                            <div class="mentions-item">
+                                <span id="mentions-number-news"></span>
+                                <span>News</span>
+                            </div>
+                            <div class="mentions-item">
+                                <span id="mentions-number-youtube"></span>
+                                <span>Youtube</span>
+                            </div>
+                            <div class="mentions-item">
+                                <span id="mentions-number-podcast"></span>
+                                <span>Podcast</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sentimentSource">
                             <h1>Sentiment By Source</h1>
                             <canvas id="sentimentSource">
                             </canvas>
                         </div>
-                        <!-- <div class="topTopics">
-                    <canvas  width="400" height="200"  id="topTopics">
-                    </canvas>
-                </div> -->
                     </div>
-                    <!-- <script>
-                new Chart(
-                {         
-                 type: 'line',
-                    data:  
-                     {labels: Utils.months({count: 7}),
-                    datasets: [{
-                        label: 'My First Dataset',
-                        data: [65, 59, 80, 81, 56, 55, 40],
-                        fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }],}},
-                    document.getElementById('mentionsChart'),
-                    
-                );
-                </script> -->
-                </div>
-                <div class="empty-result" id="empty-result-charts"
-                    style="background-color: white; border-radius: 15px; height: 100px;display: none; justify-content: center; align-items: center;flex-direction: column;">
-                    No results found. Please note that the listener runs once daily at 12:00 AM.
-                </div>
-                <div id="loading-container-charts"
-                    style="background-color: white; border-radius: 15px; height: 500px;display: flex; justify-content: center; align-items: center;flex-direction: column;">
-                    <div style="width:5%; height: 5%;margin-bottom: 40px;">
-                        <svg version="1.1" id="loading-circle" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50"
-                            style="enable-background:new 0 0 50 50;" xml:space="preserve">
-                            <path
-                                d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
-                                <animateTransform attributeType="XML" attributeName="transform" type="rotate"
-                                    from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite" />
-                            </path>
-                        </svg>
-                    </div>
-                    <p>Please Wait</p>
-                </div>
+        </div>
+        <div class="empty-result" id="empty-result-charts" style = "background-color: white; border-radius: 15px; height: 100px;display: none; justify-content: center; align-items: center;flex-direction: column;">
+            No results found. Please note that the listener runs once daily at 12:00 AM.
+        </div>
+        <div id = "loading-container-charts" style = "background-color: white; border-radius: 15px; height: 500px;display: flex; justify-content: center; align-items: center;flex-direction: column;">
+            <div style="width:5%; height: 5%;margin-bottom: 40px;">
+                <svg version="1.1" id="loading-circle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                    <path d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                        <animateTransform attributeType="XML"
+                        attributeName="transform"
+                        type="rotate"
+                        from="0 25 25"
+                        to="360 25 25"
+                        dur="0.6s"
+                        repeatCount="indefinite"/>
+                    </path>
+                </svg>
             </div>
-            <div class="mention_popup" id="mention_popup"></div>
+            <p>Please Wait</p>
+        </div>
+    </div>
+    <div class="mention_popup" id="mention_popup"></div>
 
-            <!-- POPUP ADD-LISTENER -->
-            <div class="add-listener-popup" id="add-listener-popup">
-                <div class="operations-container">
-                    <div class="back-button-container">
-                        <button id="back-button">
-                            <i class='bx bx-chevron-left'></i>
-                        </button>
-                    </div>
-                    <div class="cancel-button-container">
-                        <button id="cancel-button">
-                            <i class='bx bx-x'></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="pop-up-content">
-                    <h1>Create your brand listener</h1>
-                    <h3>Add keywords in your listener to track down their mentions</h3>
-                    <br>
-                    <div class="listener-input">
-                        <input type="text" id="new-listener-name" placeholder=" " />
-                        <label for="new-listener-name">Listener Name</label>
-                    </div>
-
-                    <div class="add-keywords-container">
-                        <h2>Add keywords</h2>
-                        <button id="add-keyword">
-                            <svg width="30" height="30" viewBox="0 0 44 44" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11 22H33M22 33V11" stroke="#282828" stroke-width="3" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="keyword-input-container" id="keyword-input-container">
-                        <div style="text-align: center; width: 100%">Click on the add button above to add a keyword
-                        </div>
-                    </div>
-                    <div class="continue-button-container">
-                        <button id="continue-add-listener">Continue</button>
-                    </div>
-                    <div style="color: red; text-align: center;" id="error-message"></div>
-                </div>
-                <div class="pop-up-content-categories">
-                    <h1>Help us understand what you do..</h1>
-                    <h3>Pick one or more category that has to do with your brand</h3>
-                    <div class="scroll-container">
-                        <div class="category-container" id="categories"></div>
-                    </div>
-                    <br>
-                    <div class="category-button-container">
-                        <button id="submit-listener">Add Listener</button>
-                    </div>
-                </div>
+    <!-- POPUP ADD-LISTENER -->
+    <div class="add-listener-popup" id="add-listener-popup">
+        <div class="operations-container">
+            <div class="back-button-container">
+                <button id="back-button">
+                    <i class='bx bx-chevron-left'></i>
+                </button>
             </div>
-
-            <div class="webmentionsPageContainer" id="web-mentions">
-                <div class="listener-header-row">
-                    <h2>Listeners</h2>
-                    <button id="add-listener-button-2">Add Listener</button>
-                </div>
-                <div class="listeners_list" id="listeners_list_items_2">
-                </div>
-                <div>
-                    <h2 id="listener_name_mentions">No Listeners</h2>
-                    <div class="table_container" id="table-container" style="display: none;">
-                        <table class="tableOne" id="mentions-table"></table>
-                        <div class="pagination_fixed_position" id="pagination_fixed_position">
-                            <button id="previous_page"><i class='bx bx-chevron-left'></i> Previous</button>
-                            <div class="page_number_container" id="page_number_container"></div>
-                            <button id="next_page">Next <i class='bx bx-chevron-right'></i></button>
-                        </div>
-                    </div>
-                    <div class="empty-result" id="empty-result"
-                        style="background-color: white; border-radius: 15px; height: 100px;display: none; justify-content: center; align-items: center;flex-direction: column;">
-                        No results found. Please note that the listener runs once daily at 12:00 AM.
-                    </div>
-                    <div id="loading-container"
-                        style="background-color: white; border-radius: 15px; height: 500px;display: flex; justify-content: center; align-items: center;flex-direction: column;">
-                        <div style="width:5%; height: 5%;margin-bottom: 40px;">
-                            <svg version="1.1" id="loading-circle" xmlns="http://www.w3.org/2000/svg"
-                                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50"
-                                style="enable-background:new 0 0 50 50;" xml:space="preserve">
-                                <path
-                                    d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
-                                    <animateTransform attributeType="XML" attributeName="transform" type="rotate"
-                                        from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite" />
-                                </path>
-                            </svg>
-                        </div>
-                        <p>Please Wait</p>
-                    </div>
-
-                </div>
+            <div class="cancel-button-container">
+                <button id="cancel-button">
+                    <i class='bx bx-x' ></i>
+                </button>
             </div>
+        </div>
+        <div class="pop-up-content">
+            <h1>Create your brand listener</h1>
+            <h3>Add keywords in your listener to track down their mentions</h3>
+            <br>
+            <div class="listener-input">
+                <input type="text" id="new-listener-name" placeholder=" "/>
+                <label for="new-listener-name">Listener Name</label>
+            </div>
+            
+            <div class="add-keywords-container">
+                <h2>Add keywords</h2>
+                <button id="add-keyword">
+                    <svg width="30" height="30" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 22H33M22 33V11" stroke="#282828" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="keyword-input-container" id="keyword-input-container">
+                <div style="text-align: center; width: 100%">Click on the add button above to add a keyword</div>
+            </div>
+            <div class="continue-button-container">
+                <button id="continue-add-listener">Continue</button>
+            </div>
+            <div style="color: red; text-align: center;" id="error-message"></div>
+        </div>
+        <div class="pop-up-content-categories">
+            <h1>Help us understand what you do..</h1>
+            <h3>Pick one or more category that has to do with your brand</h3>
+            <div class="scroll-container">
+                <div class="category-container" id="categories"></div>
+            </div>
+            <br>
+            <div class="category-button-container">
+                <button id="submit-listener">Add Listener</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="webmentionsPageContainer" id="web-mentions">
+        <div class="listener-header-row">
+            <h2>Listeners</h2>
+            <button id="add-listener-button-2">Add Listener</button>
+        </div>
+        <div class="listeners_list" id = "listeners_list_items_2">
+        </div>
+        <div>
+        <h2 id="listener_name_mentions"></h2>
+        <div class="table_container" id="table-container" style="display: none;">
+            <table class="tableOne" id="mentions-table" ></table>
+            <div class="pagination_fixed_position" id="pagination_fixed_position">
+                
+            </div>
+        </div>
+        <div class="empty-result" id="empty-result" style = "background-color: white; border-radius: 15px; height: 100px;display: none; justify-content: center; align-items: center;flex-direction: column;">
+            No results found. Please note that the listener runs once daily at 12:00 AM.
+        </div>
+        <div class="no-listeners-created-container" id = "no-listeners-created-container">
+            <h1>No Listeners Created</h1>
+            <h3>Click on the button above to create a listener</h3>
+        </div>
+        <div id = "loading-container" style = "background-color: white; border-radius: 15px; height: 500px;display: flex; justify-content: center; align-items: center;flex-direction: column;">
+            <div style="width:5%; height: 5%;margin-bottom: 40px;">
+                <svg version="1.1" id="loading-circle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                    <path d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                        <animateTransform attributeType="XML"
+                        attributeName="transform"
+                        type="rotate"
+                        from="0 25 25"
+                        to="360 25 25"
+                        dur="0.6s"
+                        repeatCount="indefinite"/>
+                    </path>
+                </svg>
+            </div>
+            <p>Please Wait</p>
+        </div>
+        
+        </div>
+    </div>
             <div class="accsetPageContainer" id="Account-Settings">
                 <h1>Account Settings</h1>
                 <div class="row">
@@ -335,97 +325,14 @@
                             <button id="Update-Profile">Update Profile</button>
                         </div>
                         <div class="button-styling-two">
-                            <button id="Reset">Reset</button>
+                            <button id="Reset-profile">Reset</button>
                         </div>
                     </div>
                 </div>
-<<<<<<< Updated upstream
-=======
                 <div class="button-styling-two">
                     <button id="Reset">Reset</button>
                 </div>
-            </div>    
-        </div> 
-    </div>
-
-    <div class="edit-listener-container" id="keyword-Settings">
-        <div class="listener-header-row">
-            <h2>Listeners</h2>
-            <button id="add-listener-button-2">Add Listener</button>
-        </div>
-        <div class="listeners_list" id = "listeners_list_items_3"></div>
-        <script>
-            function deleteRow(rowId) {
-            const table = document.getElementById("myTable");
-            const row = rowId.parentNode.parentNode; // get row element
-
-            table.deleteRow(row.rowIndex);
-            }
-            $(function() {
-    $('.delete-btn').on('click', function() {
-      var documentId = $(this).data('id');
-      $.ajax({
-        type: 'DELETE',
-        url: '/keyword/' + documentId + '/keyword',
-        success: function(response) {
-          alert('Keyword deleted successfully');
-          // Add any additional handling here, such as refreshing the page
-        },
-        error: function(error) {
-          alert('Error deleting keyword: ' + error.responseText);
-        }
-      });
-    });
-  });
-        </script>
-        <h2 id="listener_name_3">No Listeners</h2>
-        <table class = "edit_keywords_table_container" id="edit_keywords_table" width="100%" style="display: none">
-            <div id="edit-popup" style="display: none;">
-                <!-- Popup contents -->
-                <input type="text" id="edit-keyword-input" placeholder="Enter keyword">
-                <button id="save-keyword-btn">Save</button>
-              </div>
-              
-            <tbody>
-                <tr>
-                    <td id="cell1">Anghami</td>
-                    <td><button class="rounded-btn">Edit</button></td>
-                    <!-- <td><button  class="delete-btn">Delete</button></td> -->
-                </tr>
-                <tr>
-                    <td id="cell2">MIU</td>
-                    <td><button class="rounded-btn">Edit</button></td>
-                    <td><button onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
-                </tr>
-               
-                <tr>
-                    <td id="cell3">Uber</td>
-                    <td><button class="rounded-btn">Edit</button></td>
-                    <td><button  onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
-                </tr>
-                <tr>
-                    <td id="cell4">Swivl</td>
-                    <td><button class="rounded-btn">Edit</button></td>
-                    <td><button onclick="deleteRow(this)" class="delete-btn">Delete</button></td>
-                </tr>
-            </tbody>
-        </table>
-        <div id = "loading-container-edit-keywords" style = "background-color: white; border-radius: 15px; height: 500px;display: flex; justify-content: center; align-items: center;flex-direction: column;">
-            <div style="width:5%; height: 5%;margin-bottom: 40px;">
-                <svg version="1.1" id="loading-circle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-                    <path d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
-                        <animateTransform attributeType="XML"
-                        attributeName="transform"
-                        type="rotate"
-                        from="0 25 25"
-                        to="360 25 25"
-                        dur="0.6s"
-                        repeatCount="indefinite"/>
-                    </path>
-                </svg>
->>>>>>> Stashed changes
-            </div>
-
+            </div> 
             <div class="edit-listener-container" id="keyword-Settings">
                 <div class="listener-header-row">
                     <h2>Listeners</h2>
@@ -484,6 +391,8 @@
                     <p>Please Wait</p>
                 </div>
             </div>
+            </div>
+        </div>
 
 </body>
 

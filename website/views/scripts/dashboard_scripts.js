@@ -71,8 +71,7 @@ document.querySelectorAll(".listener-header-row button").forEach(function (butto
         document.getElementById("pagination_fixed_position").style.display = "none";
     });
 });
-<<<<<<< Updated upstream
-//updating profile settings
+
 function validateEditForm() {
     let addlistenerName = document.getElementById("addlistenerName");
     let addCompanyName = document.getElementById("addCompanyName");
@@ -105,6 +104,8 @@ function validateEmail(email) {
     return specialChar.test(email);
 }
 
+
+
 document.getElementById("Update-Profile").addEventListener("click", function (event) {
     event.preventDefault();
 
@@ -131,6 +132,8 @@ document.getElementById("Update-Profile").addEventListener("click", function (ev
                     user.data.user = data.user.currentPassword
                     user.data.user = data.user.newPassword
                     user.data.user = data.user.confirmPassword
+                    document.getElementById("user-name").innerHTML = data.user.name
+                    alert("Profile updated successfully")
                 })
             } else {
                 console.log(res.status)
@@ -140,25 +143,15 @@ document.getElementById("Update-Profile").addEventListener("click", function (ev
         });
     }
 });
-=======
-// document.getElementById("delete-keyword").addEventListener("click", function() {
-//     const idToDelete = "_id"; // replace with actual id of item to delete
-//     fetch(/deleteKeyword/$,{idToDelete}, {
-//         method: 'DELETE'
-//     })
-//     .then(response => {
-//         if (response.ok) {
-//             console.log("Item deleted successfully");
-//         } else {
-//             console.log("Error deleting item. Status code: ${response.status}");
-//         }
-//     })
-//     .catch(error => {
-//         console.log("Error deleting item ${error}");
-//     });
-// });
->>>>>>> Stashed changes
 
+document.getElementById('Reset-profile').addEventListener('click', () => {
+    document.getElementById('addlistenerName').value = user.data.user.name;
+    document.getElementById('addCompanyName').value = user.data.user.company;
+    document.getElementById('addlistenerEmail').value = user.data.user.email;
+    document.getElementById('currentpassword').value = '';
+    document.getElementById('Newpassword').value = '';
+    document.getElementById('confirmpassword').value = '';
+});
 
 
 // close add listener popup
@@ -207,6 +200,7 @@ function displayProfileData() {
 
 window.onload = async function () {
     user = await User.create()
+    document.getElementById("user-name").innerHTML = user.data.user.name
     User.getListeners(user.data.user._id, (data) => {
         if (data.listener.length != 0) {
             listenersData = data.listener
@@ -215,6 +209,18 @@ window.onload = async function () {
             view_listener_graphs(listenersData[0]._id, listenersData[0].listener_name)
             view_listener_mentions(listenersData[0]._id, listenersData[0].listener_name)
             viewkeywordsactions(listenersData[0]._id, listenersData[0].listener_name)
+        }
+        else{
+            // stop the loading animation and add an empty div
+            document.getElementById("loading-container-charts").style.display = "none"
+            document.getElementById("loading-container").style.display = "none"
+            document.getElementById("empty-result-charts").style.display = "none"
+            document.getElementById("listener_data_api").style.display = "none"
+            document.getElementById("empty-result-charts").style.display = "none"
+            document.getElementById("empty-result").style.display = "none"
+            document.getElementById("listeners_list_items").style.display = "none"
+            document.getElementById("listeners_list_items_2").style.display = "none"
+            document.getElementById("no-listeners-created-container").style.display = "flex"
         }
     })
     // get all categories from database
@@ -866,8 +872,20 @@ async function view_listener_graphs(listenerid, listenername) {
                     topkeywordslabels = topKeywords.map(entry => entry[0]);
                     topkeywordsdata = topKeywords.map(entry => entry[1]);
 
-                    // SENTIMENT SHARE //
                     var sentiment_counts = chartPreparer.sentiment_share_chart_data()
+
+                        // use these numbers in the summary
+                        document.getElementById("mentions-number").innerHTML = sentiment_counts[0] + sentiment_counts[1] + sentiment_counts[2]
+                        document.getElementById("mentions-number-positive").innerHTML = sentiment_counts[0]
+                        document.getElementById("mentions-number-neutral").innerHTML = sentiment_counts[1]
+                        document.getElementById("mentions-number-negative").innerHTML = sentiment_counts[2]
+
+                        // SOURCE SHARE //
+                        var source_counts = chartPreparer.sources_chart_data()
+                        document.getElementById("mentions-number-youtube").innerHTML = source_counts[0] == 0? "-" : source_counts[0]
+                        document.getElementById("mentions-number-podcast").innerHTML = source_counts[1] == 0? "-" : source_counts[1]
+                        document.getElementById("mentions-number-twitter").innerHTML = source_counts[2] == 0? "-" : source_counts[2]
+                        document.getElementById("mentions-number-news").innerHTML = source_counts[3] == 0? "-" : source_counts[3]
 
                     // SOURCE SHARE //
                     var source_counts = chartPreparer.sources_chart_data()
@@ -879,10 +897,11 @@ async function view_listener_graphs(listenerid, listenername) {
                     mentionschart.data.datasets[0].data = mentionschartdata
                     mentionschart.update()
 
-                    /** POSITIVE MENTIONS OVER TIME CHART **/
-                    positive_mentions_over_time_chart.data.labels = posmentionslabels
-                    positive_mentions_over_time_chart.data.datasets[0].data = posmentionsdata
-                    positive_mentions_over_time_chart.update()
+                        /** SENTIMENT BY SOURCE CHART **/
+                        sentiment_source_chart.data.datasets[0].data = [sentiment_data['youtube']['positive'], sentiment_data['podcast']['positive'], sentiment_data['twitter']['positive'], sentiment_data['news']['positive']]
+                        sentiment_source_chart.data.datasets[1].data = [sentiment_data['youtube']['neutral'], sentiment_data['podcast']['neutral'], sentiment_data['twitter']['neutral'], sentiment_data['news']['neutral']]
+                        sentiment_source_chart.data.datasets[2].data = [sentiment_data['youtube']['negative'], sentiment_data['podcast']['negative'], sentiment_data['twitter']['negative'], sentiment_data['news']['negative']]
+                        sentiment_source_chart.update()
 
                     /** SENTIMENT BY SOURCE CHART **/
                     sentiment_source_chart.data.datasets[0].data = [sentiment_data['youtube']['positive'], sentiment_data['podcast']['positive'], sentiment_data['twitter']['positive'], sentiment_data['news']['positive']]
@@ -928,7 +947,8 @@ const spam = {
 // Pagination
 var currentPage = 0
 
-async function view_listener_mentions(listenerid, listenername) {
+async function view_listener_mentions(listenerid, listenername){
+    currentPage = 0
     let listenernamecontainer = document.getElementById("listener_name_mentions")
     listenernamecontainer.innerHTML = listenername
     let listener_html = document.getElementById("listeners_list_items_2")
@@ -962,23 +982,28 @@ async function view_listener_mentions(listenerid, listenername) {
                     document.getElementById("empty-result").style.display = "flex"
                 } else {
                     var listener = data["result"]
-                    currentPage = 0
-                    let pages = Math.ceil(listener.length / 50)
+                    
+                    let pages = Math.ceil(listener.length/50)
+                    document.getElementById("pagination_fixed_position").innerHTML = `
+                        <button id="previous_page"><i class='bx bx-chevron-left' ></i> Previous</button>
+                        <div class="page_number_container" id="page_number_container"></div>
+                        <button id="next_page">Next <i class='bx bx-chevron-right' ></i></button>
+                    `
                     let page_number_container = document.getElementById("page_number_container")
-                    page_number_container.innerHTML = `Page 0 of ${pages}`
+                    page_number_container.innerHTML = `Page 1 of ${pages}`
                     // previous button
                     document.getElementById("previous_page").addEventListener("click", () => {
-                        if (currentPage > 0) {
+                        if(currentPage > 0){
+                            console.log(currentPage)
                             currentPage--
-                            page_number_container.innerHTML = `Page ${currentPage} of ${pages}`
+                            page_number_container.innerHTML = `Page ${currentPage+1} of ${pages}`
                             viewMentions(listener)
                         }
                     })
                     document.getElementById("next_page").addEventListener("click", () => {
                         if (currentPage < pages - 1) {
                             currentPage++
-                            page_number_container.innerHTML = `Page ${currentPage} of ${pages}`
-                            // pages[currentPage].classList.add("active")
+                            page_number_container.innerHTML = `Page ${currentPage + 1} of ${pages}`
                             viewMentions(listener)
                         }
                     })
@@ -1019,24 +1044,6 @@ async function viewkeywordsactions(listener_id, listener_name) {
     `
     document.getElementById("loading-container-edit-keywords").style.display = "flex"
     let keyword_html = document.getElementById("listeners_list_items_3")
-<<<<<<< Updated upstream
-    let response = fetch('/keyword/view/' + listener_id)
-        .then(response => response.json())
-        .then(data => {
-            const keyword_table = document.getElementById("edit_keywords_table")
-            for (let keyword in data["keywords"]) {
-                const row = keyword_table.insertRow()
-                row.insertCell().textContent = data["keywords"][keyword]["keyword"]
-                row.insertCell().innerHTML = `<button class="rounded-btn" onclick="editRow('${data["keywords"][keyword]["_id"]}','${data["keywords"][keyword]["keyword"]}')">Edit</button>`
-                row.insertCell().innerHTML = `<button class="delete-btn" onclick="deleteRow('${data["keywords"][keyword]["_id"]}','${data["keywords"][keyword]["keyword"]}')">Delete</button>`
-            }
-        }).then(() => {
-            document.getElementById("loading-container-edit-keywords").style.display = "none"
-            document.getElementById("edit_keywords_table").style.display = "table"
-        })
-}
-export function viewMentions(listener) {
-=======
     let response =fetch('/keyword/view/'+listener_id)
     .then(response=>response.json())
     .then(data=>{ 
@@ -1137,7 +1144,6 @@ export function viewMentions(listener) {
 }
 
 export function viewMentions(listener){
->>>>>>> Stashed changes
     let mentions_table = document.getElementById("mentions-table")
     mentions_table.innerHTML = `
         <tr>
@@ -1197,7 +1203,7 @@ function popUpMention(row) {
     row.text = row.text.replace(row["keyword"].toUpperCase(), wrapped_keyword)
     // format date
     let date_obj = new Date(row["created_at"])
-    let formatted_date = date_obj.getDate() + "/" + date_obj.getMonth() + "/" + date_obj.getFullYear()
+    let formatted_date = date_obj.getDate() + "/" + (date_obj.getMonth()+1) + "/" + date_obj.getFullYear()
 
     let popUp = document.getElementById("mention_popup")
     popUp.innerHTML = ""

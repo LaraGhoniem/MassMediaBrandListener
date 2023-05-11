@@ -75,7 +75,6 @@ class ASRModule:
                 text = r.recognize_google(audio, language='ar-EG')
                 return text
         except Exception as e:
-            print(e)
             return None
 
     def transcribe_audio(self):

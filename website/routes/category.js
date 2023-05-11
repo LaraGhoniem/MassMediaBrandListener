@@ -1,10 +1,17 @@
 const express = require('express')
-const { view_category_by_id, get_all_categories } = require('../controllers/category')
-const { view_media_link_by_category_id } = require('../controllers/media_link')
+const { view_category_by_id, get_all_categories, get_used_categories, add_category, delete_category, edit_category } = require('../controllers/category')
+const { view_media_link_by_category_id, get_all_media_links, add_media_link, delete_media_link, edit_media_link } = require('../controllers/media_link')
 const router = express.Router()
 
 router.get("/id/:id", view_category_by_id)
 router.get("/all", get_all_categories)
 router.get("/mediaLink/:id", view_media_link_by_category_id)
-
+router.get("/all_media_links", get_all_media_links)
+router.get("/used", get_used_categories)
+router.post("/add", add_category)
+router.post("/add_media_link", add_media_link)
+router.get("/delete_media_link/:id", delete_media_link)
+router.post("/edit_media_link/:id", edit_media_link)
+router.get("/delete/:id", delete_category)
+router.post("/edit/:id", edit_category)
 module.exports = router

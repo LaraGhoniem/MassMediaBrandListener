@@ -13,7 +13,7 @@ const mediaLinkSchema = new mongoose.Schema({
     },
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
+        ref: "categories",
         required: true
     }
 }, {timestamps: true})
