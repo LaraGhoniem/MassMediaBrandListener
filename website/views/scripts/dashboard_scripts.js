@@ -72,6 +72,18 @@ document.querySelectorAll(".listener-header-row button").forEach(function (butto
     });
 });
 
+// add keyword pop up in edit listener
+document.getElementById("close-keyword-popup").addEventListener("click", () => {
+    document.getElementById("add-keyword-button").value = ""
+    document.getElementById("add-keyword-popup-container").style.display = "none";
+})
+document.getElementById("close-edit-keyword-popup").addEventListener("click", () => {
+    document.getElementById("edit-keyword-button").value = ""
+    document.getElementById("edit-keyword-popup-container").style.display = "none";
+})
+
+
+
 function validateEditForm() {
     let addlistenerName = document.getElementById("addlistenerName");
     let addCompanyName = document.getElementById("addCompanyName");
@@ -208,7 +220,6 @@ window.onload = async function () {
             displayProfileData()
             view_listener_graphs(listenersData[0]._id, listenersData[0].listener_name)
             view_listener_mentions(listenersData[0]._id, listenersData[0].listener_name)
-            viewkeywordsactions(listenersData[0]._id, listenersData[0].listener_name)
         }
         else{
             // stop the loading animation and add an empty div
@@ -668,6 +679,7 @@ function navigate(page) {
         document.getElementById("web-mentions").style.display = "none";
         document.getElementById("Account-Settings").style.display = "none";
         document.getElementById("keyword-Settings").style.display = "block";
+        get_edit_listeners(listenersData)
     }
 }
 
@@ -750,14 +762,11 @@ function addKeyword1(){
 function view_listeners_buttons(listeners) {
     let listener_html = document.getElementById("listeners_list_items")
     let listener_html_2 = document.getElementById("listeners_list_items_2")
-    let listener_html_3 = document.getElementById("listeners_list_items_3")
     listener_html.innerHTML = `<h4>No Listeners Created</h4>`
     listener_html_2.innerHTML = `<h4>No Listeners Created</h4>`
-    listener_html_3.innerHTML = `<h4>No Listeners Created</h4>`
     if (listeners.length > 0) {
         listener_html.innerHTML = ""
         listener_html_2.innerHTML = ""
-        listener_html_3.innerHTML = ""
         for (let i = 0; i < listeners.length; i++) {
             let listener_div = document.createElement("div")
             listener_div.setAttribute("id", listeners[i]._id)
@@ -786,21 +795,6 @@ function view_listeners_buttons(listeners) {
                 view_listener_mentions(listeners[i]._id, listeners[i].listener_name)
             })
 
-
-            let listener_div_3 = document.createElement("div")
-            listener_div_3.setAttribute("id", listeners[i]._id + "_3")
-            listener_div_3.setAttribute("class", "listeners_list_item")
-            if (i == 0)
-                listener_div_3.classList.add("active")
-            else
-                listener_div_3.classList.add("inactive")
-            listener_div_3.addEventListener("click", () => {
-                viewkeywordsactions(listeners[i]._id, listeners[i].listener_name)
-            })
-
-
-
-
             let listener_name_2 = document.createElement("h3")
             listener_name_2.innerHTML = listeners[i].listener_name
             listener_div_2.appendChild(listener_name_2)
@@ -808,10 +802,6 @@ function view_listeners_buttons(listeners) {
             // listener_div_2.appendChild(listener_div_2)
             // listener_div_2.appendChild(listener_name_3)
             // listener_html_2.appendChild(listener_div_3)
-            let listener_name_3 = document.createElement("h3")
-            listener_name_3.innerHTML = listeners[i].listener_name
-            listener_div_3.appendChild(listener_name_3)
-            listener_html_3.appendChild(listener_div_3)
         }
     }
 }
@@ -863,6 +853,7 @@ async function view_listener_graphs(listenerid, listenername) {
                     posmentionslabels = pos_mentions_chart_data[0]
                     posmentionsdata = pos_mentions_chart_data[1]
 
+
                     // SENTIMENT BY SOURCE DATA
                     var sentiment_data = chartPreparer.sentiment_source_chart_data()
 
@@ -891,22 +882,20 @@ async function view_listener_graphs(listenerid, listenername) {
                     var source_counts = chartPreparer.sources_chart_data()
 
                     // update the charts
+                    /** Positive Mentions **/
+                    positive_mentions_over_time_chart.data.labels = posmentionslabels
+                    positive_mentions_over_time_chart.data.datasets[0].data = posmentionsdata
+                    positive_mentions_over_time_chart.update()
 
                     /** MENTIONS CHART **/
                     mentionschart.data.labels = mentionschartlabels
                     mentionschart.data.datasets[0].data = mentionschartdata
                     mentionschart.update()
 
-                        /** SENTIMENT BY SOURCE CHART **/
-                        sentiment_source_chart.data.datasets[0].data = [sentiment_data['youtube']['positive'], sentiment_data['podcast']['positive'], sentiment_data['twitter']['positive'], sentiment_data['news']['positive']]
-                        sentiment_source_chart.data.datasets[1].data = [sentiment_data['youtube']['neutral'], sentiment_data['podcast']['neutral'], sentiment_data['twitter']['neutral'], sentiment_data['news']['neutral']]
-                        sentiment_source_chart.data.datasets[2].data = [sentiment_data['youtube']['negative'], sentiment_data['podcast']['negative'], sentiment_data['twitter']['negative'], sentiment_data['news']['negative']]
-                        sentiment_source_chart.update()
-
                     /** SENTIMENT BY SOURCE CHART **/
                     sentiment_source_chart.data.datasets[0].data = [sentiment_data['youtube']['positive'], sentiment_data['podcast']['positive'], sentiment_data['twitter']['positive'], sentiment_data['news']['positive']]
-                    sentiment_source_chart.data.datasets[1].data = [sentiment_data['youtube']['negative'], sentiment_data['podcast']['negative'], sentiment_data['twitter']['negative'], sentiment_data['news']['negative']]
-                    sentiment_source_chart.data.datasets[2].data = [sentiment_data['youtube']['neutral'], sentiment_data['podcast']['neutral'], sentiment_data['twitter']['neutral'], sentiment_data['news']['neutral']]
+                    sentiment_source_chart.data.datasets[1].data = [sentiment_data['youtube']['neutral'], sentiment_data['podcast']['neutral'], sentiment_data['twitter']['neutral'], sentiment_data['news']['neutral']]
+                    sentiment_source_chart.data.datasets[2].data = [sentiment_data['youtube']['negative'], sentiment_data['podcast']['negative'], sentiment_data['twitter']['negative'], sentiment_data['news']['negative']]
                     sentiment_source_chart.update()
 
                     /** TOP KEYWORDS CHART **/
@@ -931,6 +920,129 @@ async function view_listener_graphs(listenerid, listenername) {
         }
     }).catch((err) => {
         console.log(err)
+    })
+}
+
+function get_edit_listeners(listeners){
+    let listeners_container = document.getElementById("listeners_list_items_edit")
+    listeners_container.innerHTML = ""
+    let listener_name_header = document.getElementById("listener_name_3")
+    let counter = 0
+    for(let listener in listeners){
+        let listener_div = document.createElement("div")
+        listener_div.setAttribute("id", listeners[listener]._id)
+        listener_div.setAttribute("class", "listeners_list_item")
+        listener_div.innerHTML = `<h3>${listeners[listener].listener_name}</h3>`
+        if (counter++ == 0){
+            listener_div.classList.add("active")
+            listener_name_header.innerHTML = listeners[listener].listener_name
+            get_edit_keywords(listeners[listener]._id)
+        }
+        else
+            listener_div.classList.add("inactive")
+        listener_div.onclick =  () => {
+            for(let child = 0; child < listeners_container.children.length; child++){
+                if(listeners_container.children[child].id == listeners[listener]._id){
+                    listeners_container.children[child].classList.remove("inactive")
+                    listeners_container.children[child].classList.add("active")
+                    continue
+                }
+                listeners_container.children[child].classList.remove("active")
+                listeners_container.children[child].classList.add("inactive")
+                listener_name_header.innerHTML = listeners[listener].listener_name
+            }
+            get_edit_keywords(listeners[listener]._id)
+        }
+        listeners_container.appendChild(listener_div)
+    }
+}
+
+function get_edit_keywords(listener_id){
+    let keywords_container = document.getElementById("edit_keywords_table")
+    keywords_container.innerHTML = ""
+    document.getElementById("add-keyword-edit").onclick = () => {
+        // view a pop-up
+        document.getElementById("add-keyword-popup-container").style.display = "flex"
+        document.getElementById("add-keyword-button").onclick = () => {
+            let keyword = document.getElementById("add-keyword-input").value
+            document.getElementById("add-keyword-input").value = ""
+            fetch('/keyword/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    keyword: keyword,
+                    listener_id: listener_id
+                })
+            }).then(response=>response.json()).then(data=>{
+                get_edit_keywords(listener_id)
+                document.getElementById("add-keyword-popup-container").style.display = "none"
+            })
+        }
+    }
+    fetch('/keyword/view/'+listener_id).then(response=>response.json()).then(data=>{
+        const keyword_table = document.getElementById("edit_keywords_table")
+        keyword_table.innerHTML = `
+        <thead>
+            <tr>
+                <th>Keyword</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        `
+        
+        for(let keyword in data["keywords"]){
+            const row = keyword_table.insertRow()
+            row.insertCell().textContent = data["keywords"][keyword]["keyword"]
+            let edit_button = document.createElement("button")
+            edit_button.setAttribute("class", "rounded-btn")
+            edit_button.textContent = "Edit"
+            edit_button.addEventListener("click", () => {
+                let keyword_input = document.getElementById("edit-keyword-input")
+                keyword_input.value = data["keywords"][keyword]["keyword"]
+                let keyword_id = data["keywords"][keyword]["_id"]
+                let edit_keyword_button = document.getElementById("edit-keyword-button")
+                document.getElementById("edit-keyword-popup-container").style.display = "flex"
+                    document.getElementById("edit-keyword-button").onclick = () => {
+                        let keyword = document.getElementById("edit-keyword-input").value
+                        document.getElementById("edit-keyword-input").value = ""
+                        fetch('/keyword/'+keyword_id+ '/' + keyword, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                keyword: keyword,
+                            })
+                        }).then(response=>response.json()).then(data=>{
+                            get_edit_keywords(listener_id)
+                            document.getElementById("edit-keyword-popup-container").style.display = "none"
+                        })
+                    }
+            })
+            row.insertCell().appendChild(edit_button)
+            let delete_button = document.createElement("button")
+            delete_button.setAttribute("class", "rounded-btn")
+            delete_button.textContent = "Delete"
+            delete_button.addEventListener("click", () => {
+                let keyword_id = data["keywords"][keyword]["_id"]
+                fetch('/keyword/delete/'+keyword_id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }).then(response=>response.json()).then(data=>{
+                    console.log(data)
+                    get_edit_keywords(listener_id)
+                })
+            })
+            row.insertCell().appendChild(delete_button)
+        }
+        
+        document.getElementById("edit_keywords_table").style.display = "table"
+        document.getElementById("loading-container-edit-keywords").style.display = "none"
     })
 }
 
@@ -982,6 +1094,8 @@ async function view_listener_mentions(listenerid, listenername){
                     document.getElementById("empty-result").style.display = "flex"
                 } else {
                     var listener = data["result"]
+                    //sort by date from the latest
+                    listener.sort((a, b) => (a.created_at < b.created_at) ? 1 : -1)
                     
                     let pages = Math.ceil(listener.length/50)
                     document.getElementById("pagination_fixed_position").innerHTML = `
@@ -1015,25 +1129,17 @@ async function view_listener_mentions(listenerid, listenername){
         console.log(err)
     })
 }
-async function viewkeywordsactions(listener_id, listener_name) {
-    let listener_name_header = document.getElementById("listener_name_3")
-    listener_name_header.innerHTML = listener_name
-    let listener_html = document.getElementById("listeners_list_items_3")
-    Array.from(listener_html.children).forEach((node) => {
-        if (node.id === listener_id + "_3") {
-            if (node.classList.contains("inactive")) {
-                node.classList.remove("inactive")
-                node.classList.add("active")
-            }
-        } else {
-            if (node.classList.contains("active")) {
-                node.classList.remove("active")
-                node.classList.add("inactive")
-            }
-        }
-    })
-    document.getElementById("edit_keywords_table").style.display = "none"
-    document.getElementById("edit_keywords_table").innerHTML = `
+
+async function deleteKeyword(keywordID, listenerID){
+    document.getElementById(`delete-keyword-${keywordID}`).addEventListener("click", () =>{
+        
+    });
+}
+
+async function keywordsTable(listener_id){
+    await fetch('/keyword/view/'+listener_id).then(response=>response.json()).then(data=>{
+        const keyword_table = document.getElementById("edit_keywords_table")
+        keyword_table.innerHTML = `
         <thead>
             <tr>
                 <th>Keyword</th>
@@ -1041,107 +1147,189 @@ async function viewkeywordsactions(listener_id, listener_name) {
                 <th></th>
             </tr>
         </thead>
-    `
-    document.getElementById("loading-container-edit-keywords").style.display = "flex"
-    let keyword_html = document.getElementById("listeners_list_items_3")
-    let response =fetch('/keyword/view/'+listener_id)
-    .then(response=>response.json())
-    .then(data=>{ 
-        var button = document.createElement("button");
-        button.innerHTML = "Add";
-        button.className = "add-key-btn";
-        button.id = "unique-button-id"; // Set the unique ID for the button
-        
-        // Add event listener to the button
-        button.addEventListener("click", addKeyword1);
-        
-        // Append the button to the document body
-        document.body.appendChild(button);
-        
-        const keyword_table = document.getElementById("edit_keywords_table")
-       
+        `
         for(let keyword in data["keywords"]){
             const row = keyword_table.insertRow()
             row.insertCell().textContent = data["keywords"][keyword]["keyword"]
-            row.insertCell().innerHTML = `<button class="rounded-btn " id="edit-keyword-${data["keywords"][keyword]["_id"]}">Edit</button>`
-           
-              
-              document.querySelectorAll(".edit-keyword-btn").forEach(function(button) {
-                button.addEventListener("click", function() {
-                  // Show the popup
-                  document.getElementById("popup").style.display = "block";
-                });
-              });
-              
-              
-                            
-            row.insertCell().innerHTML = `<button id ="delete-keyword-${data["keywords"][keyword]["_id"]}" class="delete-btn" >Delete</button>`
-          
-              
-            document.getElementById(`delete-keyword-${data["keywords"][keyword]["_id"]}`).addEventListener("click", () =>{fetch('/keyword/delete/'+data["keywords"][keyword]["_id"], {
+            let edit_button = document.createElement("button")
+            edit_button.setAttribute("class", "rounded-btn")
+            edit_button.textContent = "Edit"
+            edit_button.addEventListener("click", () => {
+                document.getElementById("edit-keyword-popup-container").style.display = "flex";
+                document.getElementById("edit-keyword-input").value = data["keywords"][keyword]["keyword"]
+                let keywordID = data["keywords"][keyword]["_id"]
+                document.getElementById("edit-keyword-button").addEventListener("click", () => {
+                    let keyword = document.getElementById("edit-keyword-input").value
+                    if(keyword === ""){
+                        alert("Please enter a keyword")
+                    }
+                    else{
+                        fetch('/keyword/'+keywordID+"/" + keyword, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }).then((res) => {
+                            if (res.status === 200) {
+                                res.json().then((data) => {
+                                    alert("Keyword edited successfully")
+                                    keywordsTable(listener_id)
+                                })
+                            } else {
+                                console.log(res.status)
+                            }
+                        }).catch((err) => {
+                            console.log(err)
+                        });
+                    }
+                })
+            })
+            row.insertCell().appendChild(edit_button)
+            // row.insertCell().innerHTML = `<button class="rounded-btn " id="edit-keyword-${data["keywords"][keyword]["_id"]}">Edit</button>`
+            let delete_button = document.createElement("button")
+            delete_button.setAttribute("class", "delete-btn")
+            delete_button.textContent = "Delete"
+            delete_button.addEventListener("click", () => {
+                fetch('/keyword/delete/'+data["keywords"][keyword]["_id"], {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                
-            }).then((res) => {
-                if (res.status === 200) {
-                    res.json().then((data) => {
-                       alert("Keyword deleted successfully")
-                       viewkeywordsactions(listener_id,listener_name)
-                    })
-                } else {
-                    console.log(res.status)
-                }
-            }).catch((err) => {
-                console.log(err)
-            });
-            });
-            function updateKeyword(button,keywordId, updatedKeyword) {
-                if (updatedKeyword) {
-                  fetch(`/keyword/${keywordId}/${updatedKeyword}`, {
-                    method: 'PUT',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    // Add any additional request body if required
-                  })
-                    .then((res) => {
-                      if (res.status === 200) {
+                },}).then((res) => {
+                    if (res.status === 200) {
                         res.json().then((data) => {
-                          // Handle the successful response
-                          alert("Keyword updated successfully");
-                          // to solve the refresh thing
-                          viewkeywordsactions(listener_id,listener_name)
-                        });
-                      } else {
-                        console.log(res.status);
-                      }
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                }
-              }
-              
-              document.getElementById(`edit-keyword-${data["keywords"][keyword]["_id"]}`).addEventListener('click', function() {
-                const button = this;
-                const keywordId = button.id.split('-')[2];
-                const updatedKeyword = prompt('Enter the updated keyword:');
-                updateKeyword(button, keywordId, updatedKeyword);
-              });
-              
-              
-              
-            
-            
+                            alert("Keyword deleted successfully")
+                            keywordsTable(listener_id)
+                        })
+                    } else {
+                        console.log(res.status)
+                    }
+                }).catch((err) => {
+                    console.log(err)
+                });
+            })
+            row.insertCell().appendChild(delete_button)
+            // row.insertCell().innerHTML = `<button id ="delete-keyword-${data["keywords"][keyword]["_id"]}" class="delete-btn" >Delete</button>`
+            // deleteKeyword(data["keywords"][keyword]["_id"], listener_id)
         }
-    }).then(()=>{
-        document.getElementById("loading-container-edit-keywords").style.display = "none"
-        document.getElementById("edit_keywords_table").style.display = "table"
-        
     })
 }
+
+// async function viewkeywordsactions(listener_id, listener_name) {
+//     let listener_name_header = document.getElementById("listener_name_3")
+//     listener_name_header.innerHTML = listener_name
+//     let listener_html = document.getElementById("listeners_list_items_3")
+//     Array.from(listener_html.children).forEach((node) => {
+//         if (node.id === listener_id + "_3") {
+//             if (node.classList.contains("inactive")) {
+//                 node.classList.remove("inactive")
+//                 node.classList.add("active")
+//             }
+//         } else {
+//             if (node.classList.contains("active")) {
+//                 node.classList.remove("active")
+//                 node.classList.add("inactive")
+//             }
+//         }
+//     })
+//     document.getElementById("edit_keywords_table").style.display = "none"
+//     document.getElementById("edit_keywords_table").innerHTML = `
+//         <thead>
+//             <tr>
+//                 <th>Keyword</th>
+//                 <th></th>
+//                 <th></th>
+//             </tr>
+//         </thead>
+//     `
+
+//     var button = document.getElementById("add-keyword-edit")
+
+//     button.addEventListener("click", () => {
+//         document.getElementById("add-keyword-popup-container").style.display = "flex";
+//         document.getElementById("add-keyword-button").addEventListener("click", () => {
+//             let keyword = document.getElementById("add-keyword-input").value
+//             if(keyword === ""){
+//                 alert("Please enter a keyword")
+//             }
+//             else{
+//                 fetch('/keyword/add/', {
+//                     method: 'POST',
+//                     headers: {
+//                         'Content-Type': 'application/json'
+//                     },
+//                     body: JSON.stringify({
+//                         listener_id: listener_id,
+//                         keyword: keyword
+//                     })
+//                 }).then((res) => {
+//                     if (res.status === 200) {
+//                         res.json().then((data) => {
+//                             alert("Keyword added successfully")
+//                             // viewkeywordsactions(listener_id,listener_name)
+//                         })
+//                     } else {
+//                         console.log(res.status)
+//                     }
+//                 }).catch((err) => {
+//                     console.log(err)
+//                 });
+//             }
+//         })
+//     })
+
+//     document.getElementById("loading-container-edit-keywords").style.display = "flex"
+//     let response =fetch('/keyword/view/'+listener_id)
+//     .then(response=>response.json())
+//     .then(data=>{ 
+//         const keyword_table = document.getElementById("edit_keywords_table")
+//         for(let keyword in data["keywords"]){
+//             const row = keyword_table.insertRow()
+//             row.insertCell().textContent = data["keywords"][keyword]["keyword"]
+//             row.insertCell().innerHTML = `<button class="rounded-btn " id="edit-keyword-${data["keywords"][keyword]["_id"]}">Edit</button>`            
+//             row.insertCell().innerHTML = `<button id ="delete-keyword-${data["keywords"][keyword]["_id"]}" class="delete-btn" >Delete</button>`
+
+//             document.getElementById(`delete-keyword-${data["keywords"][keyword]["_id"]}`).addEventListener("click", () =>{
+//                 fetch('/keyword/delete/'+data["keywords"][keyword]["_id"], {
+//                 method: 'DELETE',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },}).then((res) => {
+//                 if (res.status === 200) {
+//                     res.json().then((data) => {
+//                         alert("Keyword deleted successfully")
+//                         viewkeywordsactions(listener_id,listener_name)
+//                     })
+//                 } else {
+//                     console.log(res.status)
+//                 }
+//             }).catch((err) => {
+//                 console.log(err)
+//             });
+//             });
+
+//             document.getElementById(`edit-keyword-${data["keywords"][keyword]["_id"]}`).addEventListener('click', function() {
+//                 document.getElementById("edit-keyword-popup-container").style.display = "flex"
+//                 document.getElementById("edit-keyword-input").value = data["keywords"][keyword]["keyword"]
+//                 document.getElementById("edit-keyword-button").addEventListener("click", () => {
+//                     let new_keyword = document.getElementById("edit-keyword-input").value
+//                     if(keyword === ""){
+//                         alert("Please enter a keyword")
+//                     } else if(keyword === data["keywords"][keyword]["keyword"]){
+//                         alert("Please enter a keyword different from the current one")
+//                     }
+//                     else{
+//                         document.getElementById("edit-keyword-input").value = ""
+//                         updateKeyword(data["keywords"][keyword]["_id"],listener_id, new_keyword, listener_name);
+//                     }
+//                 })
+//             });
+//         }
+//     }).then(()=>{
+//         document.getElementById("loading-container-edit-keywords").style.display = "none"
+//         document.getElementById("edit_keywords_table").style.display = "table"
+        
+//     })
+// }
 
 export function viewMentions(listener){
     let mentions_table = document.getElementById("mentions-table")

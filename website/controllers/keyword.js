@@ -64,6 +64,7 @@ exports.addKeyword = (req, res) => {
           // Save the updated keyword
           foundKeyword.save((err, updatedKeyword) => {
             if (err) {
+              console.log(err);
               return res.status(500).send(err);
             }
       
@@ -88,14 +89,4 @@ exports.addKeyword = (req, res) => {
       //     res.send(savedKeyword);
       //   });
       // };
-      
-      
-      
-      
-      
-     
-      
-      
-      
-      
       
