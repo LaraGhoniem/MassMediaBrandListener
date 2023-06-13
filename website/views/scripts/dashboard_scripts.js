@@ -21,9 +21,9 @@ for (let i = 0; i < nav_buttons.length; i++) {
         navigate(i + 1)
     })
 }
-for (let i = 1; i < nav_settings_buttons.length; i++) {
+for (let i = 0; i < nav_settings_buttons.length; i++) {
     nav_settings_buttons[i].addEventListener('click', () => {
-        navigate(i + 3)
+        navigate(i + 4)
     })
 }
 // add keyword button

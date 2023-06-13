@@ -72,21 +72,16 @@ exports.addKeyword = (req, res) => {
           });
         });
       };
-      // exports.addKeyword = (req, res) => {
-      //   const newKeyword = req.body.keyword;
       
-      //   // Create a new keyword object
-      //   const keywordObj = new keyword({
-      //     keyword: newKeyword
-      //   });
-      
-      //   // Save the new keyword
-      //   keywordObj.save((err, savedKeyword) => {
-      //     if (err) {
-      //       return res.status(500).send(err);
-      //     }
-      
-      //     res.send(savedKeyword);
-      //   });
-      // };
-      
+      exports.get_all_keywords = (req, res) => {
+        keyword.find((err, keywords) => {
+            if(err) {
+                return res.status(400).json({
+                    err: err.toString()
+                })
+            }
+            return res.json({
+                keywords
+            })
+        })
+    }

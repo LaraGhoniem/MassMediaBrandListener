@@ -69,6 +69,18 @@ exports.signout = (req, res) => {
     })
 }
 
+exports.get_all_users = (req, res) => {
+    User.find({}, (err, users) => {
+        if (err) {
+            return res.status(400).json({
+                error: "No users found"
+            })
+        }
+        return res.json(users)
+    })
+}
+
+
 exports.editProfile = (req, res) => {
     const {
         name,

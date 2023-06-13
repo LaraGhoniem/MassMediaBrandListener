@@ -51,7 +51,35 @@
             </div>
             <div class="scrollable">
                 <div class="general_dashboard_container container" id="general-dashboard">
-                    Hello
+                    <h1>Welcome Back</h1>
+                    <div class="dashboard-row">
+                        <div class="dashboard-item">
+                            <h3>Users</h3>
+                            <h1 id="num-of-users"></h1>
+                        </div>
+                        <div class="dashboard-item">
+                            <h3>Listeners</h3>
+                            <h1 id="num-of-listeners"></h1>
+                        </div>
+                        <div class="dashboard-item">
+                            <h3>Keywords</h3>
+                            <h1 id="num-of-keywords"></h1>
+                        </div>
+                    </div>
+                    <div class="dashboard-row">
+                        <div class="dashboard-item">
+                            <h3>Categories</h3>
+                            <h1 id="num-of-categories-general"></h1>
+                        </div>
+                        <div class="dashboard-item">
+                            <h3>Media Links</h3>
+                            <h1 id="num-of-media-links-general"></h1>
+                        </div>
+                        <div class="dashboard-item">
+                            <h3>Used Categories</h3>
+                            <h1 id="num-of-used-categories-general"></h1>
+                        </div>
+                    </div>
                 </div>
                 <div class="edit_categories_container container" id="edit-categories">
                     <h1>Manage Categories</h1>
@@ -70,8 +98,11 @@
                         </div>
                     </div>
                     <div class="actions_row">
-                        <div class="actions_item addEdit">
-                            <h1 id="action-header">Create Category</h1>
+                        <div class="actions_item addEdit" id="form-category">
+                            <div id="form-header">
+                                <h1 id="action-header">Create Category</h1>
+                            </div>
+                            
                             <div class="form">
                                 <h4>Enter a name for the category to be viewed to the user</h4>
                                 <input type="text" id="category-name" placeholder="Category Name">
@@ -85,7 +116,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <button id="add-category-button">Create</button>
+                            <div id="action-button">
+                                <button id="add-category-button">Create</button>
+                            </div>
                         </div>
                         <div class="actions_item categories">
                             <h1>Categories</h1>
