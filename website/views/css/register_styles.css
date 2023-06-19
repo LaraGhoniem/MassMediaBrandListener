@@ -28,6 +28,17 @@ html, body{
         margin-right: 10px;
         font-family: sans-serif;
     }
+    .logo {
+        background-image: url(../assets/logo.png);
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 250px;
+        height: 80%;
+        /* margin: 0 auto; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .logo h2{
         font-family: 'Rubik', sans-serif;
         font-size: 25px;

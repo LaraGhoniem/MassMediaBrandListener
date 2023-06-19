@@ -25,6 +25,7 @@
     "hbs": "^4.2.0",
     "jquery": "^3.6.3",
     "jsonwebtoken": "8.5.1",
+    "jspdf": "^2.5.1",
     "mongoose": "5.9.25",
     "nodemon": "2.0.4",
     "npm": "^6.14.8",

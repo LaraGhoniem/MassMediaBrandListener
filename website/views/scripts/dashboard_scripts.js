@@ -10,8 +10,13 @@ import ChartDataPreparer from "./helpers/chart_data_preparer.js";
 // logout button
 document.getElementById("user-logout").addEventListener("click", async () => await User.logout());
 //navigation
+window.jsPDF = window.jspdf.jsPDF;
 
-let nav_slider = document.getElementById('navigation')
+var reportpdf = new jsPDF();
+var reportpdfy = 10;
+var mentionschartImage
+
+ let nav_slider = document.getElementById('navigation')
 let nav_settings_slider = document.getElementById('navigation-settings')
 let nav_buttons = nav_slider.children
 let nav_settings_buttons = nav_settings_slider.children
@@ -116,8 +121,6 @@ function validateEmail(email) {
     return specialChar.test(email);
 }
 
-
-
 document.getElementById("Update-Profile").addEventListener("click", function (event) {
     event.preventDefault();
 
@@ -164,7 +167,6 @@ document.getElementById('Reset-profile').addEventListener('click', () => {
     document.getElementById('Newpassword').value = '';
     document.getElementById('confirmpassword').value = '';
 });
-
 
 // close add listener popup
 document.getElementById("cancel-button").addEventListener("click", () => {
@@ -345,12 +347,14 @@ function viewCategories(categories) {
     })
 }
 
+// 
+
 // MENTIONS OVER TIME CHART //
 // The variable that handles the ChartJS object
 var mentionschart
-var ctx = document.getElementById('mentionslinechart');
+var mentionschartctx = document.getElementById('mentionslinechart');
 mentionschart = new Chart(
-    ctx, {
+    mentionschartctx, {
         type: 'line',
         data: {
             labels: mentionschartlabels,
@@ -397,9 +401,9 @@ var mentionschartlabels = []
 var mentionschartdata = []
 
 // TOP SOURCES CHART //
-ctx = document.getElementById('topSources')
+var topSourcesctx = document.getElementById('topSources')
 var topsourceschart = new Chart(
-    ctx, {
+    topSourcesctx, {
         type: 'bar',
         data: {
             labels: ['YouTube',
@@ -444,9 +448,9 @@ var topsourceschart = new Chart(
 var topsourcesdata = []
 
 // POSITIVE MENTIONS OVER TIME CHART //
-ctx = document.getElementById('posMentions')
+var posMentionsctx = document.getElementById('posMentions')
 var positive_mentions_over_time_chart = new Chart(
-    ctx, {
+    posMentionsctx, {
         type: 'line',
         data: {
             labels: posmentionslabels,
@@ -481,9 +485,9 @@ var positive_mentions_over_time_chart = new Chart(
 var posmentionslabels = []
 var posmentionsdata = []
 
-ctx = document.getElementById('topKeywords').getContext('2d')
+var topKeywordsctx = document.getElementById('topKeywords').getContext('2d')
 var topkeywordschart = new Chart(
-    ctx, {
+    topKeywordsctx, {
         type: 'bar',
         data: {
             labels: [],
@@ -525,9 +529,9 @@ var topkeywordsdata = []
 
 // Sentiment Share Chart //
 var sentimentsharedata = []
-ctx = document.getElementById('sentimentShare')
+var sentimentSharectx = document.getElementById('sentimentShare')
 var sentimentsharechart = new Chart(
-    ctx, {
+    sentimentSharectx, {
         type: 'pie',
         data: {
             labels: [
@@ -558,9 +562,9 @@ var sentimentsharechart = new Chart(
 );
 
 // Sentiment By Source Chart //
-ctx = document.getElementById('sentimentSource')
+var sentimentSourcectx = document.getElementById('sentimentSource')
 var sentiment_source_chart = new Chart(
-    ctx, {
+    sentimentSourcectx, {
         type: 'bar',
         data: {
             labels: ['youtube', 'podcast', 'twitter', 'news'],
@@ -632,38 +636,6 @@ function navigate(page) {
         document.getElementById("web-mentions").style.display = "none";
         document.getElementById("Account-Settings").style.display = "none";
         document.getElementById("keyword-Settings").style.display = "none";
-        // 
-        // ctx = document.getElementById('topTopics'),
-        // new Chart(
-        //     ctx,
-        //     {         
-        //         type: 'bubble',
-        //         data: {
-        //             labels: ['January',
-        //             'February',
-        //             'March',
-        //             'April',
-        //             'May',
-        //             'June',],
-
-        //         data: [65, 59, 80, 81, 56, 55, 40]},
-        //         options: {
-        //           responsive: true,
-        //           plugins: {
-        //             legend: {
-        //               position: 'bottom',
-        //             },
-        //             title: {
-        //               display: true,
-        //               text: 'Top topics'
-        //             }
-        //           }
-        //         },
-        //     },
-
-        // );
-        // 
-        // 
     } else if (page === 2) {
         document.getElementById("view-listeners").style.display = "none";
         document.getElementById("web-mentions").style.display = "block";
@@ -799,9 +771,6 @@ function view_listeners_buttons(listeners) {
             listener_name_2.innerHTML = listeners[i].listener_name
             listener_div_2.appendChild(listener_name_2)
             listener_html_2.appendChild(listener_div_2)
-            // listener_div_2.appendChild(listener_div_2)
-            // listener_div_2.appendChild(listener_name_3)
-            // listener_html_2.appendChild(listener_div_3)
         }
     }
 }
@@ -917,6 +886,7 @@ async function view_listener_graphs(listenerid, listenername) {
                     document.getElementById("empty-result-charts").style.display = "none"
                 }
             })
+
         }
     }).catch((err) => {
         console.log(err)
@@ -1214,122 +1184,6 @@ async function keywordsTable(listener_id){
     })
 }
 
-// async function viewkeywordsactions(listener_id, listener_name) {
-//     let listener_name_header = document.getElementById("listener_name_3")
-//     listener_name_header.innerHTML = listener_name
-//     let listener_html = document.getElementById("listeners_list_items_3")
-//     Array.from(listener_html.children).forEach((node) => {
-//         if (node.id === listener_id + "_3") {
-//             if (node.classList.contains("inactive")) {
-//                 node.classList.remove("inactive")
-//                 node.classList.add("active")
-//             }
-//         } else {
-//             if (node.classList.contains("active")) {
-//                 node.classList.remove("active")
-//                 node.classList.add("inactive")
-//             }
-//         }
-//     })
-//     document.getElementById("edit_keywords_table").style.display = "none"
-//     document.getElementById("edit_keywords_table").innerHTML = `
-//         <thead>
-//             <tr>
-//                 <th>Keyword</th>
-//                 <th></th>
-//                 <th></th>
-//             </tr>
-//         </thead>
-//     `
-
-//     var button = document.getElementById("add-keyword-edit")
-
-//     button.addEventListener("click", () => {
-//         document.getElementById("add-keyword-popup-container").style.display = "flex";
-//         document.getElementById("add-keyword-button").addEventListener("click", () => {
-//             let keyword = document.getElementById("add-keyword-input").value
-//             if(keyword === ""){
-//                 alert("Please enter a keyword")
-//             }
-//             else{
-//                 fetch('/keyword/add/', {
-//                     method: 'POST',
-//                     headers: {
-//                         'Content-Type': 'application/json'
-//                     },
-//                     body: JSON.stringify({
-//                         listener_id: listener_id,
-//                         keyword: keyword
-//                     })
-//                 }).then((res) => {
-//                     if (res.status === 200) {
-//                         res.json().then((data) => {
-//                             alert("Keyword added successfully")
-//                             // viewkeywordsactions(listener_id,listener_name)
-//                         })
-//                     } else {
-//                         console.log(res.status)
-//                     }
-//                 }).catch((err) => {
-//                     console.log(err)
-//                 });
-//             }
-//         })
-//     })
-
-//     document.getElementById("loading-container-edit-keywords").style.display = "flex"
-//     let response =fetch('/keyword/view/'+listener_id)
-//     .then(response=>response.json())
-//     .then(data=>{ 
-//         const keyword_table = document.getElementById("edit_keywords_table")
-//         for(let keyword in data["keywords"]){
-//             const row = keyword_table.insertRow()
-//             row.insertCell().textContent = data["keywords"][keyword]["keyword"]
-//             row.insertCell().innerHTML = `<button class="rounded-btn " id="edit-keyword-${data["keywords"][keyword]["_id"]}">Edit</button>`            
-//             row.insertCell().innerHTML = `<button id ="delete-keyword-${data["keywords"][keyword]["_id"]}" class="delete-btn" >Delete</button>`
-
-//             document.getElementById(`delete-keyword-${data["keywords"][keyword]["_id"]}`).addEventListener("click", () =>{
-//                 fetch('/keyword/delete/'+data["keywords"][keyword]["_id"], {
-//                 method: 'DELETE',
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 },}).then((res) => {
-//                 if (res.status === 200) {
-//                     res.json().then((data) => {
-//                         alert("Keyword deleted successfully")
-//                         viewkeywordsactions(listener_id,listener_name)
-//                     })
-//                 } else {
-//                     console.log(res.status)
-//                 }
-//             }).catch((err) => {
-//                 console.log(err)
-//             });
-//             });
-
-//             document.getElementById(`edit-keyword-${data["keywords"][keyword]["_id"]}`).addEventListener('click', function() {
-//                 document.getElementById("edit-keyword-popup-container").style.display = "flex"
-//                 document.getElementById("edit-keyword-input").value = data["keywords"][keyword]["keyword"]
-//                 document.getElementById("edit-keyword-button").addEventListener("click", () => {
-//                     let new_keyword = document.getElementById("edit-keyword-input").value
-//                     if(keyword === ""){
-//                         alert("Please enter a keyword")
-//                     } else if(keyword === data["keywords"][keyword]["keyword"]){
-//                         alert("Please enter a keyword different from the current one")
-//                     }
-//                     else{
-//                         document.getElementById("edit-keyword-input").value = ""
-//                         updateKeyword(data["keywords"][keyword]["_id"],listener_id, new_keyword, listener_name);
-//                     }
-//                 })
-//             });
-//         }
-//     }).then(()=>{
-//         document.getElementById("loading-container-edit-keywords").style.display = "none"
-//         document.getElementById("edit_keywords_table").style.display = "table"
-        
-//     })
-// }
 
 export function viewMentions(listener){
     let mentions_table = document.getElementById("mentions-table")
@@ -1590,4 +1444,121 @@ function generateRow(mention) {
     row.appendChild(action_item)
 
     return row
+}
+let button = document.getElementById("create-report-btn")
+button.onclick =popUpReports;
+function popUpReports() {
+    
+    // let popUp = document.getElementById("reportpopup")
+    // popUp.innerHTML = ""
+    // popUp.style.display = "flex"
+    // let popUp_div = document.createElement("div")
+    // popUp_div.classList.add("popup_container")
+    // let popUp_div_header = document.createElement("div")
+    // popUp_div_header.classList.add("popup_header_row")
+    // let popUp_div_header_button = document.createElement("button")
+    // popUp_div_header_button.addEventListener("click", () => {
+    //     let popUp = document.getElementById("reportpopup")
+    //     popUp.style.display = "none"
+    // })
+    // popUp_div_header_button.innerHTML = "<i class='bx bx-x' ></i>"
+    // popUp_div_header.appendChild(popUp_div_header_button)
+    // popUp_div.appendChild(popUp_div_header)
+    // let popUp_div_header_h1 = document.createElement("h1")
+    // popUp_div_header_h1.classList.add("popup_keyword_header")
+    // popUp_div_header_h1.innerHTML = "Report"
+    // popUp_div.appendChild(popUp_div_header_h1)
+    // // Information Row
+    // let popUp_div_info = document.createElement("div")
+    // popUp_div_info.classList.add("popup_info_row")
+    // popUp_div.appendChild(popUp_div_info)
+
+    // // Text Row
+    // let popUp_div_text = document.createElement("div")
+    // popUp_div_text.classList.add("popup_text")
+    // popUp_div_text.innerHTML = "row"
+    // popUp_div.appendChild(popUp_div_text)
+    // popUp.appendChild(popUp_div)
+    
+        // Check if Chart 1 is selected
+        // if (document.getElementById('chart1Checkbox').checked) {
+            // // Add Chart 1 to the report
+            // var chart1Canvas = document.createElement('canvas');
+            // chart1Canvas.width = 400;
+            // chart1Canvas.height = 300;
+    
+            // // Create a new Chart.js chart using the configuration
+            // var chart1 = new Chart(chart1Canvas, chart1Config);
+    
+            // Convert the chart canvas to a base64-encoded image URL
+            // var chart1Image = chart1Canvas.toDataURL('image/jpeg', 1.0);
+    
+            // // Add the chart image to the report
+            // reportpdf.addImage(chart1Image, 'JPEG', 10, reportpdfy, 180, 120);
+            // reportpdfy += 130; // Adjust the y position for the next element
+    
+            // // Add text related to Chart 1
+            // reportpdf.text('Chart 1:', 10, reportpdfy);
+            // reportpdfy += 10; // Adjust the y position for the next element
+            // reportpdf.text('Some text or numbers related to Chart 1', 10, reportpdfy);
+            // reportpdfy += 20; // Adjust the y position for the next element
+        // }
+    
+        // Check if Chart 2 is selected
+        // if (document.getElementById('chart2Checkbox').checked) {
+        //     // Add Chart 2 to the report
+        //     var chart2Canvas = document.createElement('canvas');
+        //     chart2Canvas.width = 400;
+        //     chart2Canvas.height = 300;
+    
+        //     // Create a new Chart.js chart using the configuration
+        //     var chart2 = new Chart(chart2Canvas, chart2Config);
+    
+        //     // Convert the chart canvas to a base64-encoded image URL
+        //     var chart2Image = chart2Canvas.toDataURL('image/jpeg', 1.0);
+    
+        //     // Add the chart image to the report
+        //     reportpdf.addImage(chart2Image, 'JPEG', 10, reportpdfy, 180, 120);
+        //     reportpdfy += 130; // Adjust the y position for the next element
+    
+        //     // Add text related to Chart 2
+        //     reportpdf.text('Chart 2:', 10, y);
+        //     reportpdfy += 10; // Adjust the y position for the next element
+        //     reportpdf.text('Some text or numbers related to Chart 2', 10, y);
+        //     reportpdfy += 20; // Adjust the y position for the next element
+        // }
+    
+        // Save the PDF
+        reportpdf.setFontSize(20);
+
+        const mentionschart = document.getElementById('mentionslinechart');
+        const mentionschartImage = mentionschart.toDataURL("image/png", 1.0);
+        reportpdf.addImage(mentionschartImage, 'PNG', 10, 10, 180, 120);
+        reportpdf.addPage();
+
+        const posmenchart = document.getElementById('posMentions');
+        const posmenchartImage = posmenchart.toDataURL("image/png", 1.0);
+        reportpdf.addImage(posmenchartImage, 'PNG', 10, 10, 180, 120);
+        reportpdf.addPage();
+
+        const topkeywordschart = document.getElementById('topKeywords');
+        const topkeywordschartImage = topkeywordschart.toDataURL("image/png", 1.0);
+        reportpdf.addImage(topkeywordschartImage, 'PNG', 10, 10, 180, 120);
+        reportpdf.addPage();
+
+        const topsourceschart = document.getElementById('topSources');
+        const topsourceschartImage = topsourceschart.toDataURL("image/png", 1.0);
+        reportpdf.addImage(topsourceschartImage, 'PNG', 10, 10, 180, 120);
+        reportpdf.addPage();
+
+        const sentimentsharechart = document.getElementById('sentimentShare');
+        const sentimentsharechartImage = sentimentsharechart.toDataURL("image/png", 1.0);
+        reportpdf.addImage(sentimentsharechartImage, 'PNG', 10, 10, 180, 120);
+        reportpdf.addPage();
+
+        const sentimentbysourcechart = document.getElementById('sentimentSource');
+        const sentimentbysourcechartImage = sentimentbysourcechart.toDataURL("image/png", 1.0);
+        reportpdf.addImage(sentimentbysourcechartImage, 'PNG', 10, 10, 180, 120);
+
+        reportpdf.save('dashboard_report.pdf');
 }
