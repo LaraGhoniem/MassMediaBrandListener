@@ -48,7 +48,7 @@ html, body{
     font-family: sans-serif;
 }
 .logo {
-    background-image: url(../assets/logo.png);
+background-image: url(../assets/logo.png);
     background-repeat: no-repeat;
     background-size: contain;
     width: 250px;
@@ -1303,6 +1303,7 @@ vertical-align:text-bottom;
     width: 100%;
     display: flex;
     justify-content: center;
+    text-align: right;
 }
 
 .mention_text button{
@@ -1795,7 +1796,7 @@ vertical-align:text-bottom;
     background-color: #A785FF;
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     transition: all 0.3s ease-in-out;
@@ -2574,7 +2575,7 @@ vertical-align:text-bottom;
 }
 
 /* Tablet size media query */
-@media screen and (max-width: 1200px){
+@media screen and (max-width: 1500px){
     .viewListenerData{
         display: grid;
         grid-template-columns: 1fr 1fr;

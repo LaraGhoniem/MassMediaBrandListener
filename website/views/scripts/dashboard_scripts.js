@@ -242,6 +242,7 @@ window.onload = async function () {
         categories = data.category
         viewCategories(categories)
     })
+
 }
 
 document.getElementById('navigation-2').classList.add('active')
@@ -412,7 +413,7 @@ var topsourceschart = new Chart(
                 'News'
             ],
             datasets: [{
-                label: 'Top keyword mentions',
+                label: 'Top sources',
                 data: [],
                 backgroundColor: [
                     'rgb(133,92,248)',
@@ -884,6 +885,10 @@ async function view_listener_graphs(listenerid, listenername) {
                     document.getElementById("loading-container-charts").style.display = "none"
                     document.getElementById("listener_data_api").style.display = "flex"
                     document.getElementById("empty-result-charts").style.display = "none"
+                    
+                    let button = document.getElementById("create-report-btn")
+                    button.style.display = "flex"
+                    button.onclick = popUpReports;
                 }
             })
 
@@ -1452,8 +1457,8 @@ function generateRow(mention) {
 
     return row
 }
-let button = document.getElementById("create-report-btn")
-button.onclick =popUpReports;
+// let button = document.getElementById("create-report-btn")
+// button.onclick =popUpReports;
 function popUpReports() {
     
     // let popUp = document.getElementById("reportpopup")
@@ -1486,86 +1491,116 @@ function popUpReports() {
     // popUp_div_text.innerHTML = "row"
     // popUp_div.appendChild(popUp_div_text)
     // popUp.appendChild(popUp_div)
-    
-        // Check if Chart 1 is selected
-        // if (document.getElementById('chart1Checkbox').checked) {
-            // // Add Chart 1 to the report
-            // var chart1Canvas = document.createElement('canvas');
-            // chart1Canvas.width = 400;
-            // chart1Canvas.height = 300;
-    
-            // // Create a new Chart.js chart using the configuration
-            // var chart1 = new Chart(chart1Canvas, chart1Config);
-    
-            // Convert the chart canvas to a base64-encoded image URL
-            // var chart1Image = chart1Canvas.toDataURL('image/jpeg', 1.0);
-    
-            // // Add the chart image to the report
-            // reportpdf.addImage(chart1Image, 'JPEG', 10, reportpdfy, 180, 120);
-            // reportpdfy += 130; // Adjust the y position for the next element
-    
-            // // Add text related to Chart 1
-            // reportpdf.text('Chart 1:', 10, reportpdfy);
-            // reportpdfy += 10; // Adjust the y position for the next element
-            // reportpdf.text('Some text or numbers related to Chart 1', 10, reportpdfy);
-            // reportpdfy += 20; // Adjust the y position for the next element
-        // }
-    
-        // Check if Chart 2 is selected
-        // if (document.getElementById('chart2Checkbox').checked) {
-        //     // Add Chart 2 to the report
-        //     var chart2Canvas = document.createElement('canvas');
-        //     chart2Canvas.width = 400;
-        //     chart2Canvas.height = 300;
-    
-        //     // Create a new Chart.js chart using the configuration
-        //     var chart2 = new Chart(chart2Canvas, chart2Config);
-    
-        //     // Convert the chart canvas to a base64-encoded image URL
-        //     var chart2Image = chart2Canvas.toDataURL('image/jpeg', 1.0);
-    
-        //     // Add the chart image to the report
-        //     reportpdf.addImage(chart2Image, 'JPEG', 10, reportpdfy, 180, 120);
-        //     reportpdfy += 130; // Adjust the y position for the next element
-    
-        //     // Add text related to Chart 2
-        //     reportpdf.text('Chart 2:', 10, y);
-        //     reportpdfy += 10; // Adjust the y position for the next element
-        //     reportpdf.text('Some text or numbers related to Chart 2', 10, y);
-        //     reportpdfy += 20; // Adjust the y position for the next element
-        // }
-    
-        // Save the PDF
-        reportpdf.setFontSize(20);
 
-        const mentionschart = document.getElementById('mentionslinechart');
-        const mentionschartImage = mentionschart.toDataURL("image/png", 1.0);
-        reportpdf.addImage(mentionschartImage, 'PNG', 10, 10, 180, 120);
-        reportpdf.addPage();
 
-        const posmenchart = document.getElementById('posMentions');
-        const posmenchartImage = posmenchart.toDataURL("image/png", 1.0);
-        reportpdf.addImage(posmenchartImage, 'PNG', 10, 10, 180, 120);
-        reportpdf.addPage();
+    var currentDate = new Date().toLocaleDateString();
 
-        const topkeywordschart = document.getElementById('topKeywords');
-        const topkeywordschartImage = topkeywordschart.toDataURL("image/png", 1.0);
-        reportpdf.addImage(topkeywordschartImage, 'PNG', 10, 10, 180, 120);
-        reportpdf.addPage();
+try {
+  reportpdf.setFontSize(12);
+  reportpdf.text('Date: ' + currentDate, 10, reportpdfy);
+  reportpdfy += 10;
 
-        const topsourceschart = document.getElementById('topSources');
-        const topsourceschartImage = topsourceschart.toDataURL("image/png", 1.0);
-        reportpdf.addImage(topsourceschartImage, 'PNG', 10, 10, 180, 120);
-        reportpdf.addPage();
+  const pageWidth = reportpdf.internal.pageSize.getWidth();
+  const titleWidth = reportpdf.getStringUnitWidth('Media Monitoring Report') * 24 / reportpdf.internal.scaleFactor;
+  reportpdf.setFontSize(24);
+  reportpdf.text('Media Monitoring Report', (pageWidth - titleWidth) / 2, 40);
+  reportpdfy += 50;
 
-        const sentimentsharechart = document.getElementById('sentimentShare');
-        const sentimentsharechartImage = sentimentsharechart.toDataURL("image/png", 1.0);
-        reportpdf.addImage(sentimentsharechartImage, 'PNG', 10, 10, 180, 120);
-        reportpdf.addPage();
+  reportpdf.setFontSize(16);
+  reportpdf.text('Mentions Over Time', 10, reportpdfy);
+  reportpdfy += 10;
 
-        const sentimentbysourcechart = document.getElementById('sentimentSource');
-        const sentimentbysourcechartImage = sentimentbysourcechart.toDataURL("image/png", 1.0);
-        reportpdf.addImage(sentimentbysourcechartImage, 'PNG', 10, 10, 180, 120);
+  const mentionschart = document.getElementById('mentionslinechart');
+  const mentionschartImage = mentionschart.toDataURL("image/png", 1.0);
+  reportpdf.addImage(mentionschartImage, 'PNG', 45, reportpdfy, 120, 100);
+  reportpdfy += 120;
 
-        reportpdf.save('dashboard_report.pdf');
+  reportpdf.setFontSize(11);
+  const mentionsText = 'This chart displays the number of mentions over time, allowing to track the trends and patterns of mentions related to your brand or topic.';
+  const mentionsTextLines = reportpdf.splitTextToSize(mentionsText, pageWidth - 20);
+  reportpdf.text(mentionsTextLines, 10, reportpdfy);
+
+  reportpdf.addPage();
+
+  reportpdfy = 20;
+  reportpdf.setFontSize(16);
+  reportpdf.text('Positive Mentions Over Time', 10, reportpdfy);
+  reportpdfy += 10;
+
+  const posmenchart = document.getElementById('posMentions');
+  const posmenchartImage = posmenchart.toDataURL("image/png", 1.0);
+  reportpdf.addImage(posmenchartImage, 'PNG', 45, reportpdfy, 110, 90);
+
+  reportpdfy += 100;
+  reportpdf.setFontSize(11);
+  const posMentionsText = 'This chart displays the number of positive mentions over time, providing insights into the positive sentiment surrounding your brand or topic.';
+  const posMentionsTextLines = reportpdf.splitTextToSize(posMentionsText, pageWidth - 20);
+  reportpdf.text(posMentionsTextLines, 10, reportpdfy);
+  reportpdfy += 20;
+
+  reportpdf.setFontSize(16);
+  reportpdf.text('Top Keywords Mentioned', 10, reportpdfy);
+  reportpdfy += 10;
+
+  const topkeywordschart = document.getElementById('topKeywords');
+  const topkeywordschartImage = topkeywordschart.toDataURL("image/png", 1.0);
+  reportpdf.addImage(topkeywordschartImage, 'PNG', 45, reportpdfy, 100, 80);
+  reportpdfy += 100;
+
+  reportpdf.setFontSize(11);
+  const topKeywordsText = 'This chart displays the top keywords mentioned, giving you an understanding of the most frequently used terms related to your brand or topic.';
+  const topKeywordsTextLines = reportpdf.splitTextToSize(topKeywordsText, pageWidth - 20);
+  reportpdf.text(topKeywordsTextLines, 10, reportpdfy);
+
+  reportpdf.addPage();
+  reportpdfy = 20;
+
+  reportpdf.setFontSize(16);
+  reportpdf.text('Top Sources', 10, reportpdfy);
+  reportpdfy += 10;
+
+  const topsourceschart = document.getElementById('topSources');
+  const topsourceschartImage = topsourceschart.toDataURL("image/png", 1.0);
+  reportpdf.addImage(topsourceschartImage, 'PNG', 45, reportpdfy, 100, 80);
+  reportpdfy += 100;
+
+  reportpdf.setFontSize(11);
+  const topSourcesText = 'This chart displays the top sources of mentions, helping identify the platforms or channels where the majority of discussions about your brand or topic are happening.';
+  const topSourcesTextLines = reportpdf.splitTextToSize(topSourcesText, pageWidth - 20);
+  reportpdf.text(topSourcesTextLines, 10, reportpdfy);
+
+  reportpdfy += 20;
+  reportpdf.setFontSize(16);
+  reportpdf.text('Sentiment Share', 10, reportpdfy);
+  reportpdfy += 10;
+
+  const sentimentsharechart = document.getElementById('sentimentShare');
+  const sentimentsharechartImage = sentimentsharechart.toDataURL("image/png", 1.0);
+  reportpdf.addImage(sentimentsharechartImage, 'PNG', 50, reportpdfy, 100, 100);
+  reportpdfy += 110;
+
+  reportpdf.setFontSize(11);
+  const sentimentShareText = 'This chart displays the distribution of sentiment (positive, negative, neutral) in the mentions, giving an overview of the overall sentiment share related to your brand or topic.';
+  const sentimentShareTextLines = reportpdf.splitTextToSize(sentimentShareText, pageWidth - 20);
+  reportpdf.text(sentimentShareTextLines, 10, reportpdfy);
+  reportpdf.addPage();
+
+  reportpdfy = 20;
+  reportpdf.setFontSize(16);
+  reportpdf.text('Sentiment by Source', 10, reportpdfy);
+  reportpdfy += 10;
+
+  const sentimentbysourcechart = document.getElementById('sentimentSource');
+  const sentimentbysourcechartImage = sentimentbysourcechart.toDataURL("image/png", 1.0);
+  reportpdf.addImage(sentimentbysourcechartImage, 'PNG', 45, reportpdfy, 120, 100);
+
+  reportpdf.setFontSize(11);
+  const sentimentBySourceText = 'This chart provides a breakdown of sentiment (positive, negative, neutral) by different sources, helping in understanding the sentiment distribution across various platforms or channels.';
+  const sentimentBySourceTextLines = reportpdf.splitTextToSize(sentimentBySourceText, pageWidth - 20);
+  reportpdf.text(sentimentBySourceTextLines, 10, reportpdfy + 130);
+
+  reportpdf.save('Media Monitoring Report.pdf');
+} catch (error) {
+  console.error('An error occurred while generating the report:', error);
+}
 }
