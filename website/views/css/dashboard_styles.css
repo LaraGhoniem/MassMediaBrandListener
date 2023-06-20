@@ -1303,7 +1303,6 @@ vertical-align:text-bottom;
     width: 100%;
     display: flex;
     justify-content: center;
-    text-align: right;
 }
 
 .mention_text button{
@@ -2575,7 +2574,7 @@ vertical-align:text-bottom;
 }
 
 /* Tablet size media query */
-@media screen and (max-width: 1500px){
+@media screen and (max-width: 1200px){
     .viewListenerData{
         display: grid;
         grid-template-columns: 1fr 1fr;

@@ -1184,7 +1184,6 @@ async function keywordsTable(listener_id){
     })
 }
 
-
 export function viewMentions(listener){
     let mentions_table = document.getElementById("mentions-table")
     mentions_table.innerHTML = `
@@ -1409,8 +1408,16 @@ function generateRow(mention) {
 
     // summary row
     let summary_item = document.createElement("td")
-    summary_item.id = "Summary"
-    summary_item.innerHTML = mention.summary
+    // if(mention.summary == "summary"){
+    //     // Get the first sentence of the text
+    let first_sentence = mention.text.split(".")[0]
+    summary_item.innerHTML = "<div class='mention_text'><p>"+first_sentence+"</p></div>"
+    // }
+    // else if(mention.summary == "Summary not supported for twitter"){
+    //     summary_item.innerHTML = "<div class='mention_text'><p>"+mention.text+"</p></div>"
+    // }
+    // else
+        // summary_item.innerHTML = "<div class='mention_text'><p>"+mention.text+"</p></div>"
     row.appendChild(summary_item)
 
     // action row[OPEN]

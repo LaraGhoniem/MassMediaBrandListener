@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from modules.twitter_module.twitter_api import TwitterAPI
-from modules.sentiment_module import mazajak_api
+from modules.sentiment_module.mazajak_api import Sentiment
 from modules.news_module.news import NewsScraper
 from modules.youtube_module.youtube_handler import Youtube
 from modules.database_module.database import Database as db
@@ -26,9 +26,9 @@ class ApiCall:
         self.keyword = keyword
         self.categories = categories
         self.listener_id = listener_id
-        self.__twitter = TwitterAPI(keyword)
+        # self.__twitter = TwitterAPI(keyword)
         self.__news = NewsScraper()
-        self.__sentiment = mazajak_api
+        self.__sentiment = Sentiment()
         self.__summarizer = Summarization()
     
     def send(self, youtube_results):
@@ -37,9 +37,9 @@ class ApiCall:
         processes the data, and stores the results in the result attribute.
         """
         with ThreadPoolExecutor() as executor:
-            twitter_future = executor.submit(self.get_twitter_data)
+            # twitter_future = executor.submit(self.get_twitter_data)
             news_future = executor.submit(self.get_news_data)
-            twitter_results = twitter_future.result()
+            # twitter_results = twitter_future.result()
             news_articles = news_future.result()
 
         print(self.categories)
@@ -47,7 +47,7 @@ class ApiCall:
         category_ids = [category["_id"] for category in self.categories]
 
         youtube_results = [result for result in youtube_results if result["category_id"] in category_ids]
-        self.result = self.process_data(twitter_results, news_articles, youtube_results)
+        self.result = self.process_data([], news_articles, youtube_results)
 
     def get_twitter_data(self):
         """
@@ -71,7 +71,8 @@ class ApiCall:
         }
     def similarity_checker(self, a, b):
         result = SequenceMatcher(None, a, b).ratio()
-        return result > 0.025
+        print(result)
+        return result > 0.04
     
     def get_news_data(self):
         """
@@ -99,18 +100,20 @@ class ApiCall:
         :param news_articles: A list of dictionaries containing the news data.
         :return: A list of dictionaries containing the processed data.
         """
-        result = [{
-            "listener_id": self.listener_id,
-            "keyword": self.keyword,
-            "source": "twitter",
-            "text": twitter_results["preprocessed_text"][i],
-            "tweet_data": twitter_results["tweet_data"][i],
-            "sentiment": twitter_results["sentiment_results"][i],
-            "spam": str(twitter_results["spam_results"][i]),
-            "summary": "Summary not supported for twitter",
-            "created_at": twitter_results["links_dates"][i]["date"],
-            "link": twitter_results["links_dates"][i]["link"]
-        } for i in range(len(twitter_results["preprocessed_text"]))]
+        # result = [{
+        #     "listener_id": self.listener_id,
+        #     "keyword": self.keyword,
+        #     "source": "twitter",
+        #     "text": twitter_results["preprocessed_text"][i],
+        #     "tweet_data": twitter_results["tweet_data"][i],
+        #     "sentiment": twitter_results["sentiment_results"][i],
+        #     "spam": str(twitter_results["spam_results"][i]),
+        #     "summary": "Summary not supported for twitter",
+        #     "created_at": twitter_results["links_dates"][i]["date"],
+        #     "link": twitter_results["links_dates"][i]["link"]
+        # } for i in range(len(twitter_results["preprocessed_text"]))]
+
+        result = []
 
         result += [{
             "listener_id": self.listener_id,
@@ -118,31 +121,31 @@ class ApiCall:
             "source": "news",
             "text": news_articles[i]["text"],
             "sentiment": news_articles[i]["sentiment"],
-            "summary": "summary",
+            "summary": self.__summarizer.summarize(news_articles[i]["text"]),
             "created_at": news_articles[i]["publishDate"],
             "link": news_articles[i]["url"]
         } for i in range(len(news_articles))]
 
         for youtube_result in youtube_results:
             youtube_result["sentiment"] = []
+            youtube_result["summary"] = self.__summarizer.summarize_list([youtube_single_video["text"] for youtube_single_video in youtube_result["text"]])
             for youtube_single_video in youtube_result["text"]:
-                youtube_result["sentiment"].append(self.__sentiment.predict(youtube_single_video["text"])[0])
+                youtube_result["sentiment"].append(self.__sentiment.predict(youtube_single_video["text"]))
 
         for i in range(len(youtube_results)):
             for j in range(len(youtube_results[i]["text"])):
-                if self.similarity_checker(youtube_results[i]["text"][j]["text"],self.keyword):
+                similarity = self.similarity_checker(self.keyword, youtube_results[i]["text"][j]["text"])
+                if similarity == True or self.keyword in youtube_results[i]["text"][j]["text"]:
                     result.append({
                         "listener_id": self.listener_id,
                         "keyword": self.keyword,
                         "source": "youtube",
                         "text": youtube_results[i]["text"][j]["text"],
-                        "sentiment": self.__sentiment.predict(youtube_results[i]["text"][j]["text"])[0],
-                        "summary": "summary",
-                        "created_at": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                        "link": youtube_results[i]["link"]
+                        "sentiment": youtube_results[i]["sentiment"][j],
+                        "summary":  youtube_results[i]["text"][j]["text"].split(".")[0],
+                        "created_at": datetime.now().strftime('%Y-%m-%d'),
+                        "link": youtube_results[i]["text"][j]["link"]
                     })
-        
-        print("youtube_after: " + str(len(result)))
         return result
     
     @staticmethod
@@ -160,7 +163,6 @@ class ApiCall:
             # Youtube
             youtube = Youtube(link)
             links = youtube.get_videos()
-            print("youtube: " + str(len(links)))
             youtube.download("cloud_function/modules/youtube_module/downloads")
             ASR = ASRModule("cloud_function/modules/youtube_module/downloads", "cloud_function\modules\podcasts_module\PodcastsMP3")
             ASR.convert_audio()
@@ -170,7 +172,10 @@ class ApiCall:
             
             # join the results with the links
             for i in range(len(result)):
-                youtube_asr_result.append({"text": result[i], "link": links[i]["Link"]})
+                try:
+                    youtube_asr_result.append({"text": result[i], "link": links[i]["Link"]})
+                except:
+                    continue
         return youtube_asr_result
     
     @staticmethod

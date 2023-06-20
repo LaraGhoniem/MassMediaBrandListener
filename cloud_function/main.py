@@ -49,7 +49,7 @@ def update_database(engine):
             except:
                 continue
 
-def main(event, context):
+def main(event=None, context=None):
     """Main function to run the engine"""
     print("Engine is running")
     engine = initialize_engine()
@@ -57,5 +57,3 @@ def main(event, context):
     update_database(engine)
     print("Engine ran successfully")
 
-if __name__ == "__main__":
-    main(None,None)
