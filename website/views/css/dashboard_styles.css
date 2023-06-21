@@ -408,6 +408,57 @@ background-image: url(../assets/logo.png);
     background-color: #A785FF;
 }
 
+.filter-container{
+    width: 30%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 15px ;
+    background-color: #CBB7FF;
+}
+
+.months_select{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+    border-radius: 15px;
+    background-color: #d9cbfd;
+}
+
+.months_select:focus{
+    outline: none;
+}
+
+.months_select option{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px;
+    border-radius: 15px ;
+    background-color: #CBB7FF;
+}
+
+.month_container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.month_container p{
+    font-size: 14px;
+    max-lines: 1;
+}
 
 .webmentionsPageContainer{
     display: block;
@@ -1777,9 +1828,10 @@ vertical-align:text-bottom;
 .report-header-row{
     display: flex;
     justify-content: space-between;
-    /* margin: 0 50px; */
+    margin: 10px 0;
     align-items: center;
     width: 100%;
+    
 }
       
 .report-header-row button{

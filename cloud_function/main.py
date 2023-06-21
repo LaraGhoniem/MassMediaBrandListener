@@ -57,3 +57,6 @@ def main(event=None, context=None):
     update_database(engine)
     print("Engine ran successfully")
 
+if __name__ == "__main__":
+    main()
+

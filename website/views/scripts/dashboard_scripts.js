@@ -811,6 +811,39 @@ async function view_listener_graphs(listenerid, listenername) {
                 } else {
                     var listener_data = data["result"]
                     listener_data.sort((a, b) => (a.created_at > b.created_at) ? 1 : -1)
+                    // get the months used in the data to be used for filtering
+                    // let months = []
+                    // listener_data.forEach((entry) => {
+                    //     let date = new Date(entry.created_at)
+                    //     let month = date.toLocaleString('default', {
+                    //         month: 'short',
+                    //         year: 'numeric'
+                    //     })
+                    //     if (!months.includes(month)) {
+                    //         months.push(month)
+                    //     }
+                    // })
+                    // let month_container = document.createElement("div")
+                    // month_container.setAttribute("class", "month_container")
+                    // month_container.innerHTML = `<p>Filter by month</p>`
+                    // let months_select = document.createElement("select")
+                    // months_select.setAttribute("id", "months_select")
+                    // months_select.setAttribute("class", "months_select")
+                    // months_select.setAttribute("onchange", "filter_months()")
+                    // // add the months to the select
+                    // months.forEach((month) => {
+                    //     let option = document.createElement("option")
+                    //     option.setAttribute("value", month)
+                    //     option.innerHTML = month
+                    //     months_select.appendChild(option)
+                    // })
+                    // // add the select to the page
+                    // let months_select_container = document.getElementById("filter-container")
+                    // months_select_container.innerHTML = ""
+                    // month_container.appendChild(months_select)
+                    // months_select_container.appendChild(month_container)
+
+                    
                     let chartPreparer = new ChartDataPreparer(listener_data)
 
                     // MENTIONS CHART DATA
@@ -1414,9 +1447,19 @@ function generateRow(mention) {
     // summary row
     let summary_item = document.createElement("td")
     // if(mention.summary == "summary"){
-    //     // Get the first sentence of the text
-    let first_sentence = mention.text.split(".")[0]
-    summary_item.innerHTML = "<div class='mention_text'><p>"+first_sentence+"</p></div>"
+    // Get the a random sentence from the text. But check that it is not empty.
+    let random_number = Math.floor(Math.random() * mention.text.split(".").length)
+    let random_sentence = mention.text.split(".")[random_number]
+    if(random_sentence == ""){
+        random_sentence = mention.text.split(".")[0]
+    }
+    else if (random_sentence.length > 128) {
+        random_sentence = random_sentence.slice(0, 128)
+    }
+    else if(random_sentence.length < 128){
+        random_sentence = mention.text.split(".")[0]
+    }
+    summary_item.innerHTML = "<div class='mention_text'><p>"+random_sentence+"</p></div>"
     // }
     // else if(mention.summary == "Summary not supported for twitter"){
     //     summary_item.innerHTML = "<div class='mention_text'><p>"+mention.text+"</p></div>"
